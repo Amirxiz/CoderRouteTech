@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+        <script data-type="console/javascript">
+            window.addEventListener("load", () => {
+                const googleFonts = [...document.styleSheets].some(
+                    sheet => sheet.href && sheet.href.includes("fonts.googleapis.com")
+                );
+                
+                if (!googleFonts) {
+                    console.error("GOOGLE EQUIPMENT FAILED TO LOAD: Google Fonts stylesheet not detected.");
+                }
+            });
+        </script>
+        <script data-type="console/javascript">
+            window.addEventListener("load", () => {
+                const googleFonts = [...document.styleSheets].some(
+                    sheet => sheet.href && sheet.href.includes("fonts.googleapis.com")
+                );
+                
+                if (googleFonts) {
+                    console.log(
+                        "GOOGLE EQUIPMENT LOADED: Google Font stylesheet detected & located. (MAIN USEAGE)"
+                    );
+                }
+            });
+        </script>
+        <style id="-GOOGLE-EQUIPMENT-">
+            .source-sans-3 {
+                font-family: "Source Sans 3", sans-serif;
+                font-style: normal;
+            }
+            
+            .roboto {
+                font-family: "Roboto", sans-serif;
+                font-style: normal;
+            }
+            
+            .source-code-pro {
+                font-family: "Source Code Pro", monospace;
+                font-style: normal;
+            }
+            
+            .mso {
+                font-family: 'Material Symbols Outlined';
+                font-weight: normal;
+                font-style: normal;
+                font-size: 24px;
+                line-height: 1;
+                display: inline-block;
+                -webkit-font-feature-settings: 'liga';
+                -webkit-font-smoothing: antialiased;
+            }
+        </style>
+        <style id="-MAIN-STYLE-">
+            html, body {
+                margin: 0;
+                height: 100%;
+                width: 100%;
+                overflow: hidden;
+            }
+            
+            :root {
+                --armyBlack: #171616;
+                --abacusDarkBlue: #28384a;
+                --Midnight: #122030;
+                --Space: #163150;
+                --borderColor: #524F4F;
+                --siteGrey: #beccd4;
+                --char: #404040;
+            }
+            
+            :root {
+                --hoverArmyBlack: rgba(255, 255, 255, 0.08);
+                --hoverAbacusDB: rgba(255, 255, 255, 0.06);
+                --sourceCode: "Source Code Pro", monospace;
+                --Roboto: "Roboto", sans-serif;
+                --sourceSans: "Source Sans 3", sans-serif;
+                --borderMain: 2px solid #524F4F;
+            }
+            
+            .sider {
+                display: flex; 
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            #maincontainer {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            #container {
+                min-height: 0;
+                flex: 1;
+                display: flex;
+                flex-direction: row;
+            }
+            
+            #topbar {
+                display: flex;
+                flex-direction: row;
+                font-family: var(--Roboto);
+                font-style: normal;
+                background-color: var(--Midnight);
+                color: white;
+                width: 100%;
+                height: 60px;
+                border-bottom: var(--borderMain);
+            }
+            
+            #sidebar {
+                width: 2%;
+                height: 100%;
+                background-color: var(--abacusDarkBlue);
+                border-right: var(--borderMain);
+            }
+            
+            #sidebar2 {
+                background-color: var(--armyBlack);
+                width: 8%;
+                height: 100%;
+                border-right: var(--borderMain);
+            }
+            
+            #codepage {
+                width: 70%;
+                height: 100%;
+                overflow-y: auto;
+                overflow-x: auto;
+                box-sizing: border-box;
+                white-space: pre;
+                outline: none;
+                font-family: var(--sourceCode);
+                background-color: var(--armyBlack);
+                color: white;
+            }
+            
+            .sidebutton {
+                display: block;
+                padding: 10px 0;
+                width: 100%;
+                cursor: pointer;
+            }
+            
+            #minitopbar {
+                width: 100%;
+                height: 40px;
+                background-color: var(--armyBlack);
+                border-bottom: var(--borderMain);
+            }
+            
+            #minibottombar {
+                width: 100%;
+                height: 40px;
+                background-color: var(--armyBlack);
+                border-top: var(--borderMain);
+            }
+            
+            #outputted {
+                width: 100%;
+                height: 100%;
+                outline: none;
+            }
+        </style>
+        <style id="-EXTRA-STYLE-">
+            h1, h2, h3, h4, h5, h6 {
+                margin: 0;
+            }
+            
+            #titletb {
+                cursor: pointer;
+            }
+            
+            .sidebutton:hover {
+                background-color: var(--hoverAbacusDB);
+            }
+            
+            .sidebutton.active {
+                background-color: var(--hoverAbacusDB);
+            }
+            
+            #refresh {
+                color: white;
+                cursor: pointer;
+                font-size: 35px;
+            }
+            
+            #create {
+                color: white;
+                cursor: pointer;
+                font-size: 35px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="maincontainer">
+            <div id="topbar">
+                <div style="padding-top: 15px; padding-left: 15px;">
+                    <h2 id="titletb">CodeLine</h2>
+                </div>
+            </div>
+            <div id="container">
+                <div id="sidebar">
+                    <div style="padding-top: 5px;"></div>
+                    <div style="color: white; text-align: center;">
+                        <h3 class="mso sidebutton">file_open</h3> <!-- Files -->
+                        <h3 class="mso sidebutton">settings_screen</h3> <!-- Settings -->
+                        <h3 class="mso sidebutton">folder_shared</h3> <!-- Collab -->
+                        <h3 class="mso sidebutton">unknown_document</h3> <!-- Code Documents -->
+                        <h3 class="mso sidebutton">save</h3> <!-- Saves -->
+                    </div>
+                </div>
+                <div id="sidebar2">
+                    
+                </div>
+                <!-- MAINS -->
+                <div id="codepage" class="codetext" style="padding-top: 10px; padding-left: 10px;" contenteditable="true"></div>
+                <div style="display: flex; flex-direction: column; width: 100%; height: 100%; overflow: visible; border-left: 2px solid #524F4F;">
+                    <nav id="minitopbar">
+                        <div class="mso" id="refresh" onclick="refresh()">
+                            refresh
+                        </div>
+                        <div class="mso" id="create" onclick="create()">
+                            fullscreen
+                        </div>
+                    </nav>
+                    <iframe id="outputted"></iframe>
+                    <nav id="minibottombar"></nav>
+                </div>
+            </div>
+        </div>
+        <script data-type="text/javascript">
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Tab") {
+                    event.preventDefault();
+                    const code = document.getElementById("codepage");
+                    
+                    const selection = window.getSelection();
+                    const range = selection.getRangeAt(0);
+                    
+                    const tabNode = document.createTextNode("    "); // Create TAB
+                    range.insertNode(tabNode);
+                    
+                    // Move cursor after inserted spaces
+                    range.setStartAfter(tabNode);
+                    range.setEndAfter(tabNode);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            });
+        </script>
+        <script data-type="console/javascript">
+            (() => {
+                const now = new Date();
+                console.log(`DOM loaded at: ${now.toLocaleTimeString()}`);
+                console.warn("! MAKE SURE TO NOT CHANGE THE REAL CODE !")
+                console.warn("If you can see this, and something is broken, reflect on your code! (:WARNING:)")
+            })();
+        </script>
+        <script data-type="text/javascript">
+            const editor = document.getElementById("codepage");
+            
+            editor.spellcheck = false;
+            editor.setAttribute("autocorrect", "off");
+            editor.setAttribute("autocapitalize", "off");
+            editor.setAttribute("autocomplete", "off");
+            
+            window.addEventListener("load", () => {
+                const savedCode = localStorage.getItem("codeline-code");
+                
+                if (savedCode) {
+                    document.getElementById("codepage").textContent = savedCode;
+                    
+                    // Also show it in the preview immediately
+                    document.getElementById("outputted").srcdoc = savedCode;
+                }
+            });
+            
+            // Save code
+            function saveCode() {
+                const code = document.getElementById("codepage").textContent;
+                localStorage.setItem("codeline-code", code);
+            }
+            
+            // Refresh preview
+            function refresh() {
+                const code = document.getElementById("codepage").textContent;
+                
+                document.getElementById("outputted").srcdoc = code;
+                
+                // Save whenever refresh is pressed
+                localStorage.setItem("codeline-code", code);
+            }
+            
+            // Auto-save while typing
+            document.getElementById("codepage").addEventListener("input", () => {
+                saveCode();
+            });
+            
+            function create() {
+                let code = document.getElementById("codepage").textContent;
+                
+                // If there's no title, add one
+                if (!/<title[\s>]/i.test(code)) {
+                    if (/<head>/i.test(code)) {
+                        code = code.replace(
+                            /<head>/i,
+                            "<head><title>New Webpage</title>"
+                        );
+                    } else {
+                        code =
+                            "<!DOCTYPE html>" +
+                            "<html>" +
+                            "<head><title>New Webpage</title></head>" +
+                            "<body>" +
+                            code +
+                            "</body></html>";
+                        }
+                    }
+                    
+                const win = window.open("", "_blank");
+                    
+                win.document.open();
+                win.document.write(code);
+                win.document.close();
+            }
+            
+            document.getElementById("codepage")
+                .addEventListener("paste", (event) => {
+                
+                const items = event.clipboardData.items;
+                
+                for (const item of items) {
+                    if (item.type.startsWith("image/")) {
+                        event.preventDefault();
+                        console.warn("Image pasting disabled.");
+                        return;
+                    }
+                }
+            });
+            
+            document.getElementById("codepage")
+            .addEventListener("paste", (event) => {
+                
+                event.preventDefault();
+                
+                const text = event.clipboardData.getData("text/plain");
+                
+                document.execCommand("insertText", false, text);
+            });
+        </script>
+        <script data-type="text/javascript">
+            document.querySelectorAll('.sidebutton').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active from all buttons
+                    document.querySelectorAll('.sidebutton').forEach(b => b.classList.remove('active'));
+                    
+                    // Add active to the clicked one
+                    btn.classList.add('active');
+                });
+            });
+        </script>
+    </body>
+</html>
