@@ -126,9 +126,11 @@
             
             #sidebar2 {
                 background-color: var(--armyBlack);
-                width: 8%;
+                width: 12%;
                 height: 100%;
                 border-right: var(--borderMain);
+                color: white;
+                font-family: var(--Roboto);
             }
             
             #codepage {
@@ -149,6 +151,7 @@
                 padding: 10px 0;
                 width: 100%;
                 cursor: pointer;
+                user-select: none;
             }
             
             #minitopbar {
@@ -156,6 +159,7 @@
                 height: 40px;
                 background-color: var(--armyBlack);
                 border-bottom: var(--borderMain);
+                user-select: none;
             }
             
             #minibottombar {
@@ -206,6 +210,11 @@
             <div id="topbar">
                 <div style="padding-top: 15px; padding-left: 15px;">
                     <h2 id="titletb">Coder-Route Tech</h2>
+                    
+                </div>
+                <div style="padding-top: 15px; padding-left: 15px;">
+                    <h4 id="visits">Visits:</h4>
+                    <h4 id="personalvisits">Your Visits:</h4>
                 </div>
             </div>
             <div id="container">
@@ -369,5 +378,17 @@
                 });
             });
         </script>
+        <script data-type="text/javascript">
+            let personalVisits = Number(localStorage.getItem("personal-visits")) || 0;
+                
+            personalVisits++;
+                
+            localStorage.setItem("personal-visits", personalVisits);
+                
+            document.getElementById("personalvisits").textContent =
+                `Your Visits: ${personalVisits}`;
+        </script>
+    </body>
+</html>
     </body>
 </html>
