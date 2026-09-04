@@ -40,6 +40,8 @@ body {
     overflow: visible;
     font-family: var(--ubuntu);
     font-style: normal;
+    display: flex;
+    flex-direction: column;
 }
 
 #gridarea {
@@ -51,13 +53,31 @@ body {
 }
 
 #codearea {
-    width: 100%;
-    height: 25%;
+    white-space: pre-wrap;
+    flex: 1;
     border-top: var(--bordermain);
+    border-right: var(--bordermain);
     outline: none;
     color: white;
     overflow-x: visible;
     overflow-y: visible;
+}
+
+#sidebarbottom {
+    width: 10%;
+    border-top: var(--bordermain);
+}
+
+.mainmenu {
+    color: white;
+    cursor: pointer;
+}
+
+#mainstyle {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 25%;
 }
 
 .cell {
