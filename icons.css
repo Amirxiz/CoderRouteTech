@@ -1,0 +1,81 @@
+/*===================================================================
+BOOTSTRAP
+===================================================================*/
+
+.bi {
+    display: inline-block;
+    font-family: "bootstrap-icons";
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+}
+
+.bi-folder::before {
+    content: "\f1c1"; /* Unicode for folder icon */
+}
+
+/*===================================================================
+FA
+===================================================================*/
+
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css");
+
+.fa, .fa-solid, .fa-regular, .fa-brands {
+    font-family: "Font Awesome 6 Free"; /* or Brands */
+    font-weight: 900; /* solid icons use heavy weight */
+    font-style: normal;
+    display: inline-block;
+    line-height: 1
+}
+
+.fa-code::before {
+    content: "\f121"; /* Unicode for code icon */
+}
+
+.fa-folder::before {
+    content: "\f07b"; /* Unicode for folder icon */
+}
+
+/*===================================================================
+MAINS
+===================================================================*/
+
+.fa-html5::before {
+    content: "\f13b"; /* Unicode for HTML5 icon */
+}
+
+.fa-css3-alt::before {
+    content: "\f38b"; /* Unicode for CSS3-alt icon */
+}
+
+/* REMINDER: BEFORE DOING ANYTHING, ADD fa, fa-solid, fa-regular, or fa-brands */
+
+/*===================================================================
+GOOGLE
+===================================================================*/
+
+.source-sans-3 {
+    font-family: "Source Sans 3", sans-serif;
+    font-style: normal;
+}
+
+.roboto {
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+}
+
+.source-code-pro {
+    font-family: "Source Code Pro", monospace;
+    font-style: normal;
+}
+
+.mso {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    display: inline-block;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
