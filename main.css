@@ -1,0 +1,72 @@
+:root {
+    --armyblack: #171616;
+    --abacusdarkblue: #28384a;
+    --midnight: #122030;
+    --space: #163150;
+    --bordercolor: #524F4F;
+    --sitegrey: #beccd4;
+    --char: #404040;
+    --charcoal: #1A1A1A;
+    --softblack: #121212;
+    --richblack: #0D1117;
+    --blueblack: #0F172A;
+    --spaceblack: #0A0F1C;
+}
+
+:root {
+    --hoverarmyblack: rgba(255, 255, 255, 0.08);
+    --hoverabacusdarkblue: rgba(255, 255, 255, 0.06);
+    --hovermidnight: rgba(255, 255, 255, 0.07);
+    --hoverspace: rgba(255, 255, 255, 0.07);
+    --hoversitegrey: rgba(0, 0, 0, 0.06);
+    --hoverchar: rgba(255, 255, 255, 0.08);
+    --sourcecode: "Source Code Pro", monospace;
+    --roboto: "Roboto", sans-serif;
+    --sourcesans: "Source Sans 3", sans-serif;
+    --ubuntu: "Ubuntu", sans-serif;
+    --bordermain: 2px solid #524F4F;
+}
+
+body, html {
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--armyblack);
+    overflow: visible;
+    font-family: var(--ubuntu);
+    font-style: normal;
+}
+
+#gridarea {
+    display: grid;
+    grid-template-columns: repeat(30, 1fr);
+    grid-template-rows: repeat(30, 1fr);
+    width: 100%;
+    height: 75%;
+}
+
+#codearea {
+    width: 100%;
+    height: 25%;
+    border-top: var(--bordermain);
+    outline: none;
+    color: white;
+    overflow-x: visible;
+    overflow-y: visible;
+}
+
+.cell {
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.cube {
+    background-color: lime;
+    border-radius: 4px;
+    transition: transform 0.15s ease;
+    position: relative;
+}
