@@ -6,6 +6,19 @@ let npcCubes = []; // NPC cubes (index none)
 for (let i = 0; i < 900; i++) {
     const cell = document.createElement("div");
     cell.classList.add("cell");
+
+    // Store coordinates
+    cell.dataset.x = i % 30;
+    cell.dataset.y = Math.floor(i / 30);
+
+    // DRAG movement (mobile)
+    cell.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        const x = parseInt(cell.dataset.x);
+        const y = parseInt(cell.dataset.y);
+        dragMove(x, y);
+    });
+
     grid.appendChild(cell);
 }
 
@@ -23,6 +36,11 @@ class Cube {
         this.element = document.createElement("div");
         this.element.classList.add("cube");
         this.element.style.backgroundColor = this.bgColor;
+
+        // MOBILE: select cube on touch
+        this.element.addEventListener("touchstart", () => {
+            activeCube = this;
+        });
 
         this.updatePosition();
         grid.appendChild(this.element);
@@ -73,6 +91,7 @@ function switchToNextCube() {
     activeCube = cubesByIndex[currentIndex];
 }
 
+// KEYBOARD MOVEMENT
 document.addEventListener("keydown", (e) => {
     const codeArea = document.getElementById("codearea");
     if (document.activeElement === codeArea) return;
@@ -92,28 +111,39 @@ document.addEventListener("keydown", (e) => {
         case "d": newX += 1; break;
     }
 
+    moveCube(newX, newY);
+});
+
+// DRAG MOVEMENT FUNCTION
+function dragMove(targetX, targetY) {
+    moveCube(targetX, targetY);
+}
+
+// SHARED MOVEMENT LOGIC
+function moveCube(targetX, targetY) {
     // Border collision
     if (activeCube.borderCollision) {
-        if (newX < 0 || newX > 29 || newY < 0 || newY > 29) return;
+        if (targetX < 0 || targetX > 29 || targetY < 0 || targetY > 29) return;
     }
 
-    // Cube collision (per-cube)
+    // Cube collision
     if (collisionEnabled) {
         const blockingCube = [...Object.values(cubesByIndex), ...npcCubes]
-            .find(c => c.x === newX && c.y === newY && c.borderCollision);
+            .find(c => c.x === targetX && c.y === targetY && c.borderCollision);
 
         if (blockingCube) return;
     }
 
-    activeCube.x = newX;
-    activeCube.y = newY;
+    activeCube.x = targetX;
+    activeCube.y = targetY;
 
     activeCube.element.style.transform = "scale(1.15)";
     setTimeout(() => activeCube.element.style.transform = "scale(1)", 150);
 
     activeCube.updatePosition();
-});
+}
 
+// PARSER
 function parseCode() {
     const raw = document.getElementById("codearea").innerText;
     const code = raw.replace(/\u00A0/g, " ");
@@ -216,7 +246,7 @@ function parseCode() {
     }
 }
 
-
 // Parse whenever user edits code
 document.getElementById("codearea").addEventListener("input", parseCode);
 window.onload = parseCode;
+
