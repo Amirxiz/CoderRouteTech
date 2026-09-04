@@ -61,10 +61,12 @@ body {
     color: white;
     overflow-x: visible;
     overflow-y: visible;
+    height: 100%;
 }
 
 #sidebarbottom {
     width: 10%;
+    height: 100%;
     border-top: var(--bordermain);
 }
 
