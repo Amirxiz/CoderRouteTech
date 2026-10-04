@@ -1,0 +1,173 @@
+:root {
+    --armyblack: #171616;
+    --abacusdarkblue: #28384a;
+    --midnight: #122030;
+    --space: #163150;
+    --bordercolor: #524F4F;
+    --char: #404040;
+    --charcoal: #1A1A1A;
+    --softblack: #121212;
+    --richblack: #0D1117;
+    --blueblack: #0F172A;
+    --spaceblack: #0A0F1C;
+    --navySteel: #1B2A41;
+    --obsidianBlue: #0E1A2B;
+    --abyssBlue: #0B1220;
+    --midnightNavy: #14213D;
+    --slateBlue: #1F2A44;
+    --gunmetalBlue: #1A2639;
+    --shadowNavy: #0C1B33;
+    --abacusLightBlue: #335670;
+}
+
+:root {
+    --hoverNavySteel: rgba(255, 255, 255, 0.05);
+    --hoverObsidianBlue: rgba(255, 255, 255, 0.04);
+    --hoverAbyssBlue: rgba(255, 255, 255, 0.03);
+    --hoverMidnightNavy: rgba(255, 255, 255, 0.06);
+    --hoverSlateBlue: rgba(255, 255, 255, 0.05);
+    --hoverGunmetalBlue: rgba(255, 255, 255, 0.05);
+    --hoverShadowNavy: rgba(255, 255, 255, 0.04);
+    --hoverarmyblack: rgba(255, 255, 255, 0.08);
+    --hoverabacusdarkblue: rgba(255, 255, 255, 0.06);
+    --hovermidnight: rgba(255, 255, 255, 0.07);
+    --hoverspace: rgba(255, 255, 255, 0.07);
+    --hoversitegrey: rgba(0, 0, 0, 0.06);
+    --hoverchar: rgba(255, 255, 255, 0.08);
+    --sourcecode: "Source Code Pro", monospace;
+    --roboto: "Roboto", sans-serif;
+    --sourcesans: "Source Sans 3", sans-serif;
+    --ubuntu: "Ubuntu", sans-serif;
+    --bordermain: 2px solid #524F4F;
+}
+
+:root {
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary: #851618;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --magenta-pink: #c03880;
+}
+
+:root {
+    --siteBlue: #27a9e1;
+    --sitePink: #ff99c6;
+    --siteRed: #de5844;
+    --siteMaroon: #8e3329;
+    --siteOrange: #fbaf3f;
+    --siteYellow: #ffdd17;
+    --siteGreen: #8cc63e;
+    --siteTeal: #00a79d;
+    --siteIndigo: #2e3092;
+    --sitePurple: #9e1e62;
+    --mediumBlue: #307dcd;
+    --skyBlue: #f4f8fc;
+    --darkBlue: #0d2f47;
+    --siteDarkNavy: #19232e;
+    --siteLightGrey: #dee5e9;
+    --siteGrey: #beccd4;
+    --siteSilver: #95a5ac;
+    --siteSlate: #6b757b;
+    --siteDarkGreen: #4f800e;
+    --facebookBlue: #3b5998;
+    --twitterBlue: #55acee;
+    --hoverBlue: #2499cc;
+    --hoverDarkBlue: #161f29;
+    --hoverGreen: #85be39;
+    --hoverOrange: #eca53c;
+    --hoverRed: #c8503e;
+    --hoverYellow: #efcb1b;
+    --hoverTeal: #039285;
+    --hoverPurple: #77194f;
+    --hoverPink: #f891c1;
+    --hoverIndigo: #252a72;
+    --hoverSilver: #8c9ba2;
+    --hoverSlate: #606a6f;
+    --lightGrey: #ddd;
+}
+
+:root {
+    --light_magenta1: #c586c0;
+    --blue11: #4ec9b0;
+    --light_blue1: #569cd6;
+    --light_orange1: #ffa657;
+    --light_redberry2: #ff7b72;
+    --light_purple14: #d2a8ff;
+    --light_blue14: #a5d6ff;
+    --light_grey10: #bbbebf;
+    --closegrey: #c9d1d9;
+    --light_green2: #b5cea8;
+    --cloudwhite: #F2F1E6;
+}
+
+.source-sans-3 {
+    font-family: "Source Sans 3", sans-serif;
+    font-style: normal;
+}
+
+.roboto {
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+}
+
+.source-code-pro {
+    font-family: "Source Code Pro", monospace;
+    font-style: normal;
+}
+
+.mso {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    display: inline-block;
+    font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+* {
+    resize: none;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: var(--cloudwhite);
+    color: black;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: row;
+    font-family: Inconsolata, monospace;
+}
+
+hr {
+    outline: none;
+    width: 100%;
+    border: 2px solid black;
+}
+
+br {
+    user-select: none;
+}
+
