@@ -163,6 +163,7 @@ function rebirth() {
     game.collectedApples = 0;
     game.rebirthUnlocked = false;
     game.autoCollect = false;
+    game.apples += game.summonPower * (game.rebirths + 1);
 
     game.autoApples += 1;
 
