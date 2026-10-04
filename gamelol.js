@@ -70,8 +70,7 @@ function updateLevel() {
     else {
         game.level = 1;
     }
-}
-
+} const e = "CUPS";
 function updateUI() {
     
     document.getElementById("collectedapples")
