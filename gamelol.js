@@ -139,11 +139,14 @@ setInterval(function() {
 }, 1000);
 
 function summonApple() {
-    
+
     console.log("clicked");
-    game.apples += game.summonPower;
-    game.totalApples += game.summonPower;
-    game.apples += game.summonPower * (game.rebirths + 1);
+
+    let amount =
+        game.summonPower * (game.rebirths + 1);
+
+    game.apples += amount;
+    game.totalApples += amount;
 
     updateLevel();
     updateUI();
