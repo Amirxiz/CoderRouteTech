@@ -136,7 +136,7 @@ setInterval(function() {
     updateLevel();
     updateUI();
 
-}, 10);
+}, 1000);
 
 function summonApple() {
     
