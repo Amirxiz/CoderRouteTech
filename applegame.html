@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <!-- GAME MADE IN JS FOR USERS TO CHANGE CODE IF WANTED! (also because I cant afford a server :,( k bye ) -->
+    <head>
+        <title>Game CoderRT</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>h1, h2, h3, h4 , h5, h6 { margin: 0 !important; } </style>
+        <link rel="stylesheet" href="othermain.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+        <script class="jsloaded"> window.onload = function() { console.log("DOM loaded") }; </script>
+        <style> #sidebar { width: 180px; height: 100vh; background-color: var(--teal); border-right: 3px solid black; } .title { color: black; border-bottom: 3px solid black; -webkit-text-stroke: black 1px; font-family: Inconsolata, monospace; font-weight: bold; } </style>
+        <style>
+            #mainview {
+                width: 100%;
+                height: 100%;
+            }
+            
+            .button {
+                width: 500px;
+                text-align: center;
+                align-items: center;
+                overflow: hidden;
+                background-color: var(--blue);
+                height: 60px;
+                padding-top: 20px;
+                cursor: pointer;
+                border: 3px solid black;
+                user-select: none;
+            }
+            
+            .button:active {
+                transform: scale(0.98);
+            }
+            
+            #shopviewbar {
+                width: 180px;
+                height: 100vh;
+                background-color: var(--teal);
+                border-left: 3px solid black;
+            }
+        </style>
+    </head>
+    <body style="background-color: var(--cloudwhite;)">
+        <style> #maintitle { width: 50%; height: 60px; background-color: var(--teal); color: black; border-bottom: 3px solid black; -webkit-text-stroke: black 1px; font-family: Inconsolata, monospace; text-align: center; font-weight: bold; overflow: hidden; padding-top: 15px; } </style>
+        <style>[data-visible = false] { visibility: hidden; }</style>
+        <div style="display: flex; flex-direction: column; height: inherit; width: inherit;">
+            <div style="display: flex; flex-direction: row; height: inherit; width: inherit;">
+                <div style="width: 25%; background-color: var(--teal); height: 60px; border-bottom: 3px solid black; border-right: 3px solid black;"></div>
+                <div id="maintitle">
+                    <h2 style="user-select: none;">Apple Collector Game!</h2>
+                </div>
+                <div style="width: 25%; background-color: var(--teal); height: 60px; border-bottom: 3px solid black; border-left: 3px solid black;"></div>
+            </div>
+            <div style="display: flex; flex-direction: row; height: inherit; width: inherit;">
+                <div id="sidebar">
+                    <h2 class="title" style="text-align: center; user-select: none;">STATS:</h2>
+                    <br>
+                    <h3 id="levels">Level: 1</h3>
+                    <hr>
+                    <h3 id="apples">Apples: {apples}</h3>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <h3 id="totalapples">Total: {applestotal}</h3>
+                    <hr>
+                    <h3 id="collectedapples">Collected: 0</h3>
+                    <h3 id="coins">Coins: 0</h3>
+                    <h3 id="autoapples">AutoApples: 0</h3>
+                    <h3 id="autocollect">AutoCollect: OFF</h3>
+                    <h3 id="rebirths">Rebirths: 0</h3>
+                    <h3 id="rebirthunlocked">Rebirth Unlocked: DISABLED</h3>
+                </div>
+                <div id="mainview">
+                    
+                    <style>#padder {display: flex; flex-direction: column; text-align: Center; align-items: center; justify-content: center; padding-top: 50px;}</style>
+                    <div id="padder">
+                        <div class="button" style="background-color: var(--green) !important;" id="summonApple">Summon Apple</div>
+                        <div data-visible="false" style="height: 10px;"></div>
+                        <div class="button" id="collectApple">Collect Apples</div>
+                        <div data-visible="false" style="height: 10px;"></div>
+                        <div class="button" style="background-color: var(--red) !important;" id="sellApple">Sell Apples</div>
+                        <div data-visible="false" style="height: 10px;"></div>
+                        <div class="button" style="background-color: var(--purple) !important;" id="rebirthButton">Rebirth</div>
+                    </div>
+                </div>
+                <div id="shopviewbar">
+                    <h2 class="title" style="user-select: none; text-align: center;">SHOP:</h2>
+                    <br>
+                    <div class="button" style="width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plusoneAppletree()" data-coinvalue="250">Buy Apple Tree (250 COINS)</div>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <div class="button" style="width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="autoCollecttoggle()" data-coinvalue="1000">Buy Merchant (1000 COINS)</div>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plusoneSummoner()" data-coinvalue="20">Upgrade LAME Summoner +1 (20 COINS)</div>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plustfiveSummoner()" data-coinvalue="500">Upgrade EH Summoner +25 (500 COINS)</div>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plustSummoner()" data-coinvalue="200">Upgrade BORING Summoner +10 (200 COINS)</div>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plusfiftySummoner()" data-coinvalue="1000">Upgrade COOL Summoner +50 (1000 COINS)</div>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plustwofiftySummoner()" data-coinvalue="8000">Upgrade GODLY Summoner +250 (8000 COINS)</div>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plussevenfiftySummoner()" data-coinvalue="18000">Upgrade UNIVERSAL Summoner +750 (18000 COINS)</div>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plustwofiveSummoner()" data-coinvalue="25000">Upgrade COSMICAL Summoner +1500 (25000 COINS)</div>
+                    <div data-visible="false" style="height: 10px;"></div>
+                    <div class="button" style="background-color: var(--purple) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="unlockRebirth()" data-coinvalue="1000000">Unlock Rebirth? (1000000 COINS)</div>
+                </div>
+            </div>
+        </div>
+        <script src="gamelol.js"></script>
+    </body>
+</html>
