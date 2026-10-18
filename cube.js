@@ -249,4 +249,3 @@ function parseCode() {
 // Parse whenever user edits code
 document.getElementById("codearea").addEventListener("input", parseCode);
 window.onload = parseCode;
-
