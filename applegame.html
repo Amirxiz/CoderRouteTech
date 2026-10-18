@@ -1,116 +1,327 @@
 <!DOCTYPE html>
-<html dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-    <!-- GAME MADE IN JS FOR USERS TO CHANGE CODE IF WANTED! (also because I cant afford a server :,( k bye ) -->
+<html lang="en">
     <head>
-        <title>Game CoderRT</title>
+        <title>Apple Collector | CoderRT</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>h1, h2, h3, h4 , h5, h6 { margin: 0 !important; } </style>
+        <meta name="theme-color" content="#f7f8f5">
         <link rel="stylesheet" href="othermain.css">
         <link rel="icon" type="image/png" href="mainlogo.png">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
-        <script class="jsloaded"> window.onload = function() { console.log("DOM loaded") }; </script>
-        <style> #sidebar { width: 180px; height: 100vh; background-color: var(--teal); border-right: 3px solid black; } .title { color: black; border-bottom: 3px solid black; -webkit-text-stroke: black 1px; font-family: Inconsolata, monospace; font-weight: bold; } </style>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
         <style>
-            #mainview {
+            :root {
+                color-scheme: light;
+                --text: #26332a;
+                --muted: #6c786e;
+                --green: #3e7848;
+                --border: #dfe5dc;
+                font-family: "Source Sans 3", sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html {
+                min-width: 320px;
+                min-height: 100%;
+                background: #f7f8f5;
+            }
+
+            body {
+                display: block;
                 width: 100%;
-                height: 100%;
+                min-height: 100vh;
+                height: auto;
+                margin: 0;
+                overflow-x: hidden;
+                color: var(--text);
+                background: #f7f8f5;
+                font-family: "Source Sans 3", sans-serif;
             }
-            
-            .button {
-                width: 500px;
-                text-align: center;
+
+            .page {
+                width: min(100% - 40px, 1200px);
+                margin: 0 auto;
+                padding: 24px 0 40px;
+            }
+
+            .topbar {
+                padding-bottom: 16px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .brand {
+                color: var(--text);
+                font-family: Roboto, sans-serif;
+                font-size: 14px;
+                font-weight: 700;
+                text-decoration: none;
+            }
+
+            .page-heading {
+                margin: 28px 0 24px;
+            }
+
+            h1 {
+                margin: 0;
+                font-family: Roboto, sans-serif;
+                font-size: clamp(26px, 4vw, 34px);
+                font-weight: 700;
+            }
+
+            .page-heading p {
+                margin: 5px 0 0;
+                color: var(--muted);
+                font-size: 15px;
+            }
+
+            .game-layout {
+                display: grid;
+                grid-template-columns: minmax(205px, 0.8fr) minmax(280px, 1.2fr) minmax(260px, 1fr);
+                align-items: start;
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .section {
+                min-width: 0;
+                padding: 20px;
+            }
+
+            .section + .section {
+                border-left: 1px solid var(--border);
+            }
+
+            h2 {
+                margin: 0 0 14px;
+                font-family: Roboto, sans-serif;
+                font-size: 15px;
+                font-weight: 700;
+            }
+
+            .stats-list {
+                display: grid;
+                gap: 0;
+                margin: 0;
+            }
+
+            .stat-row {
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 9px 0;
+                border-bottom: 1px solid #e9ede7;
+                font-size: 14px;
+            }
+
+            .stat-row:last-child {
+                border-bottom: 0;
+            }
+
+            .stat-row dt {
+                color: var(--muted);
+            }
+
+            .stat-row dd {
+                margin: 0;
+                font-weight: 600;
+                text-align: right;
+            }
+
+            .action-stack,
+            .shop-content {
+                display: grid;
+                gap: 8px;
+            }
+
+            .action-button,
+            .shop-button {
+                display: flex;
+                justify-content: space-between;
                 align-items: center;
-                overflow: hidden;
-                background-color: var(--blue);
-                height: 60px;
-                padding-top: 20px;
+                gap: 10px;
+                width: 100%;
+                min-height: 42px;
+                padding: 9px 11px;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                color: var(--text);
+                background: #fff;
+                font: inherit;
+                font-size: 14px;
+                text-align: left;
                 cursor: pointer;
-                border: 3px solid black;
-                user-select: none;
             }
-            
-            .button:active {
-                transform: scale(0.98);
+
+            .action-button:hover,
+            .shop-button:hover {
+                border-color: #aebcaf;
+                background: #f0f4ee;
             }
-            
-            #shopviewbar {
-                width: 180px;
-                height: 100vh;
-                background-color: var(--teal);
-                border-left: 3px solid black;
+
+            .action-button:focus-visible,
+            .shop-button:focus-visible {
+                outline: 2px solid var(--green);
+                outline-offset: 2px;
+            }
+
+            .action-button.primary {
+                justify-content: center;
+                border-color: var(--green);
+                color: #fff;
+                background: var(--green);
+                font-weight: 700;
+            }
+
+            .action-button.primary:hover {
+                background: #32643b;
+            }
+
+            .button-hint,
+            .price {
+                color: var(--muted);
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .shop-section-label {
+                margin: 12px 0 0;
+                color: var(--muted);
+                font-size: 12px;
+                font-weight: 700;
+            }
+
+            .shop-section-label:first-child {
+                margin-top: 0;
+            }
+
+            @media (max-width: 900px) {
+                .game-layout {
+                    grid-template-columns: minmax(190px, 0.8fr) minmax(260px, 1.2fr);
+                }
+
+                .shop-section {
+                    grid-column: 1 / -1;
+                    border-top: 1px solid var(--border);
+                    border-left: 0 !important;
+                }
+
+                .shop-content {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .shop-section-label {
+                    grid-column: 1 / -1;
+                }
+            }
+
+            @media (max-width: 620px) {
+                .page {
+                    width: min(100% - 28px, 480px);
+                    padding-top: 18px;
+                }
+
+                .page-heading {
+                    margin: 22px 0 18px;
+                }
+
+                .game-layout {
+                    grid-template-columns: 1fr;
+                }
+
+                .section {
+                    padding: 18px 0;
+                }
+
+                .section + .section {
+                    border-top: 1px solid var(--border);
+                    border-left: 0;
+                }
+
+                .action-section {
+                    grid-row: 1;
+                }
+
+                .shop-section {
+                    grid-column: auto;
+                }
+
+                .shop-content {
+                    grid-template-columns: 1fr;
+                }
+
+                .shop-section-label {
+                    grid-column: auto;
+                }
             }
         </style>
     </head>
-    <body style="background-color: var(--cloudwhite;)">
-        <style> #maintitle { width: 50%; height: 60px; background-color: var(--teal); color: black; border-bottom: 3px solid black; -webkit-text-stroke: black 1px; font-family: Inconsolata, monospace; text-align: center; font-weight: bold; overflow: hidden; padding-top: 15px; } </style>
-        <style>[data-visible = false] { visibility: hidden; }</style>
-        <div style="display: flex; flex-direction: column; height: inherit; width: inherit;">
-            <div style="display: flex; flex-direction: row; height: inherit; width: inherit;">
-                <div style="width: 25%; background-color: var(--teal); height: 60px; border-bottom: 3px solid black; border-right: 3px solid black;"></div>
-                <div id="maintitle">
-                    <h2 style="user-select: none;">Apple Collector Game!</h2>
-                </div>
-                <div style="width: 25%; background-color: var(--teal); height: 60px; border-bottom: 3px solid black; border-left: 3px solid black;"></div>
-            </div>
-            <div style="display: flex; flex-direction: row; height: inherit; width: inherit;">
-                <div id="sidebar">
-                    <h2 class="title" style="text-align: center; user-select: none;">STATS:</h2>
-                    <br>
-                    <h3 id="levels">Level: 1</h3>
-                    <hr>
-                    <h3 id="apples">Apples: {apples}</h3>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <h3 id="totalapples">Total: {applestotal}</h3>
-                    <hr>
-                    <h3 id="collectedapples">Collected: 0</h3>
-                    <h3 id="coins">Coins: 0</h3>
-                    <h3 id="autoapples">AutoApples: 0</h3>
-                    <h3 id="autocollect">AutoCollect: OFF</h3>
-                    <h3 id="rebirths">Rebirths: 0</h3>
-                    <h3 id="rebirthunlocked">Rebirth Unlocked: DISABLED</h3>
-                </div>
-                <div id="mainview">
-                    
-                    <style>#padder {display: flex; flex-direction: column; text-align: Center; align-items: center; justify-content: center; padding-top: 50px;}</style>
-                    <div id="padder">
-                        <div class="button" style="background-color: var(--green) !important;" id="summonApple">Summon Apple</div>
-                        <div data-visible="false" style="height: 10px;"></div>
-                        <div class="button" id="collectApple">Collect Apples</div>
-                        <div data-visible="false" style="height: 10px;"></div>
-                        <div class="button" style="background-color: var(--red) !important;" id="sellApple">Sell Apples</div>
-                        <div data-visible="false" style="height: 10px;"></div>
-                        <div class="button" style="background-color: var(--purple) !important;" id="rebirthButton">Rebirth</div>
+    <body>
+        <main class="page">
+            <header class="topbar">
+                <a class="brand" href="index.html">CODERROUTETECH</a>
+            </header>
+
+            <section class="page-heading" aria-labelledby="page-title">
+                <h1 id="page-title">Apple Collector</h1>
+                <p>Collect apples, sell your harvest, and upgrade your orchard.</p>
+            </section>
+
+            <div class="game-layout">
+                <section class="section stats-section" aria-labelledby="stats-title">
+                    <h2 id="stats-title">Stats</h2>
+                    <dl class="stats-list">
+                        <div class="stat-row"><dt>Level</dt><dd id="levels">Level: 1</dd></div>
+                        <div class="stat-row"><dt>Apples</dt><dd id="apples">Apples: 0</dd></div>
+                        <div class="stat-row"><dt>Total harvested</dt><dd id="totalapples">Total: 0</dd></div>
+                        <div class="stat-row"><dt>Collected</dt><dd id="collectedapples">Collected: 0</dd></div>
+                        <div class="stat-row"><dt>Coins</dt><dd id="coins">Coins: 0</dd></div>
+                        <div class="stat-row"><dt>Apple trees</dt><dd id="autoapples">AutoApples: 0</dd></div>
+                        <div class="stat-row"><dt>Auto collect</dt><dd id="autocollect">AutoCollect: OFF</dd></div>
+                        <div class="stat-row"><dt>Rebirths</dt><dd id="rebirths">Rebirths: 0</dd></div>
+                        <div class="stat-row"><dt>Rebirth status</dt><dd id="rebirthunlocked">Rebirth Unlocked: DISABLED</dd></div>
+                    </dl>
+                </section>
+
+                <section class="section action-section" aria-labelledby="actions-title">
+                    <h2 id="actions-title">Actions</h2>
+                    <div class="action-stack">
+                        <button class="action-button primary" id="summonApple" type="button">Summon Apple</button>
+                        <button class="action-button" id="collectApple" type="button">
+                            <span>Collect Apples</span><span class="button-hint">Move to basket</span>
+                        </button>
+                        <button class="action-button" id="sellApple" type="button">
+                            <span>Sell Apples</span><span class="button-hint">Earn coins</span>
+                        </button>
+                        <button class="action-button" id="rebirthButton" type="button">Rebirth</button>
                     </div>
-                </div>
-                <div id="shopviewbar">
-                    <h2 class="title" style="user-select: none; text-align: center;">SHOP:</h2>
-                    <br>
-                    <div class="button" style="width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plusoneAppletree()" data-coinvalue="250">Buy Apple Tree (250 COINS)</div>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <div class="button" style="width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="autoCollecttoggle()" data-coinvalue="1000">Buy Merchant (1000 COINS)</div>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plusoneSummoner()" data-coinvalue="20">Upgrade LAME Summoner +1 (20 COINS)</div>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plustfiveSummoner()" data-coinvalue="500">Upgrade EH Summoner +25 (500 COINS)</div>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plustSummoner()" data-coinvalue="200">Upgrade BORING Summoner +10 (200 COINS)</div>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plusfiftySummoner()" data-coinvalue="1000">Upgrade COOL Summoner +50 (1000 COINS)</div>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plustwofiftySummoner()" data-coinvalue="8000">Upgrade GODLY Summoner +250 (8000 COINS)</div>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plussevenfiftySummoner()" data-coinvalue="18000">Upgrade UNIVERSAL Summoner +750 (18000 COINS)</div>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <div class="button" style="background-color: var(--red) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="plustwofiveSummoner()" data-coinvalue="25000">Upgrade COSMICAL Summoner +1500 (25000 COINS)</div>
-                    <div data-visible="false" style="height: 10px;"></div>
-                    <div class="button" style="background-color: var(--purple) !important; width: 100% !important; height: 50px !important; padding-top: 0; font-size: 15px;" onclick="unlockRebirth()" data-coinvalue="1000000">Unlock Rebirth? (1000000 COINS)</div>
-                </div>
+                </section>
+
+                <section class="section shop-section" aria-labelledby="shop-title">
+                    <h2 id="shop-title">Shop</h2>
+                    <div class="shop-content">
+                        <p class="shop-section-label">Orchard</p>
+                        <button class="shop-button" type="button" onclick="plusoneAppletree()"><span>Buy Apple Tree</span><span class="price">250 coins</span></button>
+                        <button class="shop-button" type="button" onclick="autoCollecttoggle()"><span>Hire a Merchant</span><span class="price">1,000 coins</span></button>
+
+                        <p class="shop-section-label">Summoner upgrades</p>
+                        <button class="shop-button" type="button" onclick="plusoneSummoner()"><span>Summoner +1</span><span class="price">20 coins</span></button>
+                        <button class="shop-button" type="button" onclick="plustSummoner()"><span>Summoner +10</span><span class="price">200 coins</span></button>
+                        <button class="shop-button" type="button" onclick="plustfiveSummoner()"><span>Summoner +25</span><span class="price">500 coins</span></button>
+                        <button class="shop-button" type="button" onclick="plusfiftySummoner()"><span>Summoner +50</span><span class="price">1,000 coins</span></button>
+                        <button class="shop-button" type="button" onclick="plustwofiftySummoner()"><span>Summoner +250</span><span class="price">8,000 coins</span></button>
+                        <button class="shop-button" type="button" onclick="plussevenfiftySummoner()"><span>Summoner +750</span><span class="price">18,000 coins</span></button>
+                        <button class="shop-button" type="button" onclick="plustwofiveSummoner()"><span>Summoner +1,500</span><span class="price">25,000 coins</span></button>
+
+                        <p class="shop-section-label">Rebirth</p>
+                        <button class="shop-button" type="button" onclick="unlockRebirth()"><span>Unlock Rebirth</span><span class="price">6,500 coins</span></button>
+                    </div>
+                </section>
             </div>
-        </div>
+        </main>
         <script src="gamelol.js"></script>
     </body>
 </html>
