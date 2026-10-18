@@ -1,38 +1,290 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title>BlockzGame - CODERROUTETECH</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#10151e">
         <link rel="icon" type="image/png" href="mainlogo.png">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="main.css">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Source+Code+Pro:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
         <link rel="stylesheet" href="icons.css">
+        <style>
+            :root {
+                color-scheme: dark;
+                --background: #10151e;
+                --panel: #171e29;
+                --panel-raised: #1c2532;
+                --border: #2b3645;
+                --text: #e7edf5;
+                --muted: #91a0b3;
+                --accent: #7dd3a7;
+                font-family: "Source Sans 3", sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                min-width: 320px;
+                margin: 0;
+            }
+
+            body {
+                display: grid;
+                grid-template-rows: 54px minmax(0, 1fr);
+                overflow: hidden;
+                color: var(--text);
+                background: var(--background);
+                font-family: "Source Sans 3", sans-serif;
+            }
+
+            .app-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                padding: 0 20px;
+                border-bottom: 1px solid var(--border);
+                background: var(--panel);
+            }
+
+            .brand {
+                color: var(--text);
+                font-family: Roboto, sans-serif;
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-decoration: none;
+            }
+
+            .app-title {
+                color: var(--muted);
+                font-size: 13px;
+            }
+
+            .workspace {
+                display: grid;
+                min-height: 0;
+                grid-template-columns: minmax(0, 1fr) minmax(300px, 34vw);
+            }
+
+            #gridarea {
+                display: grid;
+                width: min(100%, calc(100vh - 90px));
+                height: min(100%, calc(100vh - 90px));
+                align-self: center;
+                justify-self: center;
+                grid-template-columns: repeat(30, minmax(0, 1fr));
+                grid-template-rows: repeat(30, minmax(0, 1fr));
+                gap: 2px;
+                padding: 2px;
+                overflow: hidden;
+                background: #0b1017;
+                border: 1px solid var(--border);
+                border-radius: 5px;
+                touch-action: none;
+            }
+
+            .cell {
+                min-width: 0;
+                min-height: 0;
+                border: 1px solid #202a37;
+                border-radius: 2px;
+                background: #151d28;
+            }
+
+            .cube {
+                z-index: 1;
+                width: 76%;
+                height: 76%;
+                align-self: center;
+                justify-self: center;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+                transition: transform 150ms ease;
+            }
+
+            .cube.player {
+                z-index: 2;
+                box-shadow: 0 0 0 2px rgba(125, 211, 167, 0.25);
+            }
+
+            #mainstyle {
+                display: flex;
+                min-width: 0;
+                min-height: 0;
+                flex-direction: column;
+                border-left: 1px solid var(--border);
+                background: var(--panel);
+            }
+
+            .editor-header {
+                display: flex;
+                min-height: 50px;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 0 16px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .editor-title {
+                margin: 0;
+                color: var(--text);
+                font-family: Roboto, sans-serif;
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .editor-hint {
+                color: var(--muted);
+                font-size: 12px;
+            }
+
+            #codearea {
+                flex: 1;
+                min-height: 0;
+                padding: 18px;
+                overflow: auto;
+                outline: none;
+                color: #d8e1ed;
+                background: #111821;
+                font-family: "Source Code Pro", monospace;
+                font-size: 13px;
+                line-height: 1.7;
+                tab-size: 4;
+                white-space: pre-wrap;
+                overflow-wrap: anywhere;
+                caret-color: var(--accent);
+            }
+
+            #codearea:empty::before {
+                color: #657487;
+                content: "Write your cube code here...";
+                pointer-events: none;
+            }
+
+            #sidebarbottom {
+                display: flex;
+                min-height: 54px;
+                align-items: center;
+                gap: 8px;
+                padding: 0 12px;
+                border-top: 1px solid var(--border);
+                background: var(--panel);
+            }
+
+            .mainmenu {
+                display: grid;
+                width: 36px;
+                height: 36px;
+                margin: 0;
+                place-items: center;
+                border: 1px solid transparent;
+                border-radius: 5px;
+                color: var(--muted);
+                cursor: pointer;
+                font-size: 21px;
+                user-select: none;
+            }
+
+            .mainmenu:hover {
+                border-color: var(--border);
+                color: var(--text);
+                background: var(--panel-raised);
+            }
+
+            .mainmenu:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+
+            noscript {
+                position: fixed;
+                right: 12px;
+                bottom: 12px;
+                z-index: 5;
+                padding: 10px 14px;
+                border: 1px solid #6b4141;
+                border-radius: 4px;
+                color: #ffdada;
+                background: #321d22;
+            }
+
+            @media (max-width: 720px) {
+                body {
+                    grid-template-rows: 48px minmax(0, 1fr);
+                }
+
+                .app-header {
+                    padding: 0 14px;
+                }
+
+                .workspace {
+                    grid-template-columns: minmax(0, 1fr);
+                    grid-template-rows: minmax(240px, 1fr) minmax(220px, 0.85fr);
+                }
+
+                #gridarea {
+                    width: min(calc(100% - 24px), calc(100vw - 24px), 100%);
+                    height: min(100%, calc(100vw - 24px));
+                }
+
+                #mainstyle {
+                    border-top: 1px solid var(--border);
+                    border-left: 0;
+                }
+
+                .editor-header {
+                    min-height: 42px;
+                }
+
+                #codearea {
+                    padding: 12px 14px;
+                    font-size: 12px;
+                }
+            }
+
+            @media (max-width: 420px) {
+                .app-title {
+                    font-size: 12px;
+                }
+
+                .workspace {
+                    grid-template-rows: minmax(220px, 0.9fr) minmax(220px, 1fr);
+                }
+            }
+        </style>
     </head>
     <body>
-        <div id="gridarea">
-            
-        </div>
-        <div id="mainstyle">
-            <div id="codearea" contenteditable="true" spellcheck="false" autocorrect="off" autocapitalize="off">
-                
-            </div>
-            <div id="sidebarbottom" >
-                <p class="mso mainmenu" onclick="window.location.href='mainmenu.html'">apps</p>
-                <p class="mso mainmenu" onclick="window.open('codedocuments.html', '_blank')">file_open</p>
-            </div>
-        </div>
-        
+        <header class="app-header">
+            <a class="brand" href="mainmenu.html">CODERROUTETECH</a>
+            <span class="app-title">BlockzGame</span>
+        </header>
+        <main class="workspace">
+            <div id="gridarea" aria-label="30 by 30 cube game board"></div>
+            <section id="mainstyle" aria-label="Code editor">
+                <div class="editor-header">
+                    <h1 class="editor-title">Code editor</h1>
+                    <span class="editor-hint">Changes apply as you type</span>
+                </div>
+                <div id="codearea" contenteditable="true" spellcheck="false" autocorrect="off" autocapitalize="off" role="textbox" aria-label="Cube game code editor" aria-multiline="true"></div>
+                <div id="sidebarbottom">
+                    <button class="mso mainmenu" type="button" aria-label="Open apps" title="Open apps" onclick="window.location.href='mainmenu.html'">apps</button>
+                    <button class="mso mainmenu" type="button" aria-label="Open code documents" title="Open code documents" onclick="window.open('codedocuments.html', '_blank')">file_open</button>
+                </div>
+            </section>
+        </main>
         <noscript>
             <p>Turn on JavaScript to run this program.</p>
         </noscript>
-        <script src="cube.js">
-            
-        </script>
+        <script src="cube.js"></script>
     </body>
 </html>
