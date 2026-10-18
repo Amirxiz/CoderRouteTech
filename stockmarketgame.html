@@ -1,0 +1,2585 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta description="Stock Market game, made by Amirxiz. Coderroutetech: https://coderroutetech.com/mainmenu.html">
+        <style> h1, h2, h3, h4, h5, h6 { margin: 0; } </style>
+        <title>Stock Market Game || CoderrouteTech</title>
+        <style>
+
+            /* MADE BY AMIRXIZ. */
+            
+            :root {
+                /* Backgrounds */
+                --bg: #0D1322;
+                --panel: #151E30;
+                --border: #293650;
+
+                /* Stock colors */
+                --colormain: #20C997;
+                --colorbad: #FF5268;
+                --chart-good-color: rgb(32, 201, 151);
+                --chart-bad-color: rgb(255, 82, 104);
+
+                /* Text */
+                --text: #F0F5FF;
+                --text-muted: #91A0B8;
+            }
+
+            /* Base page */
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body {
+                width: 100%;
+                min-height: 100%;
+                margin: 0;
+            }
+
+            html {
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            html::-webkit-scrollbar {
+                display: none;
+            }
+
+            body {
+                min-height: 100vh;
+                background: var(--bg);
+                color: var(--text);
+                font-family: Arial, sans-serif;
+            }
+
+            /* Main application layout */
+            #mainpage {
+                display: flex;
+                min-height: 100vh;
+                width: 100%;
+            }
+
+            /* Sidebar */
+            #sidebar {
+                width: 250px;
+                min-width: 250px;
+                min-height: 100vh;
+                background: var(--panel);
+                border-right: 1px solid var(--border);
+                padding: 18px 12px;
+            }
+
+            /* Brand */
+            #sidebar-brand {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 6px 10px 22px;
+            }
+
+            #sidebar-brand svg {
+                width: 34px;
+                height: 34px;
+                flex-shrink: 0;
+                color: var(--colormain);
+            }
+
+            #sidebar-brand h2 {
+                font-size: 17px;
+                letter-spacing: 0.5px;
+            }
+
+            #sidebar-brand span {
+                display: block;
+                margin-top: 5px;
+                color: var(--text-muted);
+                font-size: 10px;
+                letter-spacing: 1.3px;
+            }
+
+            /* Navigation */
+            #sidebar-nav {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .nav-item {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                width: 100%;
+                min-height: 44px;
+                padding: 10px 12px;
+                border: 1px solid transparent;
+                border-radius: 8px;
+                background: transparent;
+                color: var(--text-muted);
+                font: inherit;
+                text-align: left;
+                cursor: pointer;
+                transition: background 150ms ease,
+                            color 150ms ease,
+                            border-color 150ms ease;
+            }
+
+            .nav-item [data-lucide] {
+                width: 20px;
+                height: 20px;
+                flex-shrink: 0;
+                color: currentColor;
+            }
+
+            .nav-item:hover {
+                background: #202C40;
+                color: var(--text);
+            }
+
+            .nav-item.active {
+                background: #20C99718;
+                border-color: #20C99730;
+                color: var(--colormain);
+            }
+
+            .nav-item.active::after {
+                content: "";
+                position: absolute;
+                right: -1px;
+                top: 9px;
+                bottom: 9px;
+                width: 3px;
+                border-radius: 4px;
+                background: var(--colormain);
+            }
+
+            .nav-item:focus-visible {
+                outline: 2px solid var(--colormain);
+                outline-offset: 2px;
+            }
+
+            .nav-divider {
+                height: 1px;
+                background: var(--border);
+                margin: 10px 4px;
+            }
+
+            /* Main content area */
+            #content {
+                flex: 1;
+                min-width: 0;
+                padding: 28px;
+            }
+
+            #content h1 {
+                font-size: 26px;
+            }
+
+            #content p {
+                color: var(--text-muted);
+            }
+
+            /* Smaller screens */
+            @media (max-width: 600px) {
+                #sidebar {
+                    width: 190px;
+                    min-width: 190px;
+                    padding: 14px 8px;
+                }
+
+                #sidebar-brand {
+                    gap: 8px;
+                    padding-inline: 5px;
+                }
+
+                #sidebar-brand h2 {
+                    font-size: 14px;
+                }
+
+                #content {
+                    padding: 18px 12px;
+                }
+            }
+
+            .nav-item > svg {
+                width: 20px;
+                height: 20px;
+                flex-shrink: 0;
+            }
+
+            .page {
+                display: none;
+            }
+
+            .page.active {
+                display: block;
+            }
+
+            .currencies {
+                color: var(--text-muted);
+            }
+
+            .currencies,
+            .titles {
+                padding: 4px 8px;
+                font-size: 13px;
+                overflow-wrap: anywhere;
+            }
+
+            .titles {
+                color: var(--colormain);
+            }
+
+            .title-settings {
+                max-width: 560px;
+                padding: 20px;
+                margin-top: 24px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--panel);
+            }
+
+            .settings-panel {
+                max-width: 560px;
+                padding: 20px;
+                margin-top: 18px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--panel);
+            }
+
+            .settings-panel h2 {
+                font-size: 19px;
+            }
+
+            .settings-panel label {
+                display: block;
+                margin: 16px 0 8px;
+                color: var(--text-muted);
+            }
+
+            .settings-panel select,
+            .rgb-inputs input {
+                padding: 10px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: #101827;
+                color: var(--text);
+                font: inherit;
+            }
+
+            .settings-panel select {
+                width: 100%;
+            }
+
+            .rgb-row {
+                display: grid;
+                grid-template-columns: minmax(86px, 1fr) repeat(3, minmax(54px, 1fr)) 32px;
+                align-items: end;
+                gap: 8px;
+                margin-top: 14px;
+            }
+
+            .rgb-row > label {
+                margin: 0 0 10px;
+            }
+
+            .rgb-channel label {
+                display: block;
+                margin: 0 0 5px;
+                color: var(--text-muted);
+                font-size: 12px;
+            }
+
+            .rgb-inputs input {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .rgb-swatch {
+                width: 28px;
+                height: 28px;
+                margin-bottom: 7px;
+                border: 1px solid #ffffff60;
+                border-radius: 50%;
+            }
+
+            #reset-graph-colors {
+                padding: 10px 16px;
+                margin-top: 16px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: #101827;
+                color: var(--text);
+                font: inherit;
+                cursor: pointer;
+            }
+
+            #reset-graph-colors:hover {
+                border-color: var(--colormain);
+                color: var(--colormain);
+            }
+
+            .settings-note {
+                margin: 12px 0 0;
+                color: var(--text-muted);
+                font-size: 13px;
+            }
+
+            .title-settings label {
+                display: block;
+                margin: 16px 0 8px;
+                color: var(--text-muted);
+            }
+
+            .title-settings select {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: #101827;
+                color: var(--text);
+                font: inherit;
+            }
+
+            .title-list {
+                display: grid;
+                gap: 10px;
+                padding: 0;
+                margin: 16px 0 0;
+                list-style: none;
+            }
+
+            .title-list li {
+                padding: 12px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: #101827;
+            }
+
+            .title-list li.unlocked {
+                border-color: #20C99750;
+            }
+
+            .title-list li p {
+                margin: 6px 0 0;
+                font-size: 13px;
+            }
+
+            
+            .stocks-subtitle {
+                margin-top: 8px;
+                color: var(--text-muted);
+            }
+
+            .market-summary {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 14px;
+                margin: 24px 0 30px;
+            }
+
+            .market-stat {
+                min-width: 0;
+                padding: 18px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--panel);
+            }
+
+            .market-stat span {
+                display: block;
+                margin-bottom: 10px;
+                color: var(--text-muted);
+                font-size: 13px;
+            }
+
+            .market-stat strong {
+                font-size: 21px;
+                overflow-wrap: anywhere;
+            }
+
+            .market-heading {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin: 26px 0 14px;
+            }
+
+            .market-heading h2,
+            .trade-panel h2 {
+                font-size: 19px;
+            }
+
+            #marketstatus {
+                color: var(--colormain);
+                font-size: 12px;
+            }
+
+            .stock-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 12px;
+            }
+
+            .stock-card {
+                padding: 17px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--panel);
+                cursor: pointer;
+                transition: border-color 150ms ease, background 150ms ease;
+            }
+
+            .stock-card:hover,
+            .stock-card.selected {
+                border-color: var(--colormain);
+                background: #19283a;
+            }
+
+            .stock-card:focus-visible {
+                outline: 2px solid var(--colormain);
+                outline-offset: 3px;
+            }
+
+            .stock-card-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .stock-name {
+                font-weight: bold;
+            }
+
+            .stock-ticker {
+                margin-top: 5px;
+                color: var(--text-muted);
+                font-size: 12px;
+            }
+
+            .stock-price {
+                margin-top: 20px;
+                font-size: 23px;
+                font-weight: bold;
+            }
+
+            .stock-change {
+                margin-top: 8px;
+                font-size: 13px;
+            }
+
+            .positive {
+                color: var(--colormain) !important;
+            }
+
+            .negative {
+                color: var(--colorbad) !important;
+            }
+
+            .stock-card .stock-change {
+                color: var(--text-muted);
+            }
+
+            .stock-chart {
+                padding: 18px;
+                margin-top: 20px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--panel);
+            }
+
+            .stock-chart-heading {
+                margin-bottom: 14px;
+            }
+
+            .stock-chart-heading h2 {
+                font-size: 19px;
+            }
+
+            #stockchart {
+                display: block;
+                width: 100%;
+                height: auto;
+                overflow: visible;
+                border-radius: 8px;
+                background: #101827;
+            }
+
+            .chart-gridline {
+                stroke: #293650;
+                stroke-dasharray: 6 8;
+                stroke-width: 2;
+            }
+
+            .chart-axis-label {
+                fill: var(--text-muted);
+                font-size: 12px;
+            }
+
+            .chart-candle-up {
+                fill: var(--chart-good-color);
+                stroke: var(--chart-good-color);
+            }
+
+            .chart-candle-down {
+                fill: var(--chart-bad-color);
+                stroke: var(--chart-bad-color);
+            }
+
+            .chart-slope-good {
+                fill: var(--chart-good-color);
+                stroke: var(--chart-good-color);
+            }
+
+            .chart-slope-bad {
+                fill: var(--chart-bad-color);
+                stroke: var(--chart-bad-color);
+            }
+
+            .stock-chart-caption {
+                margin: 8px 0 0;
+                color: var(--text-muted);
+                font-size: 12px;
+            }
+
+            .newspaper-subtitle {
+                margin-top: 8px;
+                color: var(--text-muted);
+            }
+
+            #newspaper-next-event {
+                margin: 22px 0 14px;
+                color: var(--text-muted);
+                font-size: 13px;
+            }
+
+            .news-list {
+                display: grid;
+                gap: 14px;
+                max-width: 760px;
+            }
+
+            .news-item {
+                padding: 18px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: var(--panel);
+            }
+
+            .news-item time {
+                color: var(--text-muted);
+                font-size: 13px;
+            }
+
+            .news-item h2 {
+                margin-top: 8px;
+                font-size: 19px;
+            }
+
+            .news-item p {
+                margin: 10px 0 0;
+                line-height: 1.5;
+            }
+
+            .update-entry {
+                max-width: 760px;
+                padding: 18px;
+                margin-top: 20px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: var(--panel);
+            }
+
+            .update-entry h2 {
+                font-size: 20px;
+            }
+
+            .update-entry ul {
+                display: grid;
+                gap: 10px;
+                padding-left: 22px;
+                margin: 16px 0 0;
+                color: var(--text-muted);
+                line-height: 1.5;
+            }
+
+            .portfolio-heading {
+                margin-top: 34px;
+            }
+
+            .portfolio-entry {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                padding: 16px;
+                margin-bottom: 10px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: var(--panel);
+            }
+
+            .portfolio-entry p {
+                margin: 6px 0 0;
+                font-size: 13px;
+            }
+
+            .portfolio-entry strong {
+                overflow-wrap: anywhere;
+            }
+
+            .trade-panel {
+                max-width: 520px;
+                padding: 20px;
+                margin-top: 30px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--panel);
+            }
+
+            .trade-panel > p {
+                line-height: 1.5;
+            }
+
+            .trade-panel label {
+                display: block;
+                margin: 18px 0 8px;
+                color: var(--text-muted);
+            }
+
+            .trade-panel input {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: #101827;
+                color: var(--text);
+                font: inherit;
+            }
+
+            .trade-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 14px;
+            }
+
+            .trade-actions button {
+                flex: 1;
+                min-width: 120px;
+                padding: 11px;
+                border: 1px solid #20C99750;
+                border-radius: 8px;
+                background: #20C99718;
+                color: var(--colormain);
+                font: inherit;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            #sellshares {
+                border-color: #FF526850;
+                background: #FF526818;
+                color: var(--colorbad);
+            }
+
+            .trade-actions button:hover {
+                filter: brightness(1.2);
+            }
+
+            #trademessage {
+                min-height: 22px;
+                margin-bottom: 0;
+                font-size: 13px;
+            }
+
+            @media (max-width: 750px) {
+                .market-summary {
+                    grid-template-columns: 1fr;
+                }
+
+                .market-stat {
+                    padding: 14px;
+                }
+
+                .portfolio-entry {
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+            }
+
+  
+        </style>
+    </head>
+    <body>
+        <div id="svgspage" data-visible="false">
+            <div id="svgsmain">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 16v5"/>
+                    <path d="M16 14v7"/>
+                    <path d="M20 10v11"/>
+                    <path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/>
+                    <path d="M4 18v3"/>
+                    <path d="M8 14v7"/>
+                </svg>
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9992 1.32617C12.4653 1.32617 12.9238 1.43812 13.338 1.65137L21.1769 5.68848C21.4472 5.82748 21.6642 6.04308 21.8068 6.2998L21.8634 6.41211L21.9103 6.52832C22.0084 6.80286 22.0261 7.10022 21.963 7.38477C21.8908 7.71021 21.7141 8.01003 21.4503 8.22949C21.1859 8.44927 20.8506 8.57348 20.4992 8.57324L19.9542 8.57422V16.1855C21.143 16.5787 22.0011 17.698 22.0011 19.0186C22.0011 20.6668 20.665 22.0029 19.0167 22.0029H4.98353C3.3353 22.0029 1.99915 20.6668 1.99915 19.0186C1.99915 17.6976 2.85777 16.5785 4.04701 16.1855V8.57422H3.49915C3.14747 8.57412 2.8122 8.44875 2.54798 8.22852C2.28477 8.00885 2.10715 7.70901 2.03529 7.38379C1.96354 7.05881 1.9987 6.71631 2.13685 6.41113C2.2753 6.10563 2.51315 5.84717 2.82142 5.68848L10.6603 1.65137L10.8175 1.57617C11.189 1.41178 11.5913 1.32623 11.9992 1.32617ZM4.98353 18.0342C4.43987 18.0342 3.99915 18.4749 3.99915 19.0186C3.99915 19.5622 4.43987 20.0029 4.98353 20.0029H19.0167C19.5604 20.0029 20.0011 19.5622 20.0011 19.0186C20.0011 18.4749 19.5604 18.0029 19.0167 18.0029ZM15.3185 16.0342H17.9542V8.57422H15.3185V16.0342ZM10.6827 16.0342H13.3185V8.57422H10.6827V16.0342ZM6.04701 16.0342H8.68275V8.57422H6.04701V16.0342ZM11.9992 3.32617C11.8549 3.32624 11.7101 3.3608 11.5763 3.42969L5.47083 6.57422H18.5294L12.422 3.42969C12.2881 3.36085 12.1435 3.32617 11.9992 3.32617Z"/>
+                </svg>
+                <i data-lucide="settings"></i>
+                <i data-lucide="newspaper"></i>
+                <i data-lucide="chart-candlestick"></i>
+                <i data-lucide="triangle-alert"></i>
+                <i data-lucide="chart-no-axes-combined"></i>
+                <i data-lucide="git-branch"></i>
+                <i data-lucide="ticket"></i>
+            </div>
+        </div>
+        <div id="mainpage">
+            <div id="sidebar">
+                <div id="sidebar-brand">
+                    <svg viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 16v5"/>
+                        <path d="M16 14v7"/>
+                        <path d="M20 10v11"/>
+                        <path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/>
+                        <path d="M4 18v3"/>
+                        <path d="M8 14v7"/>
+                    </svg>
+
+                    <div>
+                        <h2>STOCK GAME</h2>
+                        <span>MARKET TERMINAL</span>
+                    </div>
+                </div>
+
+                <nav id="sidebar-nav" aria-label="Main navigation">
+                    <button class="nav-item active" data-page="stocks">
+                        <i data-lucide="chart-candlestick"></i>
+                        <span>Stocks</span>
+                    </button>
+                    <button class="nav-item" data-page="debt">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9992 1.32617C12.4653 1.32617 12.9238 1.43812 13.338 1.65137L21.1769 5.68848C21.4472 5.82748 21.6642 6.04308 21.8068 6.2998L21.8634 6.41211L21.9103 6.52832C22.0084 6.80286 22.0261 7.10022 21.963 7.38477C21.8908 7.71021 21.7141 8.01003 21.4503 8.22949C21.1859 8.44927 20.8506 8.57348 20.4992 8.57324L19.9542 8.57422V16.1855C21.143 16.5787 22.0011 17.698 22.0011 19.0186C22.0011 20.6668 20.665 22.0029 19.0167 22.0029H4.98353C3.3353 22.0029 1.99915 20.6668 1.99915 19.0186C1.99915 17.6976 2.85777 16.5785 4.04701 16.1855V8.57422H3.49915C3.14747 8.57412 2.8122 8.44875 2.54798 8.22852C2.28477 8.00885 2.10715 7.70901 2.03529 7.38379C1.96354 7.05881 1.9987 6.71631 2.13685 6.41113C2.2753 6.10563 2.51315 5.84717 2.82142 5.68848L10.6603 1.65137L10.8175 1.57617C11.189 1.41178 11.5913 1.32623 11.9992 1.32617ZM4.98353 18.0342C4.43987 18.0342 3.99915 18.4749 3.99915 19.0186C3.99915 19.5622 4.43987 20.0029 4.98353 20.0029H19.0167C19.5604 20.0029 20.0011 19.5622 20.0011 19.0186C20.0011 18.4749 19.5604 18.0029 19.0167 18.0029ZM15.3185 16.0342H17.9542V8.57422H15.3185V16.0342ZM10.6827 16.0342H13.3187V8.57422H10.6827V16.0342ZM6.04701 16.0342H8.68275V8.57422H6.04701V16.0342ZM11.9992 3.32617C11.8549 3.32624 11.7101 3.3608 11.5763 3.42969L5.47083 6.57422H18.5294L12.422 3.42969C12.2881 3.36085 12.1435 3.32617 11.9992 3.32617Z"/>
+                        </svg>
+                        <span>Debt</span>
+                    </button>
+
+                    <div class="nav-divider"></div>
+
+                    <button class="nav-item" data-page="newspaper">
+                        <i data-lucide="newspaper"></i>
+                        <span>Newspaper</span>
+                    </button>
+
+                    <button class="nav-item" data-page="warnings">
+                        <i data-lucide="triangle-alert"></i>
+                        <span>Warnings</span>
+                    </button>
+
+                    <div class="nav-divider"></div>
+
+                    <button class="nav-item" data-page="updates">
+                        <i data-lucide="chart-no-axes-combined"></i>
+                        <span>Game Updates</span>
+                    </button>
+
+                    <button class="nav-item" data-page="settings">
+                        <i data-lucide="git-branch"></i>
+                        <span>Settings</span>
+                    </button>
+
+                    <button class="nav-item" data-page="codes">
+                        <i data-lucide="ticket"></i>
+                        <span>Codes</span>
+                    </button>
+
+                    <div class="nav-divider"></div>
+
+                    <div class="currencies" id="GEMSTEXT">Gems: 0</div>
+                    <div class="currencies" id="DOLLARSTEXT">Dollars: 0</div>
+                    <div class="titles" id="TITLETEXT">TITLE: Newbie</div>
+                </nav>
+            </div>
+            <main id="content">
+                
+            <section id="stockspage" class="page active">
+                <h1>Stocks</h1>
+                <p class="stocks-subtitle">Trade shares and build your portfolio.</p>
+
+                <div class="market-summary">
+                    <div class="market-stat">
+                        <span>Available Cash</span>
+                        <strong id="stockcash">$0</strong>
+                    </div>
+                    <div class="market-stat">
+                        <span>Portfolio Value</span>
+                        <strong id="portfoliovalue">$0</strong>
+                    </div>
+                    <div class="market-stat">
+                        <span>Total Profit / Loss</span>
+                        <strong id="stockprofit">$0</strong>
+                    </div>
+                </div>
+
+                <div class="market-heading">
+                    <h2>Market Watch</h2>
+                    <span id="marketstatus">Market Open</span>
+                </div>
+
+                <div class="stock-list" id="stocklist"></div>
+
+                <section class="stock-chart" aria-labelledby="charttitle">
+                    <div class="stock-chart-heading">
+                        <h2 id="charttitle">NOVA — NovaTech</h2>
+                    </div>
+                    <svg id="stockchart" viewBox="0 0 720 300"
+                        role="img" aria-label="Candlestick price history for NOVA"></svg>
+                    <p class="stock-chart-caption" id="stockchart-caption">Each candle shows the stock's open, high, low, and close price.</p>
+                </section>
+
+                <div class="market-heading portfolio-heading">
+                    <h2>Your Portfolio</h2>
+                </div>
+
+                <div id="portfolio">
+                    <p>You don't own any stocks yet. Buy shares to get started!</p>
+                </div>
+
+                <div class="trade-panel" id="tradepanel">
+                    <h2 id="tradetitle">Trade Stock</h2>
+                    <p id="tradedescription">Select a stock above to begin trading.</p>
+
+                    <label for="tradequantity">Number of shares</label>
+                    <input
+                        id="tradequantity"
+                        type="number"
+                        min="1"
+                        step="1"
+                        value="1"
+                    >
+
+                    <div class="trade-actions">
+                        <button id="buyshares" type="button">Buy Shares</button>
+                        <button id="sellshares" type="button">Sell Shares</button>
+                    </div>
+
+                    <p id="trademessage" role="status" aria-live="polite"></p>
+                </div>
+            </section>
+                <style>
+                    
+                    .debt-subtitle {
+                        margin-top: 8px;
+                        color: var(--text-muted);
+                    }
+
+                    .debt-tabs {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        margin: 24px 0;
+                        border-bottom: 1px solid var(--border);
+                        padding-bottom: 12px;
+                    }
+
+                    .debt-tab {
+                        padding: 10px 18px;
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        background: var(--panel);
+                        color: var(--text-muted);
+                        font: inherit;
+                        cursor: pointer;
+                    }
+
+                    .debt-tab.active {
+                        background: #20C99718;
+                        border-color: #20C99750;
+                        color: var(--colormain);
+                    }
+
+                    .debt-panel {
+                        display: none;
+                        max-width: 720px;
+                    }
+
+                    .debt-panel.active {
+                        display: block;
+                    }
+
+                    .debt-panel > h2 {
+                        margin: 18px 0 10px;
+                        font-size: 19px;
+                    }
+
+                    .debt-card {
+                        padding: 20px;
+                        margin: 14px 0 24px;
+                        border: 1px solid var(--border);
+                        border-radius: 12px;
+                        background: var(--panel);
+                    }
+
+                    .debt-card label {
+                        display: block;
+                        margin: 14px 0 8px;
+                        color: var(--text-muted);
+                    }
+
+                    .debt-card input {
+                        display: block;
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        background: #101827;
+                        color: var(--text);
+                        font: inherit;
+                    }
+
+                    .debt-card button {
+                        margin-top: 14px;
+                        padding: 11px 16px;
+                        border: 1px solid #20C99750;
+                        border-radius: 8px;
+                        background: #20C99718;
+                        color: var(--colormain);
+                        font: inherit;
+                        font-weight: bold;
+                        cursor: pointer;
+                    }
+
+                    .debt-card button:hover {
+                        background: #20C9972b;
+                    }
+
+                    #totaldebt {
+                        color: var(--colorbad);
+                        margin: 8px 0 20px;
+                    }
+
+                    .loan-entry, .owed-entry {
+                        padding: 15px;
+                        margin: 10px 0;
+                        border: 1px solid var(--border);
+                        border-radius: 10px;
+                        background: var(--panel);
+                    }
+
+                    .loan-entry p, .owed-entry p {
+                        margin: 6px 0;
+                    }
+
+                </style>
+                <section id="debtpage" class="page">
+                    <h1>Debt</h1>
+                    <p class="debt-subtitle">Manage loans, repayments, and outstanding money.</p>
+
+                    <div class="debt-tabs">
+                        <button class="debt-tab active" data-debt-tab="loans">Loans</button>
+                        <button class="debt-tab" data-debt-tab="debt">Debt</button>
+                        <button class="debt-tab" data-debt-tab="owed">Owed</button>
+                    </div>
+
+                    <section class="debt-panel active" id="loanspanel">
+                        <h2>Available loan</h2>
+                        <p>Borrow game dollars now and repay the amount later.</p>
+
+                        <div class="debt-card">
+                            <label for="loanamount">Loan amount</label>
+                            <input id="loanamount" type="number" min="10" max="1000"
+                                step="10" value="100">
+
+                            <p>Interest rate: <strong>10%</strong></p>
+                            <p>Total repayment: <strong id="loanrepayment">$110</strong></p>
+
+                            <button id="takeloan" type="button">Take loan</button>
+                            <p id="loanmessage" aria-live="polite"></p>
+                        </div>
+                    </section>
+
+                    <section class="debt-panel" id="debtpanel">
+                        <h2>Your outstanding debt</h2>
+                        <div class="debt-card">
+                            <p>Total debt</p>
+                            <h2 id="totaldebt">$0</h2>
+
+                            <label for="repayamount">Repayment amount</label>
+                            <input id="repayamount" type="number" min="1"
+                                step="1" value="10">
+
+                            <button id="repaydebt" type="button">Make repayment</button>
+                            <p id="repaymessage" aria-live="polite"></p>
+                        </div>
+
+                        <h2>Loan history</h2>
+                        <div id="loanhistory"></div>
+                    </section>
+
+                    <section class="debt-panel" id="owedpanel">
+                        <h2>Money owed to you</h2>
+                        <p>Companies may repay these balances later.</p>
+                        <div id="owedlist"></div>
+                    </section>
+                </section>
+
+                <section id="newspaperpage" class="page">
+                    <h1>Newspaper</h1>
+                    <p class="newspaper-subtitle">Breaking news can move every stock in the market.</p>
+                    <p id="newspaper-next-event" aria-live="polite">Next market event in 10–20 minutes.</p>
+                    <div class="news-list" id="news-list" aria-live="polite"></div>
+                </section>
+
+                <section id="warningspage" class="page">
+                    <h1>Warnings</h1>
+                </section>
+
+                <section id="updatespage" class="page">
+                    <h1>Game Updates</h1>
+                    <article class="update-entry">
+                        <h2>V1.0.0: Release!</h2>
+                        <ul>
+                            <li>Release of the game</li>
+                            <li>Codes: Game4Fun, 1Wants!, Released</li>
+                            <li>Working Stocks</li>
+                            <li>Titles</li>
+                        </ul>
+                    </article>
+                </section>
+
+                <section id="settingspage" class="page">
+                    <h1>Settings</h1>
+                    <div class="settings-panel">
+                        <h2>Stock Graphs</h2>
+                        <label for="graph-style">Graph style</label>
+                        <select id="graph-style">
+                            <option value="candlestick">Candlestick (RECOMMENDED)</option>
+                            <option value="sloped">Sloped</option>
+                            <option value="soon" disabled>??? (SOON)</option>
+                        </select>
+
+                        <label>Graph colors (RGB values from 0 to 255)</label>
+                        <div class="rgb-row rgb-inputs" data-color-setting="good">
+                            <label>Good</label>
+                            <div class="rgb-channel">
+                                <label for="good-red">R</label>
+                                <input id="good-red" type="number" min="0" max="255" step="1" value="32">
+                            </div>
+                            <div class="rgb-channel">
+                                <label for="good-green">G</label>
+                                <input id="good-green" type="number" min="0" max="255" step="1" value="201">
+                            </div>
+                            <div class="rgb-channel">
+                                <label for="good-blue">B</label>
+                                <input id="good-blue" type="number" min="0" max="255" step="1" value="151">
+                            </div>
+                            <span class="rgb-swatch" id="good-swatch" aria-label="Good graph color preview"></span>
+                        </div>
+                        <div class="rgb-row rgb-inputs" data-color-setting="bad">
+                            <label>Bad</label>
+                            <div class="rgb-channel">
+                                <label for="bad-red">R</label>
+                                <input id="bad-red" type="number" min="0" max="255" step="1" value="255">
+                            </div>
+                            <div class="rgb-channel">
+                                <label for="bad-green">G</label>
+                                <input id="bad-green" type="number" min="0" max="255" step="1" value="82">
+                            </div>
+                            <div class="rgb-channel">
+                                <label for="bad-blue">B</label>
+                                <input id="bad-blue" type="number" min="0" max="255" step="1" value="104">
+                            </div>
+                            <span class="rgb-swatch" id="bad-swatch" aria-label="Bad graph color preview"></span>
+                        </div>
+                        <button id="reset-graph-colors" type="button">RESET</button>
+                        <p class="settings-note" id="graph-settings-message" role="status" aria-live="polite"></p>
+                    </div>
+                    <div class="title-settings">
+                        <h2>Title</h2>
+                        <label for="title-select">Choose your title</label>
+                        <select id="title-select" style="cursor: pointer;"></select>
+                        <h2 style="margin-top: 24px;">Title unlocks</h2>
+                        <ul class="title-list" id="title-list"></ul>
+                    </div>
+                </section>
+
+                <section id="codespage" class="page">
+                    <h1>Codes</h1>
+                    <style>
+                        #mainsectorpagecode {
+                            width: 100%;
+                            max-width: 560px;
+                            margin: 0 auto;
+                            padding: 30px 0 0;
+                        }
+
+                        .codetext {
+                            display: block;
+                            width: 100%;
+                            height: 48px;
+                            padding: 0 15px;
+                            border: 1px solid var(--border);
+                            border-radius: 10px;
+                            background-color: #101827;
+                            color: var(--text);
+                            font: inherit;
+                            font-size: 15px;
+                            outline: none;
+                            transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+                        }
+
+                        .codetext::placeholder {
+                            color: var(--text-muted);
+                            opacity: 1;
+                        }
+
+                        .codetext:hover {
+                            border-color: #40506b;
+                        }
+
+                        .codetext:focus {
+                            border-color: var(--colormain);
+                            background-color: var(--panel);
+                            box-shadow: 0 0 0 3px #20C99722;
+                        }
+
+                        #codedecider {
+                            min-height: 24px;
+                            margin-bottom: 12px;
+                            color: var(--text-muted);
+                        }
+
+                        #codeinput {
+                            margin-bottom: 10px;
+                        }
+
+                        #confirmcode {
+                            border-color: var(--colormain);
+                            background: #20C99718;
+                            color: var(--colormain);
+                            font-weight: 700;
+                            cursor: pointer;
+                        }
+
+                        #confirmcode:hover {
+                            background: #20C9972b;
+                        }
+
+                        #codemessage {
+                            min-height: 22px;
+                            margin: 12px 0 0;
+                            font-size: 14px;
+                        }
+
+                        #codemessage[data-state="success"] {
+                            color: var(--colormain);
+                        }
+
+                        #codemessage[data-state="error"] {
+                            color: var(--colorbad);
+                        }
+                    </style>
+                    <div id="mainsectorpagecode">
+                        <div>
+                            <div id="codedecider">???</div>
+                            <input type="text" class="codetext" id="codeinput" placeholder="Enter a code..." autocomplete="off">
+                            <button class="codetext" id="confirmcode" type="button">Redeem code</button>
+                            <p id="codemessage" role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                    
+                </section>
+            </main>
+        </div>
+        <script>
+            // CURRENCY
+            const gems = document.getElementById("GEMSTEXT");
+            const dollars = document.getElementById("DOLLARSTEXT");
+            const codes = {
+                "Game4Fun": {
+                    debt: 1,
+                    gems: 1,
+                    dollars: 0
+                },
+
+                "1Wants!": {
+                    debt: 0,
+                    gems: 15,
+                    dollars: 120
+                },
+
+                "Released": {
+                    debt: 0,
+                    gems: 50,
+                    dollars: 200,
+                    title: "OG"
+                }
+            };
+
+            const TitleRequirements = {
+                "Money-Machine": {
+                    dollars: 10000,
+                    gems: 500
+                }
+            };
+
+            const storageKey = "stockGameState";
+            const codeInput = document.getElementById("codeinput");
+            const codeMessage = document.getElementById("codemessage");
+            let gems_num = 0;
+            let dollars_num = 100;
+            let redeemedCodes = [];
+            let unlockedTitles = ["Newbie"];
+            let currentTitle = "Newbie";
+            let storageAvailable = true;
+
+            function showCodeMessage(message, state = "") {
+                codeMessage.textContent = message;
+                codeMessage.dataset.state = state;
+            }
+
+            function updateCurrencyDisplay() {
+                gems.textContent = `Gems: ${gems_num.toLocaleString()}`;
+                dollars.textContent = `Dollars: ${dollars_num.toLocaleString()}`;
+                updateTitleDisplay();
+            }
+
+            function updateTitleDisplay() {
+                const newlyUnlocked = [];
+
+                for (const [title, requirements] of Object.entries(TitleRequirements)) {
+                    if (dollars_num >= requirements.dollars &&
+                        gems_num >= requirements.gems &&
+                        !unlockedTitles.includes(title)) {
+                        unlockedTitles.push(title);
+                        newlyUnlocked.push(title);
+                    }
+                }
+
+                if (redeemedCodes.includes("Released") &&
+                    !unlockedTitles.includes(codes.Released.title)) {
+                    unlockedTitles.push(codes.Released.title);
+                    newlyUnlocked.push(codes.Released.title);
+                }
+
+                if (!unlockedTitles.includes(currentTitle)) {
+                    currentTitle = "Newbie";
+                }
+
+                document.getElementById("TITLETEXT").textContent =
+                    `TITLE: ${currentTitle}`;
+
+                const titleSelect = document.getElementById("title-select");
+                if (titleSelect) {
+                    titleSelect.replaceChildren();
+                    for (const title of unlockedTitles) {
+                        const option = document.createElement("option");
+                        option.value = title;
+                        option.textContent = title;
+                        titleSelect.appendChild(option);
+                    }
+                    titleSelect.value = currentTitle;
+                }
+
+                const titleList = document.getElementById("title-list");
+                if (titleList) {
+                    titleList.replaceChildren();
+                    const allTitles = [
+                        { name: "Newbie", description: "Available from the start." },
+                        ...Object.entries(TitleRequirements).map(([name, requirements]) => ({
+                            name,
+                            description:
+                                `Reach ${requirements.dollars.toLocaleString()} Dollars and ` +
+                                `${requirements.gems.toLocaleString()} Gems.`
+                        })),
+                        { name: "OG", description: "Redeem the ??? code." }
+                    ];
+
+                    for (const title of allTitles) {
+                        const item = document.createElement("li");
+                        const unlocked = unlockedTitles.includes(title.name);
+                        item.classList.toggle("unlocked", unlocked);
+
+                        const name = document.createElement("strong");
+                        name.textContent = `${title.name} — ${unlocked ? "Unlocked" : "Locked"}`;
+
+                        const requirement = document.createElement("p");
+                        requirement.textContent = title.description;
+                        item.append(name, requirement);
+                        titleList.appendChild(item);
+                    }
+                }
+
+                if (newlyUnlocked.length > 0 && storageAvailable) {
+                    saveState();
+                }
+            }
+
+            function isValidCashAmount(amount) {
+                return Number.isFinite(amount) &&
+                    amount >= 0 &&
+                    Number.isSafeInteger(Math.round(amount * 100));
+            }
+
+            function loadSavedState() {
+                try {
+                    const savedState = localStorage.getItem(storageKey);
+                    if (savedState === null) return;
+
+                    const state = JSON.parse(savedState);
+                    if (
+                        !state ||
+                        !Number.isSafeInteger(state.gems) ||
+                        state.gems < 0 ||
+                        !isValidCashAmount(state.dollars) ||
+                        !Array.isArray(state.redeemedCodes) ||
+                        !state.redeemedCodes.every(code => Object.hasOwn(codes, code)) ||
+                        (state.unlockedTitles !== undefined &&
+                            (!Array.isArray(state.unlockedTitles) ||
+                                !state.unlockedTitles.every(title =>
+                                    title === "Newbie" || title === "OG" ||
+                                    Object.hasOwn(TitleRequirements, title)))) ||
+                        (state.currentTitle !== undefined &&
+                            typeof state.currentTitle !== "string")
+                    ) {
+                        throw new Error("Saved game data is invalid.");
+                    }
+
+                    gems_num = state.gems;
+                    dollars_num = state.dollars;
+                    redeemedCodes = [...new Set(state.redeemedCodes)];
+                    unlockedTitles = [...new Set([
+                        "Newbie",
+                        ...(state.unlockedTitles || [])
+                    ])];
+                    currentTitle = state.currentTitle || "Newbie";
+                } catch (error) {
+                    storageAvailable = false;
+                    showCodeMessage(
+                        "Saved balances could not be loaded. Codes will only be saved for this session.",
+                        "error"
+                    );
+                    console.error("Could not load saved game data:", error);
+                }
+            }
+
+            function saveState() {
+                if (!storageAvailable) return false;
+
+                try {
+                    localStorage.setItem(storageKey, JSON.stringify({
+                        gems: gems_num,
+                        dollars: dollars_num,
+                        redeemedCodes,
+                        unlockedTitles,
+                        currentTitle
+                    }));
+                    return true;
+                } catch (error) {
+                    storageAvailable = false;
+                    console.error("Could not save game data:", error);
+                    return false;
+                }
+            }
+
+            function confirmcode() {
+                const enteredCode = codeInput.value.trim();
+                if (!enteredCode) {
+                    showCodeMessage("Enter a code to redeem.", "error");
+                    codeInput.focus();
+                    return;
+                }
+
+                const code = Object.keys(codes).find(
+                    availableCode => availableCode.toLowerCase() === enteredCode.toLowerCase()
+                );
+
+                if (!code) {
+                    showCodeMessage("That code is not valid.", "error");
+                    return;
+                }
+
+                if (redeemedCodes.includes(code)) {
+                    showCodeMessage("That code has already been redeemed.", "error");
+                    return;
+                }
+
+                const reward = codes[code];
+                const nextGems = gems_num + reward.gems;
+                const nextDollars = dollars_num + reward.dollars;
+                const nextDebt = totalDebt + reward.debt;
+                if (
+                    !Number.isSafeInteger(nextGems) ||
+                    !isValidCashAmount(nextDollars) ||
+                    !Number.isSafeInteger(nextDebt)
+                ) {
+                    showCodeMessage("Your balance is too large to add this reward.", "error");
+                    return;
+                }
+
+                gems_num = nextGems;
+                dollars_num = nextDollars;
+                totalDebt = nextDebt;
+                redeemedCodes.push(code);
+                if (reward.title && !unlockedTitles.includes(reward.title)) {
+                    unlockedTitles.push(reward.title);
+                }
+                updateCurrencyDisplay();
+                updateDebtDisplay();
+                codeInput.value = "";
+                const titleRewardMessage = reward.title
+                    ? ` The ${reward.title} title is now unlocked.`
+                    : "";
+
+                if (!saveDebtState()) {
+                    showCodeMessage(
+                        `Code redeemed: +${reward.gems} Gems, +${reward.dollars} Dollars, and +${reward.debt} Debt.${titleRewardMessage} Progress could not be saved.`,
+                        "error"
+                    );
+                    return;
+                }
+
+                showCodeMessage(
+                    `Code redeemed: +${reward.gems} Gems, +${reward.dollars} Dollars, and +${reward.debt} Debt.${titleRewardMessage}`,
+                    "success"
+                );
+            }
+            
+            loadSavedState();
+            updateCurrencyDisplay();
+            document.getElementById("confirmcode").addEventListener("click", confirmcode);
+            codeInput.addEventListener("keydown", event => {
+                if (event.key === "Enter") confirmcode();
+            });
+            document.getElementById("title-select").addEventListener("change", event => {
+                if (!unlockedTitles.includes(event.target.value)) return;
+                currentTitle = event.target.value;
+                updateTitleDisplay();
+                saveDebtState();
+            });
+        </script>
+        <script>
+            const debtTabs = document.querySelectorAll(".debt-tab");
+            const debtPanels = document.querySelectorAll(".debt-panel");
+
+            let loans = [];
+            let owedItems = [];
+            let totalDebt = 0;
+
+            function money(amount) {
+                return "$" + amount.toLocaleString();
+            }
+
+            function updateDebtDisplay() {
+                document.getElementById("totaldebt").textContent = money(totalDebt);
+
+                const history = document.getElementById("loanhistory");
+                history.replaceChildren();
+
+                if (loans.length === 0) {
+                    history.textContent = "No loans yet.";
+                } else {
+                    loans.forEach((loan, index) => {
+                        const entry = document.createElement("div");
+                        entry.className = "loan-entry";
+
+                        const title = document.createElement("strong");
+                        title.textContent = `Loan #${index + 1}`;
+
+                        const details = document.createElement("p");
+                        details.textContent =
+                            `Borrowed ${money(loan.borrowed)} · ` +
+                            `Repaid ${money(loan.repaid)} · ` +
+                            `Remaining ${money(loan.remaining)}`;
+
+                        entry.append(title, details);
+                        history.appendChild(entry);
+                    });
+                }
+
+                const owedList = document.getElementById("owedlist");
+                owedList.replaceChildren();
+
+                if (owedItems.length === 0) {
+                    owedList.textContent = "Nobody owes you money yet.";
+                } else {
+                    owedItems.forEach(item => {
+                        const entry = document.createElement("div");
+                        entry.className = "owed-entry";
+
+                        const title = document.createElement("strong");
+                        title.textContent = item.company;
+
+                        const details = document.createElement("p");
+                        details.textContent = `Owes you ${money(item.amount)}`;
+
+                        entry.append(title, details);
+                        owedList.appendChild(entry);
+                    });
+                }
+            }
+
+            function saveDebtState() {
+                const saved = saveState();
+
+                // Store debt records alongside the existing game save.
+                try {
+                    const existing = JSON.parse(
+                        localStorage.getItem(storageKey) || "{}"
+                    );
+
+                    localStorage.setItem(storageKey, JSON.stringify({
+                        ...existing,
+                        gems: gems_num,
+                        dollars: dollars_num,
+                        redeemedCodes,
+                        unlockedTitles,
+                        currentTitle,
+                        totalDebt,
+                        loans,
+                        owedItems
+                    }));
+                } catch (error) {
+                    console.error("Could not save debt:", error);
+                }
+
+                return saved;
+            }
+
+            function updateLoanRepayment() {
+                const input = document.getElementById("loanamount");
+                const amount = Number(input.value);
+                const output = document.getElementById("loanrepayment");
+
+                output.textContent =
+                    Number.isFinite(amount) && amount >= 0
+                        ? money(Math.round(amount * 1.1))
+                        : "—";
+            }
+
+            debtTabs.forEach(tab => {
+                tab.addEventListener("click", () => {
+                    debtTabs.forEach(item => item.classList.remove("active"));
+                    debtPanels.forEach(panel => panel.classList.remove("active"));
+
+                    tab.classList.add("active");
+                    document.getElementById(
+                        tab.dataset.debtTab + "panel"
+                    ).classList.add("active");
+                });
+            });
+
+            document.getElementById("loanamount").addEventListener(
+                "input",
+                updateLoanRepayment
+            );
+
+            document.getElementById("takeloan").addEventListener("click", () => {
+                const amount = Number(document.getElementById("loanamount").value);
+                const message = document.getElementById("loanmessage");
+
+                if (!Number.isSafeInteger(amount) || amount < 10 || amount > 1000 ||
+                    amount % 10 !== 0) {
+                    message.textContent = "Choose a whole-number loan from $10 to $1,000, in $10 increments.";
+                    return;
+                }
+
+                const repayment = Math.round(amount * 1.1);
+
+                if (!isValidCashAmount(dollars_num + amount) ||
+                    !Number.isSafeInteger(totalDebt + repayment)) {
+                    message.textContent = "That loan is too large.";
+                    return;
+                }
+
+                dollars_num = Math.round((dollars_num + amount) * 100) / 100;
+                totalDebt += repayment;
+
+                loans.push({
+                    borrowed: amount,
+                    repaid: 0,
+                    remaining: repayment
+                });
+
+                updateCurrencyDisplay();
+                updateDebtDisplay();
+                saveDebtState();
+
+                message.textContent =
+                    `Loan approved! You received ${money(amount)} and owe ${money(repayment)}.`;
+            });
+
+            document.getElementById("repaydebt").addEventListener("click", () => {
+                const amount = Number(document.getElementById("repayamount").value);
+                const message = document.getElementById("repaymessage");
+
+                if (!Number.isSafeInteger(amount) || amount <= 0) {
+                    message.textContent = "Enter a positive whole-dollar amount.";
+                    return;
+                }
+
+                if (totalDebt <= 0) {
+                    message.textContent = "You have no outstanding debt.";
+                    return;
+                }
+
+                if (amount > dollars_num) {
+                    message.textContent = "You don't have enough dollars.";
+                    return;
+                }
+
+                const payment = Math.min(amount, totalDebt);
+                let remainingPayment = payment;
+
+                for (const loan of loans) {
+                    if (remainingPayment <= 0) break;
+
+                    const paid = Math.min(loan.remaining, remainingPayment);
+                    loan.remaining -= paid;
+                    loan.repaid += paid;
+                    remainingPayment -= paid;
+                }
+
+                dollars_num -= payment;
+                totalDebt -= payment;
+
+                updateCurrencyDisplay();
+                updateDebtDisplay();
+                saveDebtState();
+
+                message.textContent = `You repaid ${money(payment)}.`;
+            });
+
+            function loadDebtState() {
+                try {
+                    const state = JSON.parse(localStorage.getItem(storageKey) || "{}");
+
+                    if (!Number.isSafeInteger(state.totalDebt) || state.totalDebt < 0 ||
+                        !Array.isArray(state.loans) ||
+                        !Array.isArray(state.owedItems)) {
+                        return;
+                    }
+
+                    if (state.loans.some(loan =>
+                        !Number.isSafeInteger(loan.borrowed) || loan.borrowed < 0 ||
+                        !Number.isSafeInteger(loan.repaid) || loan.repaid < 0 ||
+                        !Number.isSafeInteger(loan.remaining) || loan.remaining < 0
+                    )) {
+                        return;
+                    }
+
+                    if (state.owedItems.some(item =>
+                        typeof item.company !== "string" ||
+                        !Number.isSafeInteger(item.amount) || item.amount < 0
+                    )) {
+                        return;
+                    }
+
+                    totalDebt = state.totalDebt;
+                    loans = state.loans;
+                    owedItems = state.owedItems;
+                } catch (error) {
+                    console.error("Could not load debt data:", error);
+                }
+            }
+
+            loadDebtState();
+            updateLoanRepayment();
+            updateDebtDisplay();
+
+        </script>
+        <script>
+            const stockDefinitions = [
+                { ticker: "NOVA", name: "NovaTech", price: 50 },
+                { ticker: "GRNX", name: "GreenX Energy", price: 32 },
+                { ticker: "BLTN", name: "Bolt Industries", price: 85 },
+                { ticker: "SKYH", name: "Skyline Health", price: 24 },
+                { ticker: "GLOB", name: "Global Pocket", price: 24 },
+                { ticker: "FIDS", name: "Funny Industries", price: 27 }
+            ];
+
+            const stockNewsEvents = [
+                {
+                    title: "Stock Crash!",
+                    description: "All stocks crash 5%.",
+                    movement: () => -0.05
+                },
+                {
+                    title: "Stock Increase!",
+                    description: "All stocks increase by 10%!",
+                    movement: () => 0.10
+                },
+                {
+                    title: "Stock Shockwave",
+                    description: "Each stock has a 5% chance to rise or fall by 5%.",
+                    movement: () =>
+                        Math.random() < 0.05
+                            ? (Math.random() < 0.5 ? 0.05 : -0.05)
+                            : 0
+                }
+            ];
+
+            const stockStorageKey = "stockMarketState";
+
+            let marketStocks = stockDefinitions.map(stock => ({
+                ...stock,
+                previousPrice: stock.price
+            }));
+
+            // Shares owned, plus the total amount spent on those shares.
+            let portfolioStocks = {};
+            let selectedTicker = "NOVA";
+            let stockPriceHistory = {};
+            let newspaperItems = [];
+            let graphSettings = {
+                style: "candlestick",
+                good: [32, 201, 151],
+                bad: [255, 82, 104]
+            };
+            const maxCandles = 60;
+            const maxNewsItems = 50;
+
+            function stockMoney(amount) {
+                return "$" + amount.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+
+            function wholeMoney(amount) {
+                return "$" + amount.toLocaleString("en-US");
+            }
+
+            function saveStockMarket() {
+                try {
+                    localStorage.setItem(stockStorageKey, JSON.stringify({
+                        stocks: marketStocks,
+                        portfolio: portfolioStocks,
+                        priceHistory: stockPriceHistory,
+                        newspaper: newspaperItems,
+                        graphSettings
+                    }));
+
+                    // Preserve currency, codes, and debt data together.
+                    if (!saveDebtState()) {
+                        document.getElementById("trademessage").textContent =
+                            "Market saved, but your main game progress could not be saved.";
+                    }
+
+                    return true;
+                } catch (error) {
+                    console.error("Could not save stock market:", error);
+                    return false;
+                }
+            }
+
+            function loadStockMarket() {
+                try {
+                    const saved = localStorage.getItem(stockStorageKey);
+                    if (!saved) return;
+
+                    const state = JSON.parse(saved);
+
+                    if (!state || !Array.isArray(state.stocks) ||
+                        !state.portfolio || typeof state.portfolio !== "object" ||
+                        Array.isArray(state.portfolio)) {
+                        throw new Error("Invalid stock market save.");
+                    }
+
+                    // Accept only the known companies and valid prices.
+                    const loadedStocks = stockDefinitions.map(definition => {
+                        const savedStock = state.stocks.find(
+                            item => item.ticker === definition.ticker
+                        );
+
+                        if (!savedStock ||
+                            !Number.isFinite(savedStock.price) ||
+                            savedStock.price <= 0 ||
+                            !Number.isFinite(savedStock.previousPrice) ||
+                            savedStock.previousPrice <= 0) {
+                            return { ...definition, previousPrice: definition.price };
+                        }
+
+                        return {
+                            ...definition,
+                            price: savedStock.price,
+                            previousPrice: savedStock.previousPrice
+                        };
+                    });
+
+                    const loadedPortfolio = {};
+
+                    for (const definition of stockDefinitions) {
+                        const holding = state.portfolio[definition.ticker];
+                        if (holding === undefined) continue;
+
+                        if (!holding ||
+                            !Number.isSafeInteger(holding.shares) ||
+                            holding.shares < 0 ||
+                            !Number.isFinite(holding.costBasis) ||
+                            holding.costBasis < 0) {
+                            throw new Error("Invalid portfolio data.");
+                        }
+
+                        if (holding.shares > 0) {
+                            loadedPortfolio[definition.ticker] = {
+                                shares: holding.shares,
+                                costBasis: holding.costBasis
+                            };
+                        }
+                    }
+
+                    marketStocks = loadedStocks;
+                    portfolioStocks = loadedPortfolio;
+
+                    const loadedHistory = {};
+                    for (const stock of marketStocks) {
+                        const history = state.priceHistory?.[stock.ticker];
+                        if (history === undefined) continue;
+
+                        if (!Array.isArray(history) ||
+                            history.length > maxCandles ||
+                            history.some(candle => !candle ||
+                                !Number.isFinite(candle.open) || candle.open <= 0 ||
+                                !Number.isFinite(candle.high) || candle.high <= 0 ||
+                                !Number.isFinite(candle.low) || candle.low <= 0 ||
+                                !Number.isFinite(candle.close) || candle.close <= 0 ||
+                                candle.high < Math.max(candle.open, candle.close) ||
+                                candle.low > Math.min(candle.open, candle.close))) {
+                            throw new Error("Invalid stock price history.");
+                        }
+
+                        loadedHistory[stock.ticker] = history;
+                    }
+
+                    stockPriceHistory = loadedHistory;
+
+                    if (state.newspaper !== undefined) {
+                        if (!Array.isArray(state.newspaper) ||
+                            state.newspaper.length > maxNewsItems ||
+                            state.newspaper.some(item => !item ||
+                                !Number.isSafeInteger(item.timestamp) ||
+                                !stockNewsEvents.some(event =>
+                                    event.title === item.title &&
+                                    event.description === item.description))) {
+                            throw new Error("Invalid newspaper data.");
+                        }
+                        newspaperItems = state.newspaper;
+                    }
+
+                    if (state.graphSettings !== undefined) {
+                        const settings = state.graphSettings;
+                        const isValidRgb = rgb =>
+                            Array.isArray(rgb) &&
+                            rgb.length === 3 &&
+                            rgb.every(channel =>
+                                Number.isInteger(channel) &&
+                                channel >= 0 &&
+                                channel <= 255
+                            );
+
+                        if (!settings ||
+                            !["candlestick", "sloped"].includes(settings.style) ||
+                            !isValidRgb(settings.good) ||
+                            !isValidRgb(settings.bad)) {
+                            throw new Error("Invalid stock graph settings.");
+                        }
+
+                        graphSettings = {
+                            style: settings.style,
+                            good: [...settings.good],
+                            bad: [...settings.bad]
+                        };
+                    }
+                } catch (error) {
+                    console.error("Could not load stock market:", error);
+                }
+            }
+
+            function rgbColor(channels) {
+                return `rgb(${channels.join(", ")})`;
+            }
+
+            function applyGraphSettings() {
+                const root = document.documentElement;
+                root.style.setProperty("--chart-good-color", rgbColor(graphSettings.good));
+                root.style.setProperty("--chart-bad-color", rgbColor(graphSettings.bad));
+
+                document.getElementById("graph-style").value = graphSettings.style;
+
+                for (const [name, channels] of [
+                    ["good", graphSettings.good],
+                    ["bad", graphSettings.bad]
+                ]) {
+                    ["red", "green", "blue"].forEach((channel, index) => {
+                        document.getElementById(`${name}-${channel}`).value =
+                            String(channels[index]);
+                    });
+                    document.getElementById(`${name}-swatch`).style.backgroundColor =
+                        rgbColor(channels);
+                }
+            }
+
+            function updateGraphSettingsFromInputs() {
+                const getChannels = name =>
+                    ["red", "green", "blue"].map(channel => {
+                        const value =
+                            document.getElementById(`${name}-${channel}`).value.trim();
+                        return value === "" ? NaN : Number(value);
+                    });
+                const good = getChannels("good");
+                const bad = getChannels("bad");
+                const validChannels = channels =>
+                    channels.every(channel =>
+                        Number.isInteger(channel) && channel >= 0 && channel <= 255
+                    );
+                const message = document.getElementById("graph-settings-message");
+
+                if (!validChannels(good) || !validChannels(bad)) {
+                    message.textContent = "Enter a whole-number RGB value from 0 to 255.";
+                    return;
+                }
+
+                graphSettings = {
+                    ...graphSettings,
+                    good,
+                    bad
+                };
+                applyGraphSettings();
+                updateStockDisplay();
+                saveStockMarket();
+                message.textContent = "Graph colors saved.";
+            }
+
+            document.getElementById("graph-style").addEventListener("change", event => {
+                if (!["candlestick", "sloped"].includes(event.target.value)) return;
+                graphSettings.style = event.target.value;
+                applyGraphSettings();
+                updateStockDisplay();
+                saveStockMarket();
+            });
+
+            for (const input of document.querySelectorAll(".rgb-inputs input")) {
+                input.addEventListener("change", updateGraphSettingsFromInputs);
+            }
+
+            document.getElementById("reset-graph-colors").addEventListener("click", () => {
+                graphSettings = {
+                    ...graphSettings,
+                    good: [32, 201, 151],
+                    bad: [255, 82, 104]
+                };
+                applyGraphSettings();
+                updateStockDisplay();
+                saveStockMarket();
+                document.getElementById("graph-settings-message").textContent =
+                    "Graph colors reset to defaults.";
+            });
+
+            function updateNewspaperDisplay() {
+                const list = document.getElementById("news-list");
+                list.replaceChildren();
+
+                if (newspaperItems.length === 0) {
+                    const emptyMessage = document.createElement("p");
+                    emptyMessage.textContent =
+                        "No breaking news yet. Market events arrive every 10–20 minutes.";
+                    list.appendChild(emptyMessage);
+                    return;
+                }
+
+                for (const item of newspaperItems) {
+                    const article = document.createElement("article");
+                    article.className = "news-item";
+
+                    const time = document.createElement("time");
+                    time.dateTime = new Date(item.timestamp).toISOString();
+                    time.textContent = new Date(item.timestamp).toLocaleTimeString(
+                        undefined,
+                        { hour: "2-digit", minute: "2-digit", hour12: false }
+                    );
+
+                    const title = document.createElement("h2");
+                    title.textContent = item.title;
+
+                    const description = document.createElement("p");
+                    description.textContent = item.description;
+
+                    article.append(time, title, description);
+                    list.appendChild(article);
+                }
+            }
+
+            function runStockNewsEvent(eventIndex = Math.floor(
+                Math.random() * stockNewsEvents.length
+            )) {
+                const event = stockNewsEvents[eventIndex];
+                if (!event) {
+                    throw new Error("Unknown stock market news event.");
+                }
+
+                for (const stock of marketStocks) {
+                    const previousPrice = stock.price;
+                    const movement = event.movement(stock);
+                    stock.previousPrice = previousPrice;
+
+                    if (movement === 0) continue;
+
+                    stock.price = Math.max(
+                        0.01,
+                        Math.round(previousPrice * (1 + movement) * 100) / 100
+                    );
+
+                    const history = stockPriceHistory[stock.ticker] ||
+                        (stockPriceHistory[stock.ticker] =
+                            createInitialHistory(previousPrice));
+                    history.push(createCandle(previousPrice, stock.price));
+                    if (history.length > maxCandles) history.shift();
+                }
+
+                newspaperItems.unshift({
+                    timestamp: Date.now(),
+                    title: event.title,
+                    description: event.description
+                });
+                newspaperItems = newspaperItems.slice(0, maxNewsItems);
+
+                updateNewspaperDisplay();
+                updateStockDisplay();
+                saveStockMarket();
+            }
+
+            function scheduleStockNewsEvent() {
+                const minimumDelay = 10 * 60 * 1000;
+                const maximumDelay = 20 * 60 * 1000;
+                const delay = minimumDelay +
+                    Math.random() * (maximumDelay - minimumDelay);
+                const nextEventAt = Date.now() + delay;
+                const countdown = document.getElementById("newspaper-next-event");
+
+                function updateCountdown() {
+                    const remainingSeconds = Math.max(
+                        0,
+                        Math.ceil((nextEventAt - Date.now()) / 1000)
+                    );
+                    const minutes = Math.floor(remainingSeconds / 60);
+                    const seconds = remainingSeconds % 60;
+                    countdown.textContent =
+                        `Next market event in ${minutes}:${String(seconds).padStart(2, "0")}.`;
+                }
+
+                updateCountdown();
+                const countdownTimer = setInterval(() => {
+                    if (Date.now() >= nextEventAt) {
+                        clearInterval(countdownTimer);
+                        return;
+                    }
+                    updateCountdown();
+                }, 1000);
+
+                setTimeout(() => {
+                    runStockNewsEvent();
+                    scheduleStockNewsEvent();
+                }, delay);
+            }
+
+            function createCandle(open, close) {
+                const spread = Math.max(open, close) * (0.002 + Math.random() * 0.012);
+                return {
+                    open,
+                    high: Math.max(open, close) + spread * Math.random(),
+                    low: Math.max(0.01, Math.min(open, close) - spread * Math.random()),
+                    close
+                };
+            }
+
+            function createInitialHistory(price) {
+                const history = [];
+                let previousClose = price * (0.9 + Math.random() * 0.08);
+
+                for (let index = 0; index < 29; index++) {
+                    const movement = (Math.random() * 0.04) - 0.02;
+                    const close = Math.max(
+                        0.01,
+                        Math.round(previousClose * (1 + movement) * 100) / 100
+                    );
+                    history.push(createCandle(previousClose, close));
+                    previousClose = close;
+                }
+
+                history.push(createCandle(previousClose, price));
+                return history;
+            }
+
+            function drawStockChart(stock) {
+                const chart = document.getElementById("stockchart");
+                document.getElementById("stockchart-caption").textContent =
+                    graphSettings.style === "sloped"
+                        ? "The line shows each closing price; the shaded area follows the overall trend."
+                        : "Each candle shows the stock's open, high, low, and close price.";
+                const history = stockPriceHistory[stock.ticker];
+                const width = 720;
+                const height = 300;
+                const padding = { top: 20, right: 64, bottom: 18, left: 18 };
+                const plotWidth = width - padding.left - padding.right;
+                const plotHeight = height - padding.top - padding.bottom;
+                const minimum = Math.min(...history.map(candle => candle.low));
+                const maximum = Math.max(...history.map(candle => candle.high));
+                const range = Math.max(maximum - minimum, stock.price * 0.02);
+                const low = minimum - range * 0.08;
+                const high = maximum + range * 0.08;
+                const priceY = price =>
+                    padding.top + ((high - price) / (high - low)) * plotHeight;
+                const namespace = "http://www.w3.org/2000/svg";
+
+                chart.replaceChildren();
+                chart.setAttribute(
+                    "aria-label",
+                    `${graphSettings.style === "sloped" ? "Sloped" : "Candlestick"} ` +
+                    `price history for ${stock.ticker}, current price ${stockMoney(stock.price)}`
+                );
+
+                for (let index = 0; index < 5; index++) {
+                    const fraction = index / 4;
+                    const y = padding.top + fraction * plotHeight;
+                    const price = high - fraction * (high - low);
+
+                    const line = document.createElementNS(namespace, "line");
+                    line.setAttribute("x1", padding.left);
+                    line.setAttribute("x2", width - padding.right);
+                    line.setAttribute("y1", y);
+                    line.setAttribute("y2", y);
+                    line.setAttribute("class", "chart-gridline");
+                    chart.appendChild(line);
+
+                    const label = document.createElementNS(namespace, "text");
+                    label.setAttribute("x", width - padding.right + 10);
+                    label.setAttribute("y", y + 4);
+                    label.setAttribute("class", "chart-axis-label");
+                    label.textContent = stockMoney(price);
+                    chart.appendChild(label);
+                }
+
+                if (graphSettings.style === "sloped") {
+                    const points = history.map((candle, index) => ({
+                        x: padding.left +
+                            (history.length === 1
+                                ? plotWidth / 2
+                                : (plotWidth * index) / (history.length - 1)),
+                        y: priceY(candle.close)
+                    }));
+                    const trendClass =
+                        history[history.length - 1].close >= history[0].close
+                            ? "chart-slope-good"
+                            : "chart-slope-bad";
+                    const linePath = points.map((point, index) =>
+                        `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`
+                    ).join(" ");
+                    const areaPath = [
+                        linePath,
+                        `L ${points[points.length - 1].x} ${padding.top + plotHeight}`,
+                        `L ${points[0].x} ${padding.top + plotHeight}`,
+                        "Z"
+                    ].join(" ");
+                    const area = document.createElementNS(namespace, "path");
+                    area.setAttribute("d", areaPath);
+                    area.setAttribute("class", trendClass);
+                    area.setAttribute("fill-opacity", "0.2");
+                    area.setAttribute("stroke", "none");
+
+                    const line = document.createElementNS(namespace, "path");
+                    line.setAttribute("d", linePath);
+                    line.setAttribute("fill", "none");
+                    line.setAttribute("class", trendClass);
+                    line.setAttribute("stroke-width", "3");
+                    line.setAttribute("stroke-linejoin", "round");
+                    line.setAttribute("stroke-linecap", "round");
+
+                    chart.append(area, line);
+                    return;
+                }
+
+                const slotWidth = plotWidth / history.length;
+                const bodyWidth = Math.min(16, slotWidth * 0.62);
+
+                history.forEach((candle, index) => {
+                    const centerX = padding.left + slotWidth * (index + 0.5);
+                    const openY = priceY(candle.open);
+                    const closeY = priceY(candle.close);
+                    const wick = document.createElementNS(namespace, "line");
+                    const body = document.createElementNS(namespace, "rect");
+                    const candleClass =
+                        candle.close >= candle.open
+                            ? "chart-candle-up"
+                            : "chart-candle-down";
+
+                    wick.setAttribute("x1", centerX);
+                    wick.setAttribute("x2", centerX);
+                    wick.setAttribute("y1", priceY(candle.high));
+                    wick.setAttribute("y2", priceY(candle.low));
+                    wick.setAttribute("class", candleClass);
+                    wick.setAttribute("stroke-width", "3");
+
+                    body.setAttribute("x", centerX - bodyWidth / 2);
+                    body.setAttribute("y", Math.min(openY, closeY));
+                    body.setAttribute("width", bodyWidth);
+                    body.setAttribute("height", Math.max(2, Math.abs(closeY - openY)));
+                    body.setAttribute("class", candleClass);
+
+                    chart.append(wick, body);
+                });
+            }
+
+            function getHolding(ticker) {
+                return portfolioStocks[ticker] || { shares: 0, costBasis: 0 };
+            }
+
+            function updateStockDisplay() {
+                const stockList = document.getElementById("stocklist");
+                stockList.replaceChildren();
+
+                for (const stock of marketStocks) {
+                    if (!stockPriceHistory[stock.ticker]) {
+                        stockPriceHistory[stock.ticker] =
+                            createInitialHistory(stock.price);
+                    }
+
+                    const holding = getHolding(stock.ticker);
+                    const change = stock.price - stock.previousPrice;
+                    const changePercent =
+                        stock.previousPrice > 0
+                            ? (change / stock.previousPrice) * 100
+                            : 0;
+
+                    const card = document.createElement("div");
+                    card.className = "stock-card";
+                    card.tabIndex = 0;
+                    card.setAttribute("role", "button");
+                    card.setAttribute("aria-pressed", String(
+                        stock.ticker === selectedTicker
+                    ));
+
+                    if (stock.ticker === selectedTicker) {
+                        card.classList.add("selected");
+                    }
+
+                    const top = document.createElement("div");
+                    top.className = "stock-card-top";
+
+                    const identity = document.createElement("div");
+                    const name = document.createElement("div");
+                    name.className = "stock-name";
+                    name.textContent = stock.name;
+
+                    const ticker = document.createElement("div");
+                    ticker.className = "stock-ticker";
+                    ticker.textContent = stock.ticker;
+
+                    identity.append(name, ticker);
+
+                    const owned = document.createElement("div");
+                    owned.className = "stock-ticker";
+                    owned.textContent = `${holding.shares} shares`;
+
+                    top.append(identity, owned);
+
+                    const price = document.createElement("div");
+                    price.className = "stock-price";
+                    price.textContent = stockMoney(stock.price);
+
+                    const changeLabel = document.createElement("div");
+                    changeLabel.className =
+                        "stock-change " +
+                        (change > 0 ? "positive" : change < 0 ? "negative" : "");
+
+                    changeLabel.textContent =
+                        `${change > 0 ? "+" : ""}${stockMoney(change)} ` +
+                        `(${changePercent.toFixed(2)}%)`;
+
+                    card.append(top, price, changeLabel);
+
+                    function selectStock() {
+                        selectedTicker = stock.ticker;
+                        document.getElementById("tradetitle").textContent =
+                            `Trade ${stock.name} (${stock.ticker})`;
+
+                        document.getElementById("tradedescription").textContent =
+                            `Current share price: ${stockMoney(stock.price)}. ` +
+                            `You own ${getHolding(stock.ticker).shares} shares.`;
+
+                        document.getElementById("trademessage").textContent = "";
+                        updateStockDisplay();
+                    }
+
+                    card.addEventListener("click", selectStock);
+                    card.addEventListener("keydown", event => {
+                        if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            selectStock();
+                        }
+                    });
+
+                    stockList.appendChild(card);
+                }
+
+                const portfolio = document.getElementById("portfolio");
+                portfolio.replaceChildren();
+
+                let portfolioValue = 0;
+                let totalCostBasis = 0;
+                let holdingsCount = 0;
+
+                for (const stock of marketStocks) {
+                    const holding = getHolding(stock.ticker);
+                    if (holding.shares <= 0) continue;
+
+                    holdingsCount++;
+
+                    const value = holding.shares * stock.price;
+                    portfolioValue += value;
+                    totalCostBasis += holding.costBasis;
+
+                    const entry = document.createElement("div");
+                    entry.className = "portfolio-entry";
+
+                    const left = document.createElement("div");
+                    const title = document.createElement("strong");
+                    title.textContent = `${stock.name} (${stock.ticker})`;
+
+                    const details = document.createElement("p");
+                    details.textContent =
+                        `${holding.shares} shares · Average purchase price: ` +
+                        stockMoney(holding.costBasis / holding.shares);
+
+                    left.append(title, details);
+
+                    const right = document.createElement("div");
+                    const currentValue = document.createElement("strong");
+                    currentValue.textContent = stockMoney(value);
+
+                    const profit = value - holding.costBasis;
+                    const profitLabel = document.createElement("p");
+                    profitLabel.className =
+                        profit > 0 ? "positive" : profit < 0 ? "negative" : "";
+                    profitLabel.textContent =
+                        `${profit > 0 ? "+" : ""}${stockMoney(profit)} unrealized`;
+
+                    right.append(currentValue, profitLabel);
+                    entry.append(left, right);
+                    portfolio.appendChild(entry);
+                }
+
+                if (holdingsCount === 0) {
+                    portfolio.textContent =
+                        "You don't own any stocks yet. Buy shares to get started!";
+                }
+
+                const selectedStock = marketStocks.find(
+                    stock => stock.ticker === selectedTicker
+                );
+                if (selectedStock) {
+                    document.getElementById("charttitle").textContent =
+                        `${selectedStock.ticker} — ${selectedStock.name}`;
+                    drawStockChart(selectedStock);
+                }
+
+                document.getElementById("stockcash").textContent =
+                    wholeMoney(dollars_num);
+
+                document.getElementById("portfoliovalue").textContent =
+                    stockMoney(portfolioValue);
+
+                const totalProfit = portfolioValue - totalCostBasis;
+                const profitElement = document.getElementById("stockprofit");
+
+                profitElement.textContent =
+                    `${totalProfit > 0 ? "+" : ""}${stockMoney(totalProfit)}`;
+
+                profitElement.className =
+                    totalProfit > 0 ? "positive" :
+                    totalProfit < 0 ? "negative" : "";
+            }
+
+            function tradeShares(action) {
+                const message = document.getElementById("trademessage");
+                const quantity = Number(
+                    document.getElementById("tradequantity").value
+                );
+
+                if (!Number.isSafeInteger(quantity) || quantity < 1) {
+                    message.textContent = "Enter a positive whole number of shares.";
+                    return;
+                }
+
+                const stock = marketStocks.find(
+                    item => item.ticker === selectedTicker
+                );
+
+                if (!stock) return;
+
+                const holding = getHolding(stock.ticker);
+                const tradeValue =
+                    Math.round(quantity * stock.price * 100) / 100;
+
+                if (!Number.isSafeInteger(quantity) ||
+                    !Number.isFinite(tradeValue) ||
+                    tradeValue <= 0) {
+                    message.textContent = "That trade amount is too large.";
+                    return;
+                }
+
+                if (action === "buy") {
+                    if (tradeValue > dollars_num) {
+                        message.textContent = "You don't have enough Dollars.";
+                        return;
+                    }
+
+                    if (!Number.isSafeInteger(holding.shares + quantity) ||
+                        !Number.isFinite(holding.costBasis + tradeValue) ||
+                        !isValidCashAmount(dollars_num - tradeValue)) {
+                        message.textContent = "That purchase is too large.";
+                        return;
+                    }
+
+                    dollars_num =
+                        Math.round((dollars_num - tradeValue) * 100) / 100;
+
+                    portfolioStocks[stock.ticker] = {
+                        shares: holding.shares + quantity,
+                        costBasis: holding.costBasis + tradeValue
+                    };
+
+                    message.textContent =
+                        `Bought ${quantity} ${stock.ticker} shares for ` +
+                        `${stockMoney(tradeValue)}.`;
+                } else {
+                    if (quantity > holding.shares) {
+                        message.textContent = "You don't own enough shares.";
+                        return;
+                    }
+
+                    if (!isValidCashAmount(dollars_num + tradeValue)) {
+                        message.textContent = "That sale would make your cash balance too large.";
+                        return;
+                    }
+
+                    const averageCost = holding.costBasis / holding.shares;
+                    const costRemoved = averageCost * quantity;
+
+                    dollars_num =
+                        Math.round((dollars_num + tradeValue) * 100) / 100;
+
+                    portfolioStocks[stock.ticker] = {
+                        shares: holding.shares - quantity,
+                        costBasis: Math.max(0, holding.costBasis - costRemoved)
+                    };
+
+                    if (portfolioStocks[stock.ticker].shares === 0) {
+                        delete portfolioStocks[stock.ticker];
+                    }
+
+                    message.textContent =
+                        `Sold ${quantity} ${stock.ticker} shares for ` +
+                        `${stockMoney(tradeValue)}.`;
+                }
+
+                updateCurrencyDisplay();
+                updateStockDisplay();
+                saveStockMarket();
+            }
+
+            document.getElementById("buyshares").addEventListener(
+                "click", () => tradeShares("buy")
+            );
+
+            document.getElementById("sellshares").addEventListener(
+                "click", () => tradeShares("sell")
+            );
+
+            // Move prices every 8 seconds.
+            function moveMarket() {
+                for (const stock of marketStocks) {
+                    const previousPrice = stock.price;
+                    stock.previousPrice = previousPrice;
+
+                    // Random change between roughly -3% and +3%.
+                    const movement = (Math.random() * 0.06) - 0.03;
+
+                    stock.price = Math.max(
+                        1,
+                        Math.round(stock.price * (1 + movement) * 100) / 100
+                    );
+
+                    const history = stockPriceHistory[stock.ticker] ||
+                        (stockPriceHistory[stock.ticker] =
+                            createInitialHistory(previousPrice));
+                    history.push(createCandle(previousPrice, stock.price));
+                    if (history.length > maxCandles) history.shift();
+                }
+
+                updateStockDisplay();
+                saveStockMarket();
+            }
+
+            loadStockMarket();
+            applyGraphSettings();
+            updateStockDisplay();
+            updateNewspaperDisplay();
+
+            document.getElementById("tradetitle").textContent =
+                `Trade ${marketStocks[0].name} (${marketStocks[0].ticker})`;
+
+            document.getElementById("tradedescription").textContent =
+                `Current share price: ${stockMoney(marketStocks[0].price)}.`;
+
+            setInterval(moveMarket, 8000);
+            scheduleStockNewsEvent();
+
+        </script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <script>
+            lucide.createIcons();
+        </script>
+        <script>
+            if (document.getElementById("svgspage").dataset.visible === "false") {
+                document.getElementById("svgsmain").remove();
+            }
+
+            if (document.getElementById("svgspage").dataset.visible === "true") {
+                document.getElementById("mainpage").style.display = "none";
+            }
+        </script>
+        <script>
+            const navButtons = document.querySelectorAll(".nav-item");
+            const pages = document.querySelectorAll(".page");
+
+            navButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const pageId = button.dataset.page + "page";
+                    const targetPage = document.getElementById(pageId);
+
+                    if (!targetPage) return;
+
+                    navButtons.forEach(item => {
+                        item.classList.remove("active");
+                    });
+
+                    pages.forEach(page => {
+                        page.classList.remove("active");
+                    });
+
+                    button.classList.add("active");
+                    targetPage.classList.add("active");
+                });
+            });
+        </script>
+        <!-- MADE BY AMIRXIZ! -->
+    </body>
+</html>
