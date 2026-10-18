@@ -4,95 +4,352 @@
         <title>Main Search \ CODERROUTETECH</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Explore coding projects, games, and experiments from CoderRouteTech.">
         <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="icon" type="image/png" href="mainlogo.png">
-        <script>
-            // CUPS: spell C U P
-            // Dont forget CUPS Though.
-        </script>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/png" href="mainlogo.png">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Source+Code+Pro:wght@400;600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
         <style>
-            html, body {
-                margin: 0;
-                height: 100%;
-                width: 100%;
-                overflow-x: hidden;
-                overflow-y: auto;
+            :root {
+                color-scheme: dark;
+                --background: #10141d;
+                --surface: #171f2d;
+                --surface-raised: #1c2838;
+                --border: #2d3a4d;
+                --text: #eef3fb;
+                --muted: #aab8ca;
+                --accent: #63e6be;
+                --accent-blue: #7c9cff;
+                --source-code: "Source Code Pro", monospace;
+                --roboto: "Roboto", sans-serif;
+                --source-sans: "Source Sans 3", sans-serif;
             }
-            
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html {
+                min-width: 320px;
+                min-height: 100%;
+                background: var(--background);
+            }
+
             body {
+                min-height: 100vh;
+                margin: 0;
+                overflow-x: hidden;
+                color: var(--text);
+                background:
+                    radial-gradient(ellipse at 50% -20%, rgba(99, 230, 190, 0.13), transparent 48%),
+                    radial-gradient(ellipse at 100% 70%, rgba(124, 156, 255, 0.09), transparent 42%),
+                    var(--background);
+                font-family: var(--source-sans);
+            }
+
+            .page-shell {
+                width: min(100% - 48px, 1080px);
+                margin: 0 auto;
+                padding: 36px 0 64px;
+            }
+
+            .topbar {
                 display: flex;
-                flex-direction: row;
-            }
-            
-            :root {
-                --armyBlack: #171616;
-                --abacusDarkBlue: #28384a;
-                --Midnight: #122030;
-                --Space: #163150;
-                --borderColor: #524F4F;
-                --siteGrey: #beccd4;
-                --char: #404040;
-            }
-            
-            :root {
-                --hoverArmyBlack: rgba(255, 255, 255, 0.08);
-                --hoverAbacusDB: rgba(255, 255, 255, 0.06);
-                --sourceCode: "Source Code Pro", monospace;
-                --Roboto: "Roboto", sans-serif;
-                --sourceSans: "Source Sans 3", sans-serif;
-                --borderMain: 2px solid #524F4F;
-            }
-            
-            .blackbar {
-                background-color: var(--abacusDarkBlue);
-                width: 25%;
-                height: 100vh;
-            }
-            
-            #scrollpage {
-                background-color: var(--Midnight);
-                width: 100%;
-                height: 100vh;
-                color: white;
-                font-family: var(--Roboto);
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+                padding-bottom: 22px;
+                border-bottom: 1px solid rgba(170, 184, 202, 0.16);
             }
 
-            img {
-                width: 100%;
-                height: 50%;
-                border: 3px solid black;
+            .brand {
+                display: inline-flex;
+                align-items: center;
+                gap: 11px;
+                color: var(--text);
+                font-family: var(--roboto);
+                font-size: 15px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-decoration: none;
             }
 
-            #txt {
-                font-family: var(--sourceCode);
+            .brand-mark {
+                display: grid;
+                width: 34px;
+                height: 34px;
+                place-items: center;
+                border-radius: 11px;
+                color: #101923;
+                background: linear-gradient(145deg, var(--accent), var(--accent-blue));
+                font-size: 12px;
+                font-weight: 900;
+            }
+
+            .top-label {
+                color: var(--muted);
+                font-family: var(--source-code);
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+
+            .intro {
+                max-width: 700px;
+                margin: 66px auto 42px;
+                text-align: center;
+            }
+
+            .eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin: 0 0 16px;
+                color: var(--accent);
+                font-family: var(--source-code);
+                font-size: 12px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+
+            .eyebrow::before {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--accent);
+                box-shadow: 0 0 14px rgba(99, 230, 190, 0.7);
+                content: "";
+            }
+
+            h1 {
+                margin: 0;
+                font-family: var(--roboto);
+                font-size: clamp(36px, 6vw, 58px);
+                font-weight: 900;
+                letter-spacing: -0.045em;
+                line-height: 1.05;
+            }
+
+            h1 span {
+                color: var(--accent);
+            }
+
+            .intro-copy {
+                max-width: 510px;
+                margin: 18px auto 0;
+                color: var(--muted);
+                font-size: 17px;
+                line-height: 1.65;
+            }
+
+            .projects-heading {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                gap: 16px;
+                margin: 0 0 16px;
+            }
+
+            .projects-heading h2 {
+                margin: 0;
+                font-family: var(--roboto);
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .projects-heading span {
+                color: var(--muted);
+                font-family: var(--source-code);
+                font-size: 11px;
+            }
+
+            .project-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+            }
+
+            .project-card {
+                display: flex;
+                min-width: 0;
+                min-height: 210px;
+                flex-direction: column;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                color: inherit;
+                background: linear-gradient(150deg, rgba(28, 40, 56, 0.96), rgba(20, 28, 41, 0.98));
+                text-decoration: none;
+                box-shadow: 0 14px 36px rgba(0, 0, 0, 0.16);
+                transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+            }
+
+            .project-card:hover {
+                transform: translateY(-4px);
+                border-color: rgba(99, 230, 190, 0.65);
+                box-shadow: 0 20px 44px rgba(0, 0, 0, 0.28);
+            }
+
+            .project-card:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 4px;
+            }
+
+            .project-art {
+                display: grid;
+                min-height: 150px;
+                flex: 1;
+                place-items: center;
+                overflow: hidden;
+                padding: 18px;
+                background:
+                    radial-gradient(ellipse at center, rgba(124, 156, 255, 0.12), transparent 68%),
+                    #131b28;
+            }
+
+            .project-art img {
+                display: block;
+                width: 100%;
+                height: 150px;
+                border: 0;
+                border-radius: 9px;
+                object-fit: contain;
+                transition: transform 180ms ease;
+            }
+
+            .project-card:hover img {
+                transform: scale(1.035);
+            }
+
+            .project-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                padding: 14px 17px;
+                border-top: 1px solid rgba(170, 184, 202, 0.12);
+            }
+
+            .project-info h3 {
+                margin: 0;
+                font-family: var(--roboto);
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            .project-info .arrow {
+                color: var(--accent);
+                font-family: "Material Symbols Outlined";
+                font-size: 20px;
+                transition: transform 160ms ease;
+            }
+
+            .project-card:hover .arrow {
+                transform: translateX(3px);
+            }
+
+            @media (max-width: 600px) {
+                .page-shell {
+                    width: min(100% - 32px, 440px);
+                    padding-top: 22px;
+                }
+
+                .top-label {
+                    font-size: 9px;
+                }
+
+                .intro {
+                    margin: 48px auto 34px;
+                }
+
+                .intro-copy {
+                    font-size: 15px;
+                }
+
+                .project-grid {
+                    grid-template-columns: 1fr;
+                    gap: 14px;
+                }
+
+                .project-card {
+                    min-height: 195px;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    scroll-behavior: auto !important;
+                    transition-duration: 0.01ms !important;
+                }
             }
         </style>
     </head>
     <body>
-        <div class="blackbar">
-            
-        </div>
-        <div id="scrollpage">
-            <h3 style="text-align: center;" id="txt">Changer</h3>
-            <br>
-            <a href="index.html">
-                <img src="logo1.png" alt="CoderRoute Logo">
-            </a>
-            <a href="stockmarketgame.html">
-                <img src="Screenshot 2026-10-18 083155.png" alt="stockgame Logo">
-            </a>
-            <a href="blockzgame.html">
-                <img src="logo2.png" alt="Blockz Game Logo">
-            </a>
-            <a href="applegame.html">
-                <img src="logo3.png" alt="Apple Game Logo">
-            </a>
-        </div>
-        <div class="blackbar">
-            
+        <div class="page-shell">
+            <header class="topbar">
+                <a class="brand" href="index.html">
+                    <span class="brand-mark" aria-hidden="true">CR</span>
+                    <span>CODERROUTETECH</span>
+                </a>
+                <span class="top-label">Projects &amp; experiments</span>
+            </header>
+
+            <main>
+                <section class="intro" aria-labelledby="page-title">
+                    <p class="eyebrow">Made to explore</p>
+                    <h1 id="page-title">Choose one of <span>my projects.</span></h1>
+                    <p class="intro-copy">All made by Amirxiz. Select a game to start playing.</p>
+                </section>
+
+                <section aria-labelledby="projects-title">
+                    <div class="projects-heading">
+                        <h2 id="projects-title">Explore projects</h2>
+                        <span>04 PROJECTS</span>
+                    </div>
+                    <div class="project-grid">
+                        <a class="project-card" href="index.html">
+                            <div class="project-art">
+                                <img src="logo1.png" alt="CoderRoute Logo">
+                            </div>
+                            <div class="project-info">
+                                <h3>CoderRouteTech</h3>
+                                <span class="arrow" aria-hidden="true">arrow_forward</span>
+                            </div>
+                        </a>
+                        <a class="project-card" href="stockmarketgame.html">
+                            <div class="project-art">
+                                <img src="Screenshot 2026-10-18 083155.png" alt="stockgame Logo">
+                            </div>
+                            <div class="project-info">
+                                <h3>Stock Market Game</h3>
+                                <span class="arrow" aria-hidden="true">arrow_forward</span>
+                            </div>
+                        </a>
+                        <a class="project-card" href="blockzgame.html">
+                            <div class="project-art">
+                                <img src="logo2.png" alt="Blockz Game Logo">
+                            </div>
+                            <div class="project-info">
+                                <h3>Blockz Game</h3>
+                                <span class="arrow" aria-hidden="true">arrow_forward</span>
+                            </div>
+                        </a>
+                        <a class="project-card" href="applegame.html">
+                            <div class="project-art">
+                                <img src="logo3.png" alt="Apple Game Logo">
+                            </div>
+                            <div class="project-info">
+                                <h3>Apple Game</h3>
+                                <span class="arrow" aria-hidden="true">arrow_forward</span>
+                            </div>
+                        </a>
+                    </div>
+                </section>
+            </main>
+            <p style="text-align: center;">I had recently decided MainMenu needed a little "freshup" earlier on. So here it is! Unfinished to Finished. </p>
         </div>
     </body>
 </html>
