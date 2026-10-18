@@ -164,6 +164,47 @@
                 font-size: 11px;
             }
 
+            .view-switch {
+                display: flex;
+                gap: 8px;
+                margin: 0 0 20px;
+                padding-bottom: 14px;
+                border-bottom: 1px solid rgba(170, 184, 202, 0.16);
+            }
+
+            .view-switch button {
+                min-height: 38px;
+                padding: 8px 14px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                color: var(--muted);
+                background: var(--surface);
+                font: inherit;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .view-switch button:hover {
+                color: var(--text);
+                background: var(--surface-raised);
+            }
+
+            .view-switch button[aria-pressed="true"] {
+                border-color: rgba(99, 230, 190, 0.55);
+                color: var(--accent);
+                background: rgba(99, 230, 190, 0.08);
+            }
+
+            .view-switch button:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 3px;
+            }
+
+            [hidden] {
+                display: none !important;
+            }
+
             .project-grid {
                 display: grid;
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -307,67 +348,93 @@
                 <section aria-labelledby="projects-title">
                     <div class="projects-heading">
                         <h2 id="projects-title">Explore projects</h2>
-                        <span>05 PROJECTS</span>
+                        <span>CHOOSE A COLLECTION</span>
                     </div>
-                    <div class="project-grid">
-                        <a class="project-card" href="index.html">
-                            <div class="project-art">
-                                <img src="logo1.png" alt="CoderRoute Logo">
-                            </div>
-                            <div class="project-info">
-                                <h3>CoderRouteTech</h3>
-                                <span class="arrow" aria-hidden="true">arrow_forward</span>
-                            </div>
-                        </a>
-                        <a class="project-card" href="stockmarketgame.html">
-                            <div class="project-art">
-                                <img src="Screenshot 2026-10-18 083155.png" alt="stockgame Logo">
-                            </div>
-                            <div class="project-info">
-                                <h3>Stock Market Game</h3>
-                                <span class="arrow" aria-hidden="true">arrow_forward</span>
-                            </div>
-                        </a>
-                        <a class="project-card" href="blockzgame.html">
-                            <div class="project-art">
-                                <img src="newblockgame.png" alt="Blockz Game Logo">
-                            </div>
-                            <div class="project-info">
-                                <h3>Blockz Game</h3>
-                                <span class="arrow" aria-hidden="true">arrow_forward</span>
-                            </div>
-                        </a>
-                        <a class="project-card" href="applegame.html">
-                            <div class="project-art">
-                                <img src="applegame.png" alt="Apple Game Logo">
-                            </div>
-                            <div class="project-info">
-                                <h3>Apple Game</h3>
-                                <span class="arrow" aria-hidden="true">arrow_forward</span>
-                            </div>
-                        </a>
-                         <a class="project-card" href="legacycube.html">
-                            <div class="project-art">
-                                <img src="logo2.png" alt="Legacy Logo">
-                            </div>
-                            <div class="project-info">
-                                <h3>Legacy Blockz Game</h3>
-                                <span class="arrow" aria-hidden="true">arrow_forward</span>
-                            </div>
-                        </a>
-                        <a class="project-card" href="legacyapple.html">
-                            <div class="project-art">
-                                <img src="logo3.png" alt="Legacy Apple Game Logo">
-                            </div>
-                            <div class="project-info">
-                                <h3>Legacy Apple Game</h3>
-                                <span class="arrow" aria-hidden="true">arrow_forward</span>
-                            </div>
-                        </a>
+                    <div class="view-switch" role="group" aria-label="Project collection">
+                        <button type="button" id="newProjectsButton" aria-controls="newProjects" aria-pressed="true">New projects</button>
+                        <button type="button" id="legacyProjectsButton" aria-controls="legacyProjects" aria-pressed="false">Legacy projects</button>
+                    </div>
+                    <div id="newProjects">
+                        <div class="project-grid">
+                            <a class="project-card" href="index.html">
+                                <div class="project-art">
+                                    <img src="logo1.png" alt="CoderRoute Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>CoderRouteTech</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="stockmarketgame.html">
+                                <div class="project-art">
+                                    <img src="Screenshot 2026-10-18 083155.png" alt="stockgame Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Stock Market Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="blockzgame.html">
+                                <div class="project-art">
+                                    <img src="newblockgame.png" alt="Blockz Game Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Blockz Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="applegame.html">
+                                <div class="project-art">
+                                    <img src="applegame.png" alt="Apple Game Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Apple Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="legacyProjects" hidden>
+                        <div class="project-grid">
+                            <a class="project-card" href="legacycube.html">
+                                <div class="project-art">
+                                    <img src="logo2.png" alt="Legacy Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Legacy Blockz Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="legacyapple.html">
+                                <div class="project-art">
+                                    <img src="logo3.png" alt="Legacy Apple Game Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Legacy Apple Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </section>
             </main>
             <p style="text-align: center;">I had recently decided MainMenu needed a little "freshup" earlier on. So here it is! Unfinished to Finished. <strong>Apple Game will SOON have more upgrades.</strong></p>
         </div>
+        <script>
+            const newProjectsButton = document.getElementById("newProjectsButton");
+            const legacyProjectsButton = document.getElementById("legacyProjectsButton");
+            const newProjects = document.getElementById("newProjects");
+            const legacyProjects = document.getElementById("legacyProjects");
+
+            function showProjectCollection(showLegacy) {
+                newProjects.hidden = showLegacy;
+                legacyProjects.hidden = !showLegacy;
+                newProjectsButton.setAttribute("aria-pressed", String(!showLegacy));
+                legacyProjectsButton.setAttribute("aria-pressed", String(showLegacy));
+            }
+
+            newProjectsButton.addEventListener("click", () => showProjectCollection(false));
+            legacyProjectsButton.addEventListener("click", () => showProjectCollection(true));
+        </script>
     </body>
 </html>
