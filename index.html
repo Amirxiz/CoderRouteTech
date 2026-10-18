@@ -63,121 +63,301 @@
             }
         </style>
         <style id="-MAIN-STYLE-">
-            html, body {
-                margin: 0;
-                height: 100%;
-                width: 100%;
-                overflow: hidden;
-            }
-            
             :root {
-                --armyBlack: #171616;
-                --abacusDarkBlue: #28384a;
-                --Midnight: #122030;
-                --Space: #163150;
-                --borderColor: #524F4F;
-                --siteGrey: #beccd4;
-                --char: #404040;
-            }
-            
-            :root {
-                --hoverArmyBlack: rgba(255, 255, 255, 0.08);
-                --hoverAbacusDB: rgba(255, 255, 255, 0.06);
+                color-scheme: dark;
+                --armyBlack: #10141d;
+                --abacusDarkBlue: #192332;
+                --Midnight: #141c2b;
+                --Space: #1d293b;
+                --borderColor: #2d3a4d;
+                --siteGrey: #aab8ca;
+                --char: #404c60;
+                --accent: #63e6be;
+                --accentBlue: #7c9cff;
+                --hoverArmyBlack: rgba(124, 156, 255, 0.12);
+                --hoverAbacusDB: rgba(99, 230, 190, 0.12);
                 --sourceCode: "Source Code Pro", monospace;
                 --Roboto: "Roboto", sans-serif;
                 --sourceSans: "Source Sans 3", sans-serif;
-                --borderMain: 2px solid #524F4F;
+                --borderMain: 1px solid var(--borderColor);
+                --shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
             }
-            
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+
+            body {
+                overflow: hidden;
+                background: var(--armyBlack);
+                color: #edf3fb;
+                font-family: var(--sourceSans);
+            }
+
             .sider {
-                display: flex; 
+                display: flex;
                 flex-direction: row;
                 align-items: center;
             }
-            
+
             #maincontainer {
                 width: 100%;
                 height: 100%;
                 display: flex;
                 flex-direction: column;
             }
-            
+
             #container {
                 min-height: 0;
                 flex: 1;
                 display: flex;
                 flex-direction: row;
+                background: var(--armyBlack);
             }
-            
+
             #topbar {
                 display: flex;
                 flex-direction: row;
+                align-items: center;
+                gap: 24px;
                 font-family: var(--Roboto);
                 font-style: normal;
                 background-color: var(--Midnight);
-                color: white;
+                background-image: linear-gradient(110deg, #18263a, #151d2c 62%, #1b2436);
+                color: #f3f7ff;
+                flex: 0 0 68px;
                 width: 100%;
-                height: 60px;
                 border-bottom: var(--borderMain);
+                padding: 0 24px;
+                box-shadow: var(--shadow);
+                z-index: 1;
             }
-            
+
+            #topbar > div {
+                padding: 0 !important;
+            }
+
+            #topbar > div:first-child h2 {
+                font-size: 19px;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+            }
+
+            #topbar > div:first-child h2::before {
+                content: "CR";
+                display: inline-grid;
+                place-items: center;
+                width: 32px;
+                height: 32px;
+                margin-right: 10px;
+                border-radius: 10px;
+                background: linear-gradient(145deg, var(--accent), #8ba5ff);
+                color: #101923;
+                font-family: var(--Roboto);
+                font-size: 12px;
+                vertical-align: middle;
+            }
+
+            #topbar > div:nth-child(2) {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                color: var(--siteGrey);
+                font-size: 11px;
+                line-height: 1.25;
+            }
+
             #sidebar {
-                width: 2%;
+                flex: 0 0 58px;
                 height: 100%;
-                background-color: var(--abacusDarkBlue);
+                background: #151d2a;
                 border-right: var(--borderMain);
             }
-            
+
             #sidebar2 {
-                background-color: var(--armyBlack);
-                width: 12%;
+                flex: 0 0 208px;
                 height: 100%;
+                padding: 20px 16px;
+                background: #121924;
                 border-right: var(--borderMain);
-                color: white;
+                color: var(--siteGrey);
                 font-family: var(--Roboto);
             }
-            
+
+            #sidebar2 h4 {
+                color: #e8eff8;
+                font-size: 12px !important;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-align: left !important;
+                text-transform: uppercase;
+            }
+
+            #sidebar2 hr {
+                border: 0;
+                border-top: 1px solid var(--borderColor);
+                margin: 14px 0;
+            }
+
+            #sidebar2 footer {
+                font-size: 13px !important;
+                line-height: 1.7;
+                opacity: 1 !important;
+                text-align: left !important;
+            }
+
             #codepage {
-                width: 70%;
+                flex: 1 1 0;
+                min-width: 0;
                 height: 100%;
-                overflow-y: auto;
-                overflow-x: auto;
-                box-sizing: border-box;
-                white-space: pre;
+                overflow: auto;
+                padding: 22px 24px !important;
+                resize: none;
+                border: 0;
+                white-space: pre-wrap;
+                overflow-wrap: anywhere;
                 outline: none;
                 font-family: var(--sourceCode);
-                background-color: var(--armyBlack);
-                color: white;
+                font-size: 13px;
+                line-height: 1.75;
+                tab-size: 4;
+                background: #10141d;
+                color: #dce6f4;
+                caret-color: var(--accent);
             }
-            
+
+            #codepage:focus {
+                box-shadow: inset 0 0 0 1px rgba(99, 230, 190, 0.2);
+            }
+
+            #codepage::placeholder {
+                color: #718096;
+                opacity: 1;
+            }
+
+            #container > div[style*="display: flex"] {
+                flex: 1 1 0;
+                min-width: 0;
+                height: 100% !important;
+                overflow: hidden !important;
+                border-left: var(--borderMain) !important;
+                background: #f8fafc;
+            }
+
             .sidebutton {
                 display: block;
-                padding: 10px 0;
+                padding: 11px 0;
                 width: 100%;
                 cursor: pointer;
                 user-select: none;
+                color: #8493a9;
+                transition: color 140ms ease, background-color 140ms ease;
             }
-            
+
             #minitopbar {
                 width: 100%;
-                height: 40px;
-                background-color: var(--armyBlack);
+                flex: 0 0 48px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 0 12px;
+                background: #151d2a;
                 border-bottom: var(--borderMain);
                 user-select: none;
-                overflow: hidden;
             }
-            
+
             #minibottombar {
                 width: 100%;
-                height: 40px;
-                background-color: var(--armyBlack);
+                flex: 0 0 30px;
+                background: #151d2a;
                 border-top: var(--borderMain);
             }
-            
+
             #outputted {
+                display: block;
                 width: 100%;
-                height: 100%;
+                flex: 1 1 auto;
+                min-height: 0;
                 outline: none;
+                border: 0;
+                background: #fff;
+            }
+
+            @media (max-width: 900px) {
+                #sidebar2 {
+                    flex-basis: 170px;
+                }
+            }
+
+            @media (max-width: 680px) {
+                body {
+                    overflow: auto;
+                }
+
+                #maincontainer {
+                    min-height: 100%;
+                    height: auto;
+                }
+
+                #topbar {
+                    flex-basis: 62px;
+                    gap: 14px;
+                    padding: 0 14px;
+                }
+
+                #topbar > div:first-child h2 {
+                    font-size: 16px;
+                }
+
+                #sidebar {
+                    flex-basis: 48px;
+                    height: auto;
+                }
+
+                #sidebar2 {
+                    flex: 1 1 calc(100% - 48px);
+                    height: auto;
+                    padding: 13px 14px;
+                    border-right: 0;
+                }
+
+                #sidebar2 hr {
+                    margin: 8px 0;
+                }
+
+                #sidebar2 footer {
+                    line-height: 1.45;
+                }
+
+                #container {
+                    flex-wrap: wrap;
+                    align-content: flex-start;
+                    overflow: visible;
+                }
+
+                #codepage,
+                #container > div[style*="display: flex"] {
+                    flex: 0 0 100%;
+                    width: 100%;
+                    height: 45vh !important;
+                    min-height: 280px;
+                }
+
+                #codepage {
+                    border-top: var(--borderMain);
+                    padding: 16px !important;
+                }
+
+                #container > div[style*="display: flex"] {
+                    border-left: 0 !important;
+                    border-top: var(--borderMain);
+                }
             }
         </style>
         <style id="-EXTRA-STYLE-">
@@ -188,31 +368,54 @@
             #titletb {
                 cursor: pointer;
             }
-            
+
             .sidebutton:hover {
                 background-color: var(--hoverAbacusDB);
+                color: var(--accent);
             }
-            
+
             .sidebutton.active {
                 background-color: var(--hoverAbacusDB);
+                color: var(--accent);
             }
-            
+
             #refresh {
-                color: white;
+                color: #aab8ca;
                 cursor: pointer;
-                font-size: 35px;
+                font-size: 24px;
+                padding: 7px;
+                border-radius: 8px;
             }
-            
+
             #create {
-                color: white;
+                color: #aab8ca;
                 cursor: pointer;
-                font-size: 35px;
+                font-size: 24px;
+                padding: 7px;
+                border-radius: 8px;
             }
-            
+
             #mainmenubtn {
-                color: white;
+                color: #aab8ca;
                 cursor: pointer;
-                font-size: 35px;
+                font-size: 24px;
+                padding: 7px;
+                border-radius: 8px;
+            }
+
+            #refresh:hover,
+            #create:hover,
+            #mainmenubtn:hover {
+                color: var(--accent);
+                background: var(--hoverAbacusDB);
+            }
+
+            #refresh:focus-visible,
+            #create:focus-visible,
+            #mainmenubtn:focus-visible,
+            .sidebutton:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
             }
         </style>
     </head>
@@ -249,7 +452,7 @@
                     </footer>
                 </div>
                 <!-- MAINS -->
-                <div id="codepage" class="codetext" style="padding-top: 10px; padding-left: 10px;" contenteditable="true"></div>
+                <textarea id="codepage" class="codetext" aria-label="HTML code editor" placeholder="Start writing HTML here…" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
                 <div style="display: flex; flex-direction: column; width: 100%; height: 100%; overflow: visible; border-left: 2px solid #524F4F;">
                     <nav id="minitopbar">
                         <div class="mso" id="mainmenubtn" onclick="window.location.href='mainmenu.html'">apps</div>
@@ -266,22 +469,59 @@
             </div>
         </div>
         <script data-type="text/javascript">
-            document.addEventListener("keydown", (event) => {
-                if (event.key === "Tab") {
+            const codeEditor = document.getElementById("codepage");
+            const voidElements = new Set([
+                "area", "base", "br", "col", "embed", "hr", "img", "input",
+                "link", "meta", "param", "source", "track", "wbr"
+            ]);
+
+            function closeTagAfterInsertion(insertedText) {
+                if (!insertedText || !insertedText.endsWith(">")) {
+                    return;
+                }
+
+                const caret = codeEditor.selectionStart;
+                if (caret !== codeEditor.selectionEnd) {
+                    return;
+                }
+
+                const textBeforeCaret = codeEditor.value.slice(0, caret);
+                const completedClosingTag = textBeforeCaret.match(/<\/([a-z][a-z0-9:-]*)>$/i);
+                if (completedClosingTag) {
+                    const existingClosingTag = `</${completedClosingTag[1]}>`;
+                    if (codeEditor.value.slice(caret, caret + existingClosingTag.length).toLowerCase() === existingClosingTag.toLowerCase()) {
+                        const nextCaret = caret - completedClosingTag[0].length + existingClosingTag.length;
+                        codeEditor.setRangeText("", caret - completedClosingTag[0].length, caret, "preserve");
+                        codeEditor.setSelectionRange(nextCaret, nextCaret);
+                        return;
+                    }
+                }
+
+                const openingTag = textBeforeCaret.match(/<([a-z][a-z0-9:-]*)(?:\s[^<>]*)?>$/i);
+                if (!openingTag || voidElements.has(openingTag[1].toLowerCase())) {
+                    return;
+                }
+
+                const closingTag = `</${openingTag[1]}>`;
+                if (codeEditor.value.slice(caret, caret + closingTag.length).toLowerCase() === closingTag.toLowerCase()) {
+                    return;
+                }
+
+                codeEditor.setRangeText(closingTag, caret, caret, "end");
+                codeEditor.setSelectionRange(caret, caret);
+            }
+
+            codeEditor.addEventListener("keydown", (event) => {
+                if (event.key === "Tab" && !event.shiftKey) {
                     event.preventDefault();
-                    const code = document.getElementById("codepage");
-                    
-                    const selection = window.getSelection();
-                    const range = selection.getRangeAt(0);
-                    
-                    const tabNode = document.createTextNode("    "); // Create TAB
-                    range.insertNode(tabNode);
-                    
-                    // Move cursor after inserted spaces
-                    range.setStartAfter(tabNode);
-                    range.setEndAfter(tabNode);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
+                    codeEditor.setRangeText(
+                        "    ",
+                        codeEditor.selectionStart,
+                        codeEditor.selectionEnd,
+                        "end"
+                    );
+                    codeEditor.dispatchEvent(new Event("input", { bubbles: true }));
+                    return;
                 }
             });
         </script>
@@ -295,94 +535,83 @@
         </script>
         <script data-type="text/javascript">
             const editor = document.getElementById("codepage");
-            
-            editor.spellcheck = false;
-            editor.setAttribute("autocorrect", "off");
-            editor.setAttribute("autocapitalize", "off");
-            editor.setAttribute("autocomplete", "off");
-            
+
+            function getPageSource(code) {
+                if (/<title(?:\s|>)/i.test(code)) {
+                    return code;
+                }
+
+                if (/<head(?:\s[^>]*)?>/i.test(code)) {
+                    return code.replace(
+                        /<head(?:\s[^>]*)?>/i,
+                        (headTag) => `${headTag}<title>New Webpage</title>`
+                    );
+                }
+
+                if (/<html(?:\s[^>]*)?>/i.test(code)) {
+                    return code.replace(
+                        /<html(?:\s[^>]*)?>/i,
+                        (htmlTag) => `${htmlTag}<head><title>New Webpage</title></head>`
+                    );
+                }
+
+                return `<!DOCTYPE html><html><head><title>New Webpage</title></head><body>${code}</body></html>`;
+            }
+
+            function saveCode() {
+                const code = editor.value;
+                localStorage.setItem("codeline-code", code);
+            }
+
+            function refresh() {
+                const code = editor.value;
+                document.getElementById("outputted").srcdoc = getPageSource(code);
+                saveCode();
+            }
+
             window.addEventListener("load", () => {
                 const savedCode = localStorage.getItem("codeline-code");
-                
-                if (savedCode) {
-                    document.getElementById("codepage").textContent = savedCode;
-                    
-                    // Also show it in the preview immediately
-                    document.getElementById("outputted").srcdoc = savedCode;
+                if (savedCode !== null) {
+                    editor.value = savedCode;
+                    refresh();
                 }
             });
-            
-            // Save code
-            function saveCode() {
-                const code = document.getElementById("codepage").textContent;
-                localStorage.setItem("codeline-code", code);
-            }
-            
-            // Refresh preview
-            function refresh() {
-                const code = document.getElementById("codepage").textContent;
-                
-                document.getElementById("outputted").srcdoc = code;
-                
-                // Save whenever refresh is pressed
-                localStorage.setItem("codeline-code", code);
-            }
-            
-            // Auto-save while typing
-            document.getElementById("codepage").addEventListener("input", () => {
+
+            editor.addEventListener("input", (event) => {
+                closeTagAfterInsertion(event.data);
                 saveCode();
+                document.getElementById("outputted").srcdoc = getPageSource(editor.value);
             });
-            
+
             function create() {
-                let code = document.getElementById("codepage").textContent;
-                
-                // If there's no title, add one
-                if (!/<title[\s>]/i.test(code)) {
-                    if (/<head>/i.test(code)) {
-                        code = code.replace(
-                            /<head>/i,
-                            "<head><title>New Webpage</title>"
-                        );
-                    } else {
-                        code =
-                            "<!DOCTYPE html>" +
-                            "<html>" +
-                            "<head><title>New Webpage</title></head>" +
-                            "<body>" +
-                            code +
-                            "</body></html>";
-                        }
-                    }
-                    
-                const win = window.open("", "_blank");
-                    
+                const win = window.open("about:blank", "_blank");
+                if (!win) {
+                    window.alert("The new tab was blocked. Allow pop-ups for this page, then try again.");
+                    return;
+                }
+
+                const code = getPageSource(editor.value);
                 win.document.open();
                 win.document.write(code);
                 win.document.close();
             }
-            
-            document.getElementById("codepage")
-                .addEventListener("paste", (event) => {
-                
-                const items = event.clipboardData.items;
-                
-                for (const item of items) {
-                    if (item.type.startsWith("image/")) {
-                        event.preventDefault();
-                        console.warn("Image pasting disabled.");
-                        return;
-                    }
+
+            editor.addEventListener("paste", (event) => {
+                const items = event.clipboardData?.items ?? [];
+                if ([...items].some((item) => item.type.startsWith("image/"))) {
+                    event.preventDefault();
+                    console.warn("Image pasting disabled.");
+                    return;
                 }
-            });
-            
-            document.getElementById("codepage")
-            .addEventListener("paste", (event) => {
-                
+
                 event.preventDefault();
-                
                 const text = event.clipboardData.getData("text/plain");
-                
-                document.execCommand("insertText", false, text);
+                editor.setRangeText(text, editor.selectionStart, editor.selectionEnd, "end");
+                editor.dispatchEvent(new InputEvent("input", {
+                    bubbles: true,
+                    inputType: "insertFromPaste",
+                    data: text
+                }));
             });
         </script>
         <script data-type="text/javascript">
