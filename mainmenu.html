@@ -418,7 +418,7 @@
                     </div>
                 </section>
             </main>
-            <p style="text-align: center;">I had recently decided MainMenu needed a little "freshup" earlier on. So here it is! Unfinished to Finished. <strong>Apple Game will SOON have more upgrades.</strong></p>
+            <p style="text-align: center;" id="message">I had recently decided MainMenu needed a little "freshup" earlier on. So here it is! Unfinished to Finished. <strong>Apple Game will SOON have more upgrades.</strong></p>
         </div>
         <script>
             const newProjectsButton = document.getElementById("newProjectsButton");
@@ -435,6 +435,28 @@
 
             newProjectsButton.addEventListener("click", () => showProjectCollection(false));
             legacyProjectsButton.addEventListener("click", () => showProjectCollection(true));
+        </script>
+        <script>
+            const messages = document.getElementById("message");
+            const randomessages = {
+                "My vocabulary has been Enhanced.": 20,
+                'I had recently decided MainMenu needed a little "freshup" earlier on. So here it is! Unfinished to Finished. <strong>Apple Game will SOON have more upgrades.</strong>': 60,
+                "If you see this message, congrats.": 2,
+                "These were REALLY hard to make. Please, enjoy.": 50,
+                "What's 9 + 10? (reference)": 21,
+                'Insert("Cool Message")': 22,
+            };
+
+            const totalChance = Object.values(randomessages).reduce((total, chance) => total + chance, 0);
+            let chanceRoll = Math.random() * totalChance;
+
+            for (const [text, chance] of Object.entries(randomessages)) {
+                chanceRoll -= chance;
+                if (chanceRoll < 0) {
+                    messages.innerHTML = text;
+                    break;
+                }
+            }
         </script>
     </body>
 </html>
