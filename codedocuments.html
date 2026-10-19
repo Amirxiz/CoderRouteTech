@@ -1,43 +1,361 @@
 <!DOCTYPE html>
-<html dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
     <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CodeDocuments - CODEROUTETECH</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Browse the source code for BlockzGame and the HTML editor.">
+        <style>
+            :root {
+                color-scheme: dark;
+                --background: #10151e;
+                --panel: #171e29;
+                --panel-raised: #1c2532;
+                --border: #2b3645;
+                --text: #e7edf5;
+                --muted: #a0adbd;
+                --accent: #7dd3a7;
+                font-family: "Segoe UI", Arial, sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                display: grid;
+                min-width: 320px;
+                min-height: 100vh;
+                margin: 0;
+                grid-template-columns: 250px minmax(0, 1fr);
+                color: var(--text);
+                background: var(--background);
+            }
+
+            .sidebar {
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                padding: 24px 16px;
+                border-right: 1px solid var(--border);
+                background: var(--panel);
+            }
+
+            .brand {
+                padding: 0 12px;
+                color: var(--text);
+                font-size: 15px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-decoration: none;
+            }
+
+            .nav-label {
+                margin: 0 12px 8px;
+                color: var(--muted);
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+
+            .nav-links {
+                display: grid;
+                gap: 6px;
+            }
+
+            .nav-links button {
+                min-height: 42px;
+                padding: 0 12px;
+                border: 1px solid transparent;
+                border-radius: 6px;
+                color: var(--muted);
+                background: transparent;
+                font: inherit;
+                font-size: 14px;
+                text-align: left;
+                cursor: pointer;
+            }
+
+            .nav-links button:hover,
+            .nav-links button:focus-visible,
+            .nav-links button[aria-pressed="true"] {
+                border-color: var(--border);
+                color: var(--text);
+                background: var(--panel-raised);
+                outline: none;
+            }
+
+            .nav-links button[aria-pressed="true"] {
+                border-left: 3px solid var(--accent);
+            }
+
+            main {
+                display: flex;
+                width: min(100%, 1100px);
+                min-width: 0;
+                min-height: 100vh;
+                flex-direction: column;
+                margin: 0 auto;
+                padding: clamp(28px, 5vw, 60px);
+            }
+
+            .eyebrow {
+                margin: 0 0 12px;
+                color: var(--accent);
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+
+            h1 {
+                margin: 0;
+                font-size: clamp(32px, 5vw, 48px);
+                letter-spacing: -0.04em;
+            }
+
+            .intro {
+                max-width: 700px;
+                margin: 16px 0 28px;
+                color: var(--muted);
+                font-size: 16px;
+                line-height: 1.7;
+            }
+
+            .code-panel {
+                display: flex;
+                min-width: 0;
+                min-height: 300px;
+                flex: 1;
+                flex-direction: column;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: var(--panel);
+            }
+
+            .code-panel[hidden] {
+                display: none;
+            }
+
+            .code-panel h2 {
+                margin: 0;
+                padding: 14px 18px;
+                border-bottom: 1px solid var(--border);
+                font-size: 15px;
+            }
+
+            .lessons {
+                display: grid;
+                gap: 14px;
+                padding: 16px;
+                overflow: auto;
+            }
+
+            .lesson {
+                padding: 16px;
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                background: #131a24;
+            }
+
+            .lesson h3 {
+                margin: 0 0 12px;
+                font-size: 15px;
+            }
+
+            .lesson pre {
+                margin: 0 0 12px;
+                padding: 14px;
+                overflow-x: auto;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                color: #d5e2ef;
+                font: 13px/1.6 Consolas, "Courier New", monospace;
+                tab-size: 4;
+                white-space: pre;
+            }
+
+            .lesson p {
+                margin: 0;
+                color: var(--muted);
+                font-size: 14px;
+                line-height: 1.7;
+            }
+
+            .lesson p code {
+                color: var(--text);
+                font-family: Consolas, "Courier New", monospace;
+            }
+
+            kbd {
+                padding: 1px 5px;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                color: var(--text);
+                background: var(--panel-raised);
+                font: inherit;
+            }
+
+            @media (max-width: 640px) {
+                body {
+                    grid-template-columns: 1fr;
+                    grid-template-rows: auto 1fr;
+                }
+
+                .sidebar {
+                    gap: 18px;
+                    padding: 16px;
+                    border-right: 0;
+                    border-bottom: 1px solid var(--border);
+                }
+
+                .nav-links {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .nav-links button {
+                    text-align: center;
+                }
+
+                main {
+                    min-height: 70vh;
+                    padding: 32px 18px;
+                }
+            }
+        </style>
     </head>
     <body>
-    <div id="main">
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-        <marquee style="font-family: Verdana;">Hello! Thanks for using Coderroute tech! This website cannot be accessed right now. (AKA: UNDER DEVELOPMENT OR CLOSED)</marquee>
-    </div>
+        <aside class="sidebar">
+            <a class="brand" href="codedocuments.html">CODEROUTETECH</a>
+            <nav aria-label="Code documents">
+                <p class="nav-label">Code guides</p>
+                <div class="nav-links">
+                    <button type="button" aria-controls="blockzgame-panel" aria-pressed="true">BlockzGame Code</button>
+                    <button type="button" aria-controls="html-panel" aria-pressed="false">HTML Code Basics</button>
+                </div>
+            </nav>
+        </aside>
+        <main>
+            <p class="eyebrow">Learn by example</p>
+            <h1>CodeDocuments</h1>
+            <p class="intro">Choose a guide from the sidebar to explore code examples and what each part does.</p>
+            <section class="code-panel" id="blockzgame-panel" aria-labelledby="blockzgame-heading">
+                <h2 id="blockzgame-heading">BlockzGame Code</h2>
+                <div class="lessons">
+                    <article class="lesson">
+                        <h3>Section 1: Make a cube</h3>
+                        <pre><code>cubePlayer {
+    grid(1x, 1y)
+    index(1)
+}</code></pre>
+                        <p><code>cubePlayer</code> creates a named cube. <code>grid(1x, 1y)</code> places it at column 1, row 1. <code>index(1)</code> gives it an index so it can be selected and controlled.</p>
+                    </article>
+                    <article class="lesson">
+                        <h3>Section 2: Change a cube's color</h3>
+                        <pre><code>cubePlayer {
+    grid(4x, 6y)
+    bg-color: lime
+    index(1)
+}</code></pre>
+                        <p><code>bg-color</code> sets the cube's background color. You can use a color name, such as <code>lime</code>, or a hex value such as <code>#7dd3a7</code>.</p>
+                    </article>
+                    <article class="lesson">
+                        <h3>Section 3: Reuse a class</h3>
+                        <pre><code>create class(wall)
+
+.wall {
+    bg-color: slategray;
+    border-collision: true;
+}
+
+cubeWall {
+    grid(8x, 4y)
+    class: wall
+    index(none)
+}</code></pre>
+                        <p>A class groups shared cube settings. Applying <code>class: wall</code> gives the cube those settings. <code>index(none)</code> makes it an unselectable NPC cube.</p>
+                    </article>
+                    <article class="lesson">
+                        <h3>Section 4: Turn on collision</h3>
+                        <pre><code>import collision</code></pre>
+                        <p>This enables collision checks in BlockzGame. Cubes with <code>border-collision: true</code> can block another cube from moving onto their grid position.</p>
+                    </article>
+                    <article class="lesson">
+                        <h3>Section 5: Move your cube</h3>
+                        <pre><code>cubePlayer {
+    grid(2x, 2y)
+    index(1)
+}</code></pre>
+                        <p>Use <kbd>W</kbd>, <kbd>A</kbd>, <kbd>S</kbd>, and <kbd>D</kbd> to move the selected cube. Press <kbd>E</kbd> to switch between indexed cubes.</p>
+                    </article>
+                </div>
+            </section>
+            <section class="code-panel" id="html-panel" aria-labelledby="html-heading" hidden>
+                <h2 id="html-heading">HTML Code Basics</h2>
+                <div class="lessons">
+                    <article class="lesson">
+                        <h3>Section 1: Basics</h3>
+                        <pre><code>&lt;!DOCTYPE html&gt;</code></pre>
+                        <p><code>&lt;!DOCTYPE html&gt;</code> tells the browser the document uses modern HTML. It belongs at the very beginning of an HTML page.</p>
+                    </article>
+                    <article class="lesson">
+                        <h3>Section 2: The HTML page</h3>
+                        <pre><code>&lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;title&gt;My first page&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        Page content goes here.
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                        <p><code>&lt;html&gt;</code> wraps the page. The <code>&lt;head&gt;</code> contains page information, while the visible content goes inside <code>&lt;body&gt;</code>. The <code>lang</code> attribute identifies the page language.</p>
+                    </article>
+                    <article class="lesson">
+                        <h3>Section 3: Headings and paragraphs</h3>
+                        <pre><code>&lt;h1&gt;Welcome&lt;/h1&gt;
+&lt;p&gt;This is a paragraph.&lt;/p&gt;</code></pre>
+                        <p><code>&lt;h1&gt;</code> is the main heading. Use paragraph tags, <code>&lt;p&gt;</code>, for blocks of regular text.</p>
+                    </article>
+                    <article class="lesson">
+                        <h3>Section 4: Links</h3>
+                        <pre><code>&lt;a href="https://example.com"&gt;
+    Visit Example
+&lt;/a&gt;</code></pre>
+                        <p>The <code>&lt;a&gt;</code> element creates a link. Its <code>href</code> attribute says where the link goes, and the text between the tags is clickable.</p>
+                    </article>
+                    <article class="lesson">
+                        <h3>Section 5: Lists</h3>
+                        <pre><code>&lt;ul&gt;
+    &lt;li&gt;First item&lt;/li&gt;
+    &lt;li&gt;Second item&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+                        <p><code>&lt;ul&gt;</code> makes a bulleted list, and each <code>&lt;li&gt;</code> is one list item.</p>
+                    </article>
+                </div>
+            </section>
+            <h2>More coming Soon (THIS WAS RUSHED)</h2>
+        </main>
+        <script>
+            const codeButtons = document.querySelectorAll(".nav-links button");
+
+            function showCode(button) {
+                const panel = document.getElementById(button.getAttribute("aria-controls"));
+
+                document.querySelectorAll(".code-panel").forEach(section => {
+                    section.hidden = section !== panel;
+                });
+                codeButtons.forEach(item => {
+                    item.setAttribute("aria-pressed", String(item === button));
+                });
+            }
+
+            codeButtons.forEach(button => {
+                button.addEventListener("click", () => showCode(button));
+            });
+            showCode(codeButtons[0]);
+        </script>
     </body>
 </html>
+
