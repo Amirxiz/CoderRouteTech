@@ -439,7 +439,7 @@
                         <h3 class="mso sidebutton" aria-hidden="true">file_open</h3> <!-- Files -->
                         <h3 class="mso sidebutton" aria-hidden="true">settings_screen</h3> <!-- Settings -->
                         <h3 class="mso sidebutton" aria-hidden="true">folder_shared</h3> <!-- Collab -->
-                        <h3 class="mso sidebutton" aria-hidden="true">unknown_document</h3> <!-- Code Documents -->
+                        <h3 class="mso sidebutton" aria-hidden="true" id="codedocsbtn">unknown_document</h3> <!-- Code Documents -->
                         <h3 class="mso sidebutton" aria-hidden="true">save</h3> <!-- Saves -->
                     </div>
                 </div>
@@ -470,6 +470,11 @@
                 </div>
             </div>
         </div>
+        <script>
+            document.getElementById("codedocsbtn").addEventListener("click", function() {
+                window.open("codedocuments.html", "_blank"); // Opens in new tab
+            });
+        </script>
         <script data-type="text/javascript">
             const codeEditor = document.getElementById("codepage");
             const voidElements = new Set([
