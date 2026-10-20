@@ -194,6 +194,26 @@ function plusoneAppletree() {
     updateUI();
 }
 
+function plustenAppletree() {
+
+    if (!spendCoins(2500))
+        return;
+
+    game.autoApples += 10;
+
+    updateUI();
+}
+
+function plustwentyAppletree() {
+
+    if (!spendCoins(5000))
+        return;
+
+    game.autoApples += 20;
+
+    updateUI();
+}
+
 function autoCollecttoggle() {
 
     if (game.autoCollect)
