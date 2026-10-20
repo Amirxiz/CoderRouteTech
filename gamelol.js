@@ -311,7 +311,7 @@ function loadGame() {
         localStorage.getItem("appleCollectorSave");
 
     if (save) {
-        game = JSON.parse(save);
+        game = { ...game, ...JSON.parse(save) };
     }
 
     if (game.collectedApples === undefined) {
