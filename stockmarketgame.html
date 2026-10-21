@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta description="Stock Market game, made by Amirxiz. Coderroutetech: https://coderroutetech.com/mainmenu.html">
         <style> h1, h2, h3, h4, h5, h6 { margin: 0; } </style>
-        <link rel="icon" type="image/png" href="mainlogo.png">
         <title>Stock Market Game || CoderrouteTech</title>
         <style>
 
@@ -418,6 +417,7 @@
             #marketstatus {
                 color: var(--colormain);
                 font-size: 12px;
+                text-align: right;
             }
 
             .stock-list {
@@ -459,6 +459,12 @@
 
             .stock-ticker {
                 margin-top: 5px;
+                color: var(--text-muted);
+                font-size: 12px;
+            }
+
+            .stock-odds {
+                margin-top: 8px;
                 color: var(--text-muted);
                 font-size: 12px;
             }
@@ -812,7 +818,7 @@
                 
             <section id="stockspage" class="page active">
                 <h1>Stocks</h1>
-                <p class="stocks-subtitle">Trade shares and build your portfolio.</p>
+                <p class="stocks-subtitle">Trade shares and build your portfolio. Company odds affect price rises every 8 seconds.</p>
 
                 <div class="market-summary">
                     <div class="market-stat">
@@ -1714,12 +1720,12 @@
         </script>
         <script>
             const stockDefinitions = [
-                { ticker: "NOVA", name: "NovaTech", price: 50 },
-                { ticker: "GRNX", name: "GreenX Energy", price: 32 },
-                { ticker: "BLTN", name: "Bolt Industries", price: 85 },
-                { ticker: "SKYH", name: "Skyline Health", price: 24 },
-                { ticker: "GLOB", name: "Global Pocket", price: 24 },
-                { ticker: "FIDS", name: "Funny Industries", price: 27 }
+                { ticker: "NOVA", name: "NovaTech", price: 50, riseChanceModifier: 0.25 },
+                { ticker: "GRNX", name: "GreenX Energy", price: 32, riseChanceModifier: -0.10 },
+                { ticker: "BLTN", name: "Bolt Industries", price: 85, riseChanceModifier: 0.35 },
+                { ticker: "SKYH", name: "Skyline Health", price: 24, riseChanceModifier: -0.22 },
+                { ticker: "GLOB", name: "Global Pocket", price: 24, riseChanceModifier: 0.32 },
+                { ticker: "FIDS", name: "Funny Industries", price: 27, riseChanceModifier: 0.23 }
             ];
 
             const stockNewsEvents = [
@@ -1762,6 +1768,65 @@
             };
             const maxCandles = 60;
             const maxNewsItems = 50;
+            const globalPocketCheckInterval = 5 * 60 * 1000;
+            const globalPocketEffectDuration = 25 * 1000;
+            const globalPocketEffectChance = 0.25;
+            let globalPocketEffectEndsAt = 0;
+            let nextGlobalPocketCheckAt = Date.now() + globalPocketCheckInterval;
+
+            function getRiseChance(stock) {
+                let chance = 0.5 * (1 + stock.riseChanceModifier);
+
+                if (stock.ticker === "GLOB" &&
+                    Date.now() < globalPocketEffectEndsAt) {
+                    chance *= 0.85;
+                }
+
+                return chance;
+            }
+
+            function updateMarketStatus() {
+                const status = document.getElementById("marketstatus");
+                const now = Date.now();
+
+                if (now < globalPocketEffectEndsAt) {
+                    const secondsRemaining = Math.ceil(
+                        (globalPocketEffectEndsAt - now) / 1000
+                    );
+                    status.textContent =
+                        `GLOB rise chance -15%: ${secondsRemaining}s remaining`;
+                    status.style.color = "var(--colorbad)";
+                    return;
+                }
+
+                const secondsUntilCheck = Math.ceil(
+                    (nextGlobalPocketCheckAt - now) / 1000
+                );
+                const minutes = Math.floor(secondsUntilCheck / 60);
+                const seconds = secondsUntilCheck % 60;
+                status.textContent =
+                    `Market Open · GLOB 25% event roll in ` +
+                    `${minutes}:${String(seconds).padStart(2, "0")}`;
+                status.style.color = "var(--colormain)";
+            }
+
+            function checkGlobalPocketEvent() {
+                const now = Date.now();
+                const wasActive = now < globalPocketEffectEndsAt;
+
+                if (now >= nextGlobalPocketCheckAt) {
+                    nextGlobalPocketCheckAt = now + globalPocketCheckInterval;
+                    if (Math.random() < globalPocketEffectChance) {
+                        globalPocketEffectEndsAt = now + globalPocketEffectDuration;
+                    }
+                }
+
+                const isActive = now < globalPocketEffectEndsAt;
+                if (wasActive !== isActive) {
+                    updateStockDisplay();
+                }
+                updateMarketStatus();
+            }
 
             function stockMoney(amount) {
                 return "$" + amount.toLocaleString("en-US", {
@@ -2299,7 +2364,12 @@
                     ticker.className = "stock-ticker";
                     ticker.textContent = stock.ticker;
 
-                    identity.append(name, ticker);
+                    const odds = document.createElement("div");
+                    odds.className = "stock-odds";
+                    odds.textContent =
+                        `${(getRiseChance(stock) * 100).toFixed(1)}% chance to rise`;
+
+                    identity.append(name, ticker, odds);
 
                     const owned = document.createElement("div");
                     owned.className = "stock-ticker";
@@ -2526,8 +2596,11 @@
                     const previousPrice = stock.price;
                     stock.previousPrice = previousPrice;
 
-                    // Random change between roughly -3% and +3%.
-                    const movement = (Math.random() * 0.06) - 0.03;
+                    const magnitude = Math.random() * 0.03;
+                    const movement =
+                        Math.random() < getRiseChance(stock)
+                            ? magnitude
+                            : -magnitude;
 
                     stock.price = Math.max(
                         1,
@@ -2557,6 +2630,8 @@
                 `Current share price: ${stockMoney(marketStocks[0].price)}.`;
 
             setInterval(moveMarket, 8000);
+            updateMarketStatus();
+            setInterval(checkGlobalPocketEvent, 1000);
             scheduleStockNewsEvent();
 
         </script>
