@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Asap+Sharp:ital,wght@0,100..900;1,100..900&family=Bebas+Neue&family=Inconsolata:wght@200..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+        <title>Coderroutetech || Math CheatSheet</title>
+        <style>
+            /*
+            maybe next time lil rooter
+            :root {
+                --other: rgba(255, 255, 255, 0.12);
+            }
+            */
+        </style>
+        <style>
+            body, html {
+                margin: 0;
+                width: 100%;
+                min-height: 100vh;
+            }
+
+            body {
+                background-color: #1b1c25;
+                font-family: 'Roboto', monospace;
+                overflow-x: hidden;
+                overflow-y: visible;
+            }
+
+            main {
+                width: 100%;
+                min-height: 100vh;
+                height: auto;
+                color: #eaf3f0;
+                padding: 15px 10px 0 15px;
+                box-sizing: border-box;
+            }
+
+            [boxedalt] {
+                display: inline-block;
+                border: 1px solid #fff;
+                border-radius: 0;
+                padding: 2px 4px;
+            }
+
+            .fraction {
+                display: inline-grid;
+                grid-template-rows: auto auto;
+                vertical-align: middle;
+                text-align: center;
+                line-height: 1.1;
+            }
+
+            .fraction__numerator {
+                border-bottom: 1px solid currentColor;
+                padding: 0 3px 1px;
+            }
+
+            .fraction__denominator {
+                padding: 1px 3px 0;
+            }
+
+            .radical {
+                display: inline-flex;
+                align-items: center;
+                vertical-align: middle;
+            }
+
+            .radical__sign {
+                font-size: 1.5em;
+                line-height: 0.9;
+            }
+
+            .radical__content {
+                border-top: 1px solid currentColor;
+                padding: 2px 3px 0;
+            }
+        </style>
+        <style>
+            sigma::before { content: "Σ"; }
+            lowsigma::before { content: "σ"; }
+
+            integral::before { content: "∫"; }
+
+            product::before { content: "∏"; }
+
+            infinity::before { content: "∞"; }
+
+            nabla::before { content: "∇"; }
+
+            partial::before { content: "∂"; }
+
+            radical::before { content: "√"; }
+
+            delta::before { content: "Δ"; }
+            lowdelta::before { content: "δ"; }
+
+            pi::before { content: "Π"; }
+            lowpi::before { content: "π"; }
+
+            theta::before { content: "Θ"; }
+            lowtheta::before { content: "θ"; }
+
+            lambda::before { content: "Λ"; }
+            lowlambda::before { content: "λ"; }
+
+            gamma::before { content: "Γ"; }
+            lowgamma::before { content: "γ"; }
+
+            phi::before { content: "Φ"; }
+            lowphi::before { content: "φ"; }
+
+            omega::before { content: "Ω"; }
+            lowomega::before { content: "ω"; }
+
+            mu::before {
+                content: "μ";
+            }
+        </style>
+    </head>
+    <body>
+        <style> [data-visible="off"] { display: none; } #SVGSholder { width: 100%; height: 100vh; font-size: 15px; user-select: none; } #SVGSpv { padding: 15px 0 0 15px; font-family: 'Lato'; color: white;}</style>
+        <div id="SVGSholder" data-visible="off">
+            <div id="SVGSpv">
+                <style>
+                    main {
+                        display: none;
+                    }
+                </style>
+                
+                <sigma></sigma>
+                <lowsigma></lowsigma>
+
+                <integral></integral>
+                <product></product>
+                <infinity></infinity>
+                <nabla></nabla>
+                <partial></partial>
+                <radical></radical>
+
+                <delta></delta>
+                <lowdelta></lowdelta>
+
+                <pi></pi>
+                <lowpi></lowpi>
+
+                <theta></theta>
+                <lowtheta></lowtheta>
+
+                <lambda></lambda>
+                <lowlambda></lowlambda>
+
+                <gamma></gamma>
+                <lowgamma></lowgamma>
+
+                <phi></phi>
+                <lowphi></lowphi>
+
+                <omega></omega>
+                <lowomega></lowomega>
+
+                <mu></mu>
+
+                <h1 boxedalt>test</h1>
+                <br>
+                <p>/frac40&4</p>
+                <br>
+                <p>radicals(/frac40&4)</p>
+                <br>
+                <p>3^26</p>
+            </div>
+        </div>
+        <script>const SVGs = document.getElementById("SVGSholder"); const SVGmain = document.getElementById("SVGSpv"); if (SVGs.dataset.visible === "off") { SVGmain.innerHTML = "" } else if (SVGs.dataset.visible === "true") { SVGs.style.display = "block" }
+        </script>
+        <main>
+            <style>
+                #sectorspage {
+                    width: 100%;
+                    height: 120px;
+                    gap: 5px;
+                }
+
+                [sector] {
+                    cursor: pointer;
+                }
+
+                padding {
+                    padding-top: 15px;
+                }
+
+                row {
+                    display: flex;
+                    flex-direction: row;
+                }
+
+                column {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                h1, h2, h3, h4, h5, h6 {
+                    margin: 0;
+                }
+
+                [bold] {
+                    font-weight: bold;
+                }
+
+                [hrdiff] {
+                    width: 95%;
+                    padding-left: 50px;
+                    height: 2px;
+                    background-color: #fff;
+                }
+
+                p {
+                    white-space: normal;
+                    overflow-wrap: break-word;
+                    max-width: 100%;
+                    box-sizing: border-box;
+                }
+            </style>
+            <div id="sectorspage">
+                <row>
+                    <div id="sect1" sectorid="1el" sector boxedalt>1. Sigma Symbol</div>
+                    <div style="padding-left: 5px;"></div>
+                    <div id="sect1" sectorid="2el" sector boxedalt>2. Lowercase Sigma Symbol </div>
+                </row>
+            </div>
+            <padding></padding>
+            <div hrdiff></div>
+            <padding></padding>
+            <row><h1><span sectoridsct="1sl">1. </span> Sigma Symbol (<sigma></sigma>)</h1></row>
+            <padding></padding>
+            <p>The <sigma></sigma> Symbol (<sigma></sigma>) is a mathematical
+                symbol used to represent <b>summation</b>, which is the process
+                of adding a sequence of numbers together. Instead of writing
+                every addition separately, Sigma notation provides a shorter
+                and more organized way to represent the calculation.
+            </p>
+            <h4>EXAMPLE:</h4>
+            <p bold>
+                Upper bound: 3 <br>
+                <sigma></sigma> 5n <br>
+                Lower bound: n = 1 <br>
+                <br>
+                5 * 1 = 5 <br>
+                5 * 2 = 10 <br>
+                5 * 3 = 15 <br>
+                5 + 10 + 15 = <span boxedalt>30</span>
+            </p>
+            <h4>AGAIN:</h4>
+            <p bold>
+                Upper bound: 5 <br>
+                <sigma></sigma> 2n² <br>
+                Lower bound: n = 1 <br>
+                <br>
+                2(1²) = 2 <br>
+                2(2²) = 8 <br>
+                2(3²) = 18 <br>
+                2(4²) = 32 <br>
+                2(5²) = 50 <br>
+                2 + 8 + 18 + 32 + 50 = <span boxedalt>110</span>
+            </p>
+            <p>The Sigma notation consists of three main components: the upper
+                bound, which determines where the summation ends; the lower
+                bound, which determines the starting value; and the expression
+                to the right of the symbol, which determines what value is
+                added at each step.
+            </p>
+            <div hrdiff></div>
+            <padding></padding>
+            <row><h1><span sectoridsct="2sl">2. </span> Lowercase Sigma Symbol (<lowsigma></lowsigma>)</h1></row>
+            <padding></padding>
+            <p>
+                The lowercase symbol (<lowsigma></lowsigma>) is different from
+                uppercase Sigma. It is commonly used to represent standard
+                deviation in statistics, among other mathematical applications.
+            </p>
+            <p>
+                Say we have the Scores: 2, 4, 4, 4, 5, 5, 7, 9 (TOTAL: 8 Numbers)<br>
+                First, we have to find the Mean (Average)
+            </p>
+            <p>
+                <row>radicals(/frac2 + 4 + 4 + 4 + 5 + 5 + 7 + 9&8) = <span boxedalt>5</span> </row>
+            </p>
+            <p>
+                Secondly, we have to find the population standard deviation (<lowsigma></lowsigma>):
+            </p>
+            <p>
+                radicals(/frac<sigma></sigma>(x - <mu></mu>²)&<i>N</i>) <br>
+                • x = Each Score <br> 
+                • <mu></mu> = Mean (5) <br>
+                • <i>N</i> = Number of Scores (8) <br>
+                • <sigma></sigma> = Add all Values together
+            </p>
+            <p>
+                Third, we have to Substitute all the Values together:
+            </p>
+            <p>
+                <lowsigma></lowsigma> = radicals(/frac9 + 1 + 1 + 1 + 0 + 0 + 4 + 16&8) <br>
+                <lowsigma></lowsigma> = radicals(4) = 2 <br>
+                <br>
+                <span boxedalt><lowsigma></lowsigma> = 2</span>
+            </p>
+            <padding></padding>
+            <div hrdiff></div>
+            <padding></padding>
+            <h1>More coming soon!</h1>
+            <div style="width: 100%; height: 200px; display: block;">
+                
+            </div>
+            <script>
+                document.querySelectorAll("[sectorid]").forEach(element => {
+                    element.addEventListener("click", () => {
+                        const sectorNumber = element.getAttribute("sectorid").match(/\d+/)?.[0];
+                        if (!sectorNumber) return;
+
+                        const target = [...document.querySelectorAll("[sectoridsct]")].find(section =>
+                            section.getAttribute("sectoridsct").match(/\d+/)?.[0] === sectorNumber
+                        );
+
+                        target?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    });
+                });
+            </script>
+            <script>
+                const fractionPattern = /^\/frac\s*([\d\s.+*\/()^-]+?)\s*&\s*(-?\d+(?:\.\d+)?)/;
+                const mathRoots = [document.getElementById("SVGSholder"), document.querySelector("main")]
+                    .filter(Boolean);
+
+                function getTextInfo(root) {
+                    const walker = document.createTreeWalker(
+                        root,
+                        NodeFilter.SHOW_TEXT,
+                        {
+                            acceptNode(node) {
+                                return node.parentElement?.closest("script, style")
+                                    ? NodeFilter.FILTER_REJECT
+                                    : NodeFilter.FILTER_ACCEPT;
+                            }
+                        }
+                    );
+                    const nodes = [];
+                    let text = "";
+
+                    while (walker.nextNode()) {
+                        nodes.push({ node: walker.currentNode, start: text.length });
+                        text += walker.currentNode.textContent;
+                    }
+
+                    return { nodes, text };
+                }
+
+                function getTextBoundary(info, index) {
+                    for (const entry of info.nodes) {
+                        const end = entry.start + entry.node.textContent.length;
+                        if (index <= end) {
+                            return { node: entry.node, offset: index - entry.start };
+                        }
+                    }
+
+                    const last = info.nodes[info.nodes.length - 1];
+                    return last
+                        ? { node: last.node, offset: last.node.textContent.length }
+                        : null;
+                }
+
+                function getTextRange(root, start, end) {
+                    const info = getTextInfo(root);
+                    const startBoundary = getTextBoundary(info, start);
+                    const endBoundary = getTextBoundary(info, end);
+                    if (!startBoundary || !endBoundary) return null;
+
+                    const range = document.createRange();
+                    range.setStart(startBoundary.node, startBoundary.offset);
+                    range.setEnd(endBoundary.node, endBoundary.offset);
+                    return range;
+                }
+
+                function wrapRadicals(root) {
+                    while (true) {
+                        const info = getTextInfo(root);
+                        const start = info.text.indexOf("radicals(");
+                        if (start < 0) return;
+
+                        let depth = 1;
+                        let end = start + "radicals(".length;
+                        while (end < info.text.length && depth > 0) {
+                            if (info.text[end] === "(") depth++;
+                            if (info.text[end] === ")") depth--;
+                            end++;
+                        }
+                        if (depth !== 0) return;
+
+                        const expressionRange = getTextRange(root, start, end);
+                        if (!expressionRange) return;
+                        const expression = expressionRange.extractContents();
+                        const expressionText = getTextInfo(expression).text;
+                        const innerRange = getTextRange(
+                            expression,
+                            "radicals(".length,
+                            expressionText.length - 1
+                        );
+                        if (!innerRange) return;
+                        const contentFragment = innerRange.extractContents();
+
+                        wrapRadicals(contentFragment);
+                        wrapRadicalFraction(contentFragment);
+
+                        const radical = document.createElement("span");
+                        radical.className = "radical";
+
+                        const sign = document.createElement("span");
+                        sign.className = "radical__sign";
+                        sign.textContent = "√";
+
+                        const content = document.createElement("span");
+                        content.className = "radical__content";
+                        content.append(contentFragment);
+                        radical.append(sign, content);
+                        expressionRange.insertNode(radical);
+                    }
+                }
+
+                function wrapRadicalFraction(root) {
+                    const info = getTextInfo(root);
+                    const fractionStart = info.text.indexOf("/frac");
+                    if (fractionStart < 0) return;
+
+                    const separator = info.text.indexOf("&", fractionStart + "/frac".length);
+                    if (separator < 0) return;
+
+                    const fractionRange = getTextRange(root, fractionStart, info.text.length);
+                    if (!fractionRange) return;
+                    const fractionContent = fractionRange.extractContents();
+                    const fractionInfo = getTextInfo(fractionContent);
+                    const numeratorEnd = fractionInfo.text.indexOf("&");
+                    if (numeratorEnd < 0) return;
+
+                    const denominatorRange = getTextRange(
+                        fractionContent,
+                        numeratorEnd + 1,
+                        fractionInfo.text.length
+                    );
+                    const numeratorRange = getTextRange(
+                        fractionContent,
+                        "/frac".length,
+                        numeratorEnd
+                    );
+                    if (!denominatorRange || !numeratorRange) return;
+
+                    const denominatorContent = denominatorRange.extractContents();
+                    const numeratorContent = numeratorRange.extractContents();
+                    const fraction = document.createElement("span");
+                    fraction.className = "fraction";
+
+                    const numerator = document.createElement("span");
+                    numerator.className = "fraction__numerator";
+                    numerator.append(numeratorContent);
+
+                    const denominator = document.createElement("span");
+                    denominator.className = "fraction__denominator";
+                    denominator.append(denominatorContent);
+
+                    fraction.append(numerator, denominator);
+                    fractionRange.insertNode(fraction);
+                }
+
+                function renderMathText(text) {
+                    const fragment = document.createDocumentFragment();
+                    let plainStart = 0;
+                    let position = 0;
+
+                    function appendPlainText(end) {
+                        if (end > plainStart) {
+                            fragment.append(document.createTextNode(text.slice(plainStart, end)));
+                        }
+                    }
+
+                    while (position < text.length) {
+                        if (text.startsWith("radicals(", position)) {
+                            let depth = 1;
+                            let closingIndex = position + "radicals(".length;
+
+                            while (closingIndex < text.length && depth > 0) {
+                                if (text[closingIndex] === "(") depth++;
+                                if (text[closingIndex] === ")") depth--;
+                                closingIndex++;
+                            }
+
+                            if (depth === 0) {
+                                appendPlainText(position);
+
+                                const radical = document.createElement("span");
+                                radical.className = "radical";
+
+                                const sign = document.createElement("span");
+                                sign.className = "radical__sign";
+                                sign.textContent = "√";
+
+                                const content = document.createElement("span");
+                                content.className = "radical__content";
+                                content.append(renderMathText(
+                                    text.slice(position + "radicals(".length, closingIndex - 1)
+                                ));
+
+                                radical.append(sign, content);
+                                fragment.append(radical);
+                                position = closingIndex;
+                                plainStart = position;
+                                continue;
+                            }
+                        }
+
+                        const fractionMatch = fractionPattern.exec(text.slice(position));
+                        if (fractionMatch) {
+                            appendPlainText(position);
+
+                            const fraction = document.createElement("span");
+                            fraction.className = "fraction";
+
+                            const numerator = document.createElement("span");
+                            numerator.className = "fraction__numerator";
+                            numerator.append(renderMathText(fractionMatch[1].trim()));
+
+                            const denominator = document.createElement("span");
+                            denominator.className = "fraction__denominator";
+                            denominator.textContent = fractionMatch[2];
+
+                            fraction.append(numerator, denominator);
+                            fragment.append(fraction);
+                            position += fractionMatch[0].length;
+                            plainStart = position;
+                            continue;
+                        }
+
+                        const powerMatch = /^(\d+(?:\.\d+)?)\^(-?\d+(?:\.\d+)?)/.exec(text.slice(position));
+                        if (powerMatch) {
+                            appendPlainText(position);
+                            fragment.append(document.createTextNode(powerMatch[1]));
+
+                            const exponent = document.createElement("sup");
+                            exponent.textContent = powerMatch[2];
+                            fragment.append(exponent);
+                            position += powerMatch[0].length;
+                            plainStart = position;
+                            continue;
+                        }
+
+                        position++;
+                    }
+
+                    appendPlainText(text.length);
+                    return fragment;
+                }
+
+                mathRoots.forEach(root => {
+                    wrapRadicals(root);
+                    const textWalker = document.createTreeWalker(
+                        root,
+                        NodeFilter.SHOW_TEXT,
+                        {
+                            acceptNode(node) {
+                                return node.parentElement.closest("script, style")
+                                    ? NodeFilter.FILTER_REJECT
+                                    : NodeFilter.FILTER_ACCEPT;
+                            }
+                        }
+                    );
+                    const textNodes = [];
+
+                    while (textWalker.nextNode()) {
+                        textNodes.push(textWalker.currentNode);
+                    }
+
+                    textNodes.forEach(textNode => {
+                        const renderedText = renderMathText(textNode.textContent);
+                        if (renderedText.childNodes.length > 1
+                            || renderedText.firstChild?.nodeType !== Node.TEXT_NODE
+                            || renderedText.firstChild.textContent !== textNode.textContent) {
+                            textNode.replaceWith(renderedText);
+                        }
+                    });
+                });
+            </script>
+        </main>
+    </body>
+</html>
