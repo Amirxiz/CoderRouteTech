@@ -729,6 +729,29 @@
                 NOTE: Uppercase Theta also represents other concepts in mathematics, including Big Theta notation (<theta></theta>), which describes the asymptotic growth rate of an algorithm.
             </p>
             <h1>More coming soon!</h1>
+            <h4>Last updated: <time id="last-updated-timer" datetime="2026-10-26T17:11:33Z">0 days, 0 hours, 0 minutes</time></h4>
+            <script>
+                const lastUpdatedAt = Date.parse(
+                    document.getElementById("last-updated-timer").dateTime
+                );
+                const lastUpdatedTimer = document.getElementById("last-updated-timer");
+
+                function updateLastUpdatedTimer() {
+                    const elapsedMinutes = Math.max(
+                        0,
+                        Math.floor((Date.now() - lastUpdatedAt) / 60_000)
+                    );
+                    const days = Math.floor(elapsedMinutes / 1440);
+                    const hours = Math.floor((elapsedMinutes % 1440) / 60);
+                    const minutes = elapsedMinutes % 60;
+
+                    lastUpdatedTimer.textContent =
+                        `${days} days, ${hours} hours, ${minutes} minutes`;
+                }
+
+                updateLastUpdatedTimer();
+                setInterval(updateLastUpdatedTimer, 60_000);
+            </script>
             <div style="width: 100%; height: 200px; display: block;">
                 
             </div>
