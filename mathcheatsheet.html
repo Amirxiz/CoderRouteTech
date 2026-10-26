@@ -237,6 +237,8 @@
                     <div id="sect1" sectorid="4el" sector boxedalt>4. Lowercase Pi Symbol (<lowpi></lowpi>) </div>
                     <div style="padding-left: 5px;"></div>
                     <div id="sect1" sectorid="5el" sector boxedalt>5. Integrals </div>
+                    <div style="padding-left: 5px;"></div>
+                    <div id="sect1" sectorid="6el" sector boxedalt>6. Gamma </div>
                 </row>
             </div>
             <padding></padding>
@@ -250,6 +252,90 @@
                 every addition separately, Sigma notation provides a shorter
                 and more organized way to represent the calculation.
             </p>
+            <h4>TRY A SIGMA SUM</h4>
+            <p>Enter an arithmetic expression and whole-number bounds. The sum includes both the lower and upper bounds. Use +, −, ×, ÷, parentheses, and powers.</p>
+            <style>
+                #sigma-calculator {
+                    display: grid;
+                    grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr);
+                    gap: 20px;
+                    width: min(900px, 100%);
+                    padding: 16px;
+                    color: #eaf3f0;
+                    background-color: #10141d;
+                    border: 3px solid #eaf3f0;
+                    box-sizing: border-box;
+                }
+
+                .sigma-fields {
+                    display: grid;
+                    align-content: start;
+                    gap: 12px;
+                }
+
+                .sigma-fields label {
+                    display: grid;
+                    gap: 6px;
+                    font-weight: 700;
+                }
+
+                .sigma-fields input {
+                    width: 100%;
+                    padding: 9px;
+                    color: #eaf3f0;
+                    background-color: #1b1c25;
+                    border: 1px solid #eaf3f0;
+                    border-radius: 2px;
+                    box-sizing: border-box;
+                    font: inherit;
+                }
+
+                #sigma-expression {
+                    font-family: 'Inconsolata', monospace;
+                }
+
+                #sigma-result {
+                    margin: 0;
+                    font-weight: 700;
+                }
+
+                #sigma-steps {
+                    margin: 0;
+                    padding-left: 24px;
+                    overflow-wrap: anywhere;
+                    font-family: 'Inconsolata', monospace;
+                }
+
+                #sigma-steps li + li {
+                    margin-top: 4px;
+                }
+
+                @media (max-width: 600px) {
+                    #sigma-calculator {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            </style>
+            <div id="sigma-calculator">
+                <div class="sigma-fields">
+                    <label for="sigma-expression">Expression
+                        <input id="sigma-expression" type="text" value="6(x + 2)" autocomplete="off" spellcheck="false">
+                    </label>
+                    <label for="sigma-variable">Variable
+                        <input id="sigma-variable" type="text" value="x" maxlength="1" autocomplete="off" spellcheck="false">
+                    </label>
+                    <label for="sigma-lower">Lower bound
+                        <input id="sigma-lower" type="number" value="2" step="1">
+                    </label>
+                    <label for="sigma-upper">Upper bound
+                        <input id="sigma-upper" type="number" value="3" step="1">
+                    </label>
+                </div>
+                <div>
+                    <p id="sigma-result" aria-live="polite"></p>
+                    <ol id="sigma-steps"></ol>
+                </div>
+            </div>
             <h4>EXAMPLE:</h4>
             <p bold>
                 Upper bound: 3 <br>
@@ -565,10 +651,216 @@
                 constant is zero, so multiple functions can have the same
                 derivative.
             </p>
+            <div hrdiff></div>
+            <padding></padding>
+            <row><h1><span sectoridsct="6sl">6. </span> Gamma (<gamma></gamma>)</h1></row>
+            <padding></padding>
+            <p>
+                The <b>Gamma function</b> extends the factorial function to numbers beyond positive integers, including fractions and decimals.
+                The key formula is: <br>
+                <gamma></gamma>(n) = (n - 1)!
+            </p>
+            <h4>EXAMPLES:</h4>
+            <p>
+                <gamma></gamma>(3) = (3 - 1)! = 2! <br>
+                Answer: <span boxedalt>2</span> <br>
+                <br>
+                <gamma></gamma>(5) = (5 - 1)! = 4! <br>
+                Answer: <span boxedalt>24</span> <br>
+                <br>
+                <gamma></gamma>(6) = (6 - 1)! = 5! <br>
+                Answer: <span boxedalt>120</span>
+            </p>
             <h1>More coming soon!</h1>
             <div style="width: 100%; height: 200px; display: block;">
                 
             </div>
+            <script>
+                const sigmaExpressionInput = document.getElementById("sigma-expression");
+                const sigmaVariableInput = document.getElementById("sigma-variable");
+                const sigmaLowerInput = document.getElementById("sigma-lower");
+                const sigmaUpperInput = document.getElementById("sigma-upper");
+                const sigmaResult = document.getElementById("sigma-result");
+                const sigmaSteps = document.getElementById("sigma-steps");
+                const sigmaSuperscriptDigits = { "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9" };
+
+                function tokenizeSigmaExpression(expression, variable) {
+                    const normalized = expression
+                        .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, digit => `^${sigmaSuperscriptDigits[digit]}`)
+                        .replace(/[−–]/g, "-")
+                        .replace(/×/g, "*")
+                        .replace(/[÷]/g, "/")
+                        .replace(/\s+/g, "")
+                        .toLowerCase();
+                    if (!normalized || normalized.length > 100) {
+                        throw new Error("Enter an expression with 1–100 characters.");
+                    }
+
+                    const tokens = [];
+                    let position = 0;
+                    while (position < normalized.length) {
+                        const match = /^(?:\d+(?:\.\d*)?|\.\d+|[a-z]|[()+\-*/^])/.exec(normalized.slice(position));
+                        if (!match) {
+                            throw new Error("Use numbers, the selected variable, +, −, ×, ÷, parentheses, and powers.");
+                        }
+
+                        const value = match[0];
+                        if (/^[a-z]$/.test(value) && value !== variable) {
+                            throw new Error(`The only allowed variable is "${variable}".`);
+                        }
+                        tokens.push(value);
+                        position += value.length;
+                    }
+
+                    const expandedTokens = [];
+                    for (const token of tokens) {
+                        const previous = expandedTokens[expandedTokens.length - 1];
+                        const previousEndsValue = previous === ")" || previous === variable || /^(?:\d|\.)/.test(previous || "");
+                        const currentStartsValue = token === "(" || token === variable || /^(?:\d|\.)/.test(token);
+                        if (previousEndsValue && currentStartsValue) {
+                            if (/^(?:\d|\.)/.test(previous) && /^(?:\d|\.)/.test(token)) {
+                                throw new Error("Put an operator between numbers.");
+                            }
+                            expandedTokens.push("*");
+                        }
+                        expandedTokens.push(token);
+                    }
+                    return expandedTokens;
+                }
+
+                function parseSigmaExpression(tokens) {
+                    let position = 0;
+
+                    function parsePrimary() {
+                        const token = tokens[position++];
+                        if (token === undefined) throw new Error("The expression is incomplete.");
+                        if (token === "(") {
+                            const node = parseAddition();
+                            if (tokens[position++] !== ")") throw new Error("Check the parentheses in the expression.");
+                            return node;
+                        }
+                        if (/^\d/.test(token) || /^\.\d/.test(token)) {
+                            return { type: "number", value: Number(token) };
+                        }
+                        if (/^[a-z]$/.test(token)) return { type: "variable" };
+                        throw new Error("Expected a number, variable, or parenthesized expression.");
+                    }
+
+                    function parsePower() {
+                        const base = parsePrimary();
+                        if (tokens[position] !== "^") return base;
+                        position++;
+                        const exponent = parseUnary();
+                        return { type: "binary", operator: "^", left: base, right: exponent };
+                    }
+
+                    function parseUnary() {
+                        if (tokens[position] === "+" || tokens[position] === "-") {
+                            const operator = tokens[position++];
+                            return { type: "unary", operator, operand: parseUnary() };
+                        }
+                        return parsePower();
+                    }
+
+                    function parseMultiplication() {
+                        let node = parseUnary();
+                        while (tokens[position] === "*" || tokens[position] === "/") {
+                            const operator = tokens[position++];
+                            node = { type: "binary", operator, left: node, right: parseUnary() };
+                        }
+                        return node;
+                    }
+
+                    function parseAddition() {
+                        let node = parseMultiplication();
+                        while (tokens[position] === "+" || tokens[position] === "-") {
+                            const operator = tokens[position++];
+                            node = { type: "binary", operator, left: node, right: parseMultiplication() };
+                        }
+                        return node;
+                    }
+
+                    const tree = parseAddition();
+                    if (position !== tokens.length) throw new Error("Check the expression syntax.");
+                    return tree;
+                }
+
+                function evaluateSigmaExpression(node, variableValue) {
+                    if (node.type === "number") return node.value;
+                    if (node.type === "variable") return variableValue;
+                    if (node.type === "unary") {
+                        const value = evaluateSigmaExpression(node.operand, variableValue);
+                        return node.operator === "-" ? -value : value;
+                    }
+
+                    const left = evaluateSigmaExpression(node.left, variableValue);
+                    const right = evaluateSigmaExpression(node.right, variableValue);
+                    if (node.operator === "+") return left + right;
+                    if (node.operator === "-") return left - right;
+                    if (node.operator === "*") return left * right;
+                    if (node.operator === "/") {
+                        if (right === 0) throw new Error("The expression divides by zero.");
+                        return left / right;
+                    }
+                    if (!Number.isInteger(right) || Math.abs(right) > 8) {
+                        throw new Error("Powers must be whole numbers from −8 to 8.");
+                    }
+                    return left ** right;
+                }
+
+                function updateSigma() {
+                    sigmaSteps.replaceChildren();
+                    try {
+                        const variable = sigmaVariableInput.value.trim().toLowerCase();
+                        if (!/^[a-z]$/.test(variable)) {
+                            throw new Error("Choose a single letter as the variable.");
+                        }
+                        const lower = Number(sigmaLowerInput.value);
+                        const upper = Number(sigmaUpperInput.value);
+                        if (!Number.isInteger(lower) || !Number.isInteger(upper)) {
+                            throw new Error("Enter whole-number lower and upper bounds.");
+                        }
+                        if (Math.abs(lower) > 1000 || Math.abs(upper) > 1000) {
+                            throw new Error("Keep bounds between −1,000 and 1,000.");
+                        }
+                        if (upper < lower) throw new Error("The upper bound must be at least the lower bound.");
+                        if (upper - lower + 1 > 100) {
+                            throw new Error("Use at most 100 terms in one sum.");
+                        }
+
+                        const tree = parseSigmaExpression(tokenizeSigmaExpression(sigmaExpressionInput.value, variable));
+                        const evaluatedTerms = [];
+                        for (let value = lower; value <= upper; value++) {
+                            const result = evaluateSigmaExpression(tree, value);
+                            if (!Number.isFinite(result) || Math.abs(result) > 1e12) {
+                                throw new Error("A term is too large to calculate safely.");
+                            }
+                            evaluatedTerms.push({ value, result });
+                        }
+
+                        const total = evaluatedTerms.reduce((sum, term) => sum + term.result, 0);
+                        if (!Number.isFinite(total)) throw new Error("The sum is too large to calculate safely.");
+                        const numberFormat = new Intl.NumberFormat("en-US", { maximumFractionDigits: 8 });
+                        const substitutionPattern = new RegExp(variable, "gi");
+                        evaluatedTerms.forEach(term => {
+                            const item = document.createElement("li");
+                            const substituted = sigmaExpressionInput.value.replace(
+                                substitutionPattern,
+                                term.value < 0 ? `(${term.value})` : String(term.value)
+                            );
+                            item.textContent = `${substituted} = ${numberFormat.format(term.result)}`;
+                            sigmaSteps.append(item);
+                        });
+                        sigmaResult.textContent = `ANSWER: ${numberFormat.format(total)}`;
+                    } catch (error) {
+                        sigmaResult.textContent = error.message;
+                    }
+                }
+
+                [sigmaExpressionInput, sigmaVariableInput, sigmaLowerInput, sigmaUpperInput]
+                    .forEach(input => input.addEventListener("input", updateSigma));
+                updateSigma();
+            </script>
             <script>
                 const piDigitCountInput = document.getElementById("pi-digit-count");
                 const piDigitsOutput = document.getElementById("pi-digits");
