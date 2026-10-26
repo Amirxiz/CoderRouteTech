@@ -189,6 +189,9 @@
 
                 padding {
                     padding-top: 15px;
+                    width: 100%;
+                    height: auto;
+                    display: block;
                 }
 
                 row {
@@ -228,6 +231,12 @@
                     <div id="sect1" sectorid="1el" sector boxedalt>1. Sigma Symbol</div>
                     <div style="padding-left: 5px;"></div>
                     <div id="sect1" sectorid="2el" sector boxedalt>2. Lowercase Sigma Symbol </div>
+                    <div style="padding-left: 5px;"></div>
+                    <div id="sect1" sectorid="3el" sector boxedalt>3. Pi Symbol (<pi></pi>) </div>
+                    <div style="padding-left: 5px;"></div>
+                    <div id="sect1" sectorid="4el" sector boxedalt>4. Lowercase Pi Symbol (<lowpi></lowpi>) </div>
+                    <div style="padding-left: 5px;"></div>
+                    <div id="sect1" sectorid="5el" sector boxedalt>5. Integrals </div>
                 </row>
             </div>
             <padding></padding>
@@ -306,13 +315,452 @@
                 <br>
                 <span boxedalt><lowsigma></lowsigma> = 2</span>
             </p>
+            <div hrdiff></div>
+            <padding></padding>
+            <row><h1><span sectoridsct="3sl">3. </span>Pi (<pi></pi>)</h1></row>
+            <padding></padding>
+            <p>
+                The Product Symbol (<product></product>) is a mathematical
+                symbol used to represent product notation, which is the
+                process of multiplying a sequence of values together.
+                Instead of writing every multiplication separately,
+                product notation provides a shorter and more organized
+                way to represent the calculation.
+            </p>
+            <h4>EXAMPLE:</h4>
+            <p bold>
+                Upper bound: 4 <br>
+                <product></product> n <br>
+                Lower bound: n = 1 <br><br>
+                1 × 2 × 3 × 4 = <span boxedalt>24</span>
+            </p>
+            <h4>AGAIN:</h4>
+            <p bold>
+                Upper bound: 4 <br>
+                <product></product> 2n <br>
+                Lower bound: n = 1 <br><br>
+                2(1) = 2 <br>
+                2(2) = 4 <br>
+                2(3) = 6 <br>
+                2(4) = 8 <br><br>
+                2 × 4 × 6 × 8 = <span boxedalt>384</span>
+            </p>
+            <p>
+                Product notation consists of three main components:
+                the upper bound, which determines where multiplication
+                ends; the lower bound, which determines the starting
+                value; and the expression to the right of the symbol,
+                which determines what value is multiplied at each step.
+            </p>
+            <div hrdiff></div>
+            <padding></padding>
+            <row><h1><span sectoridsct="4sl">4. </span>Lowercase Pi (<lowpi></lowpi>)</h1></row>
+            <padding></padding>
+            <p>
+                The <lowpi></lowpi> Symbol represents the ratio between
+                a circle's circumference (distance around a cirlce) and it's
+                diameter (Distance across the circle through it's center).
+            </p>
+            <style>
+                #calculator {
+                    display: grid;
+                    grid-template-columns: minmax(180px, 1fr) minmax(0, 3fr);
+                    gap: 16px;
+                    width: min(900px, 100%);
+                    min-height: 120px;
+                    padding: 16px;
+                    background-color: #10141d;
+                    border: 3px solid #eaf3f0;
+                    border-radius: 2px;
+                    box-sizing: border-box;
+                }
+
+                .pi-count-control,
+                .pi-display {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+
+                .pi-count-control label,
+                .pi-display h2 {
+                    font-size: 1rem;
+                    font-weight: 700;
+                }
+
+                #pi-digit-count {
+                    width: 100%;
+                    padding: 10px;
+                    color: #eaf3f0;
+                    background-color: #1b1c25;
+                    border: 1px solid #eaf3f0;
+                    border-radius: 2px;
+                    box-sizing: border-box;
+                    font: inherit;
+                }
+
+                #pi-digits {
+                    margin: 0;
+                    overflow-wrap: anywhere;
+                    font-family: 'Inconsolata', monospace;
+                    line-height: 1.5;
+                }
+
+                @media (max-width: 600px) {
+                    #calculator {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            </style>
+            <div id="calculator">
+                <div class="pi-count-control">
+                    <label for="pi-digit-count">Digits after the decimal (1–100)</label>
+                    <input id="pi-digit-count" type="number" min="1" max="100" step="1" value="100">
+                </div>
+                <section class="pi-display" aria-labelledby="pi-display-heading">
+                    <h2 id="pi-display-heading">Digits of π</h2>
+                    <p id="pi-digits" aria-live="polite">3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679</p>
+                </section>
+            </div>
+            <padding></padding>
             <padding></padding>
             <div hrdiff></div>
             <padding></padding>
+            <row><h1><span sectoridsct="5sl">5. </span> Integrals (<integral></integral>)</h1></row>
+            <padding></padding>
+            <p>
+                The Integral Symbol (<integral></integral>) is a mathematical
+                symbol used in calculus to represent integration. Integration
+                is commonly used to calculate accumulated quantities, such as
+                the area under a curve, and to find antiderivatives.
+            </p>
+            <h4>THE TWO MAIN TYPES:</h4>
+            <p>
+                • Definite Integral: Has upper and lower bounds and produces
+                a numerical value when evaluated. <br>
+                • Indefinite Integral: Represents a family of antiderivatives
+                and includes a constant of integration, C.
+            </p>
+            <h4>TRY A DEFINITE INTEGRAL</h4>
+            <p>
+                Enter a polynomial using x, +, −, and whole-number powers, such as
+                <b>x²</b> or <b>3x² + 2x + 1</b>. Use ^ for powers too (for example, x^2).
+            </p>
+            <style>
+                #integral-calculator {
+                    display: grid;
+                    grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr);
+                    gap: 20px;
+                    width: min(900px, 100%);
+                    padding: 16px;
+                    color: #eaf3f0;
+                    background-color: #10141d;
+                    border: 3px solid #eaf3f0;
+                    box-sizing: border-box;
+                }
+
+                .integral-fields {
+                    display: grid;
+                    align-content: start;
+                    gap: 12px;
+                }
+
+                .integral-fields label {
+                    display: grid;
+                    gap: 6px;
+                    font-weight: 700;
+                }
+
+                .integral-fields input {
+                    width: 100%;
+                    padding: 9px;
+                    color: #eaf3f0;
+                    background-color: #1b1c25;
+                    border: 1px solid #eaf3f0;
+                    border-radius: 2px;
+                    box-sizing: border-box;
+                    font: inherit;
+                }
+
+                #integral-expression {
+                    font-family: 'Inconsolata', monospace;
+                }
+
+                #integral-result {
+                    min-height: 3em;
+                    margin: 0;
+                }
+
+                #integral-graph {
+                    display: block;
+                    width: 100%;
+                    height: auto;
+                    background-color: #080a0f;
+                }
+
+                #integral-graph .integral-axis {
+                    stroke: #eaf3f0;
+                    stroke-width: 1.5;
+                }
+
+                #integral-graph .integral-curve {
+                    fill: none;
+                    stroke: #35a9e8;
+                    stroke-width: 3;
+                }
+
+                #integral-graph .integral-rectangle {
+                    fill: #72c9e8;
+                    fill-opacity: 0.65;
+                    stroke: #193746;
+                    stroke-width: 1;
+                }
+
+                #integral-graph text {
+                    fill: #eaf3f0;
+                    font: 14px 'Roboto', sans-serif;
+                }
+
+                @media (max-width: 600px) {
+                    #integral-calculator {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            </style>
+            <div id="integral-calculator">
+                <div class="integral-fields">
+                    <label for="integral-expression">
+                        Function f(x)
+                        <input id="integral-expression" type="text" value="x^2" autocomplete="off" spellcheck="false">
+                    </label>
+                    <label for="integral-lower">Lower bound (a)
+                        <input id="integral-lower" type="number" value="0" step="any">
+                    </label>
+                    <label for="integral-upper">Upper bound (b)
+                        <input id="integral-upper" type="number" value="3" step="any">
+                    </label>
+                    <p id="integral-result" aria-live="polite"></p>
+                </div>
+                <div>
+                    <svg id="integral-graph" viewBox="0 0 480 280" role="img" aria-label="Graph of the function and rectangles approximating the definite integral">
+                        <title>Definite integral area approximation</title>
+                    </svg>
+                    <p id="integral-approximation">Shaded rectangles show a left-endpoint approximation using 10 rectangles.</p>
+                </div>
+            </div>
+            <p>
+                The upper bound determines where the integration ends, while
+                the lower bound determines where it begins. The expression
+                being integrated is called the integrand, and dx indicates
+                integration with respect to x.
+            </p>
+
+            <h4>EXAMPLE: INDEFINITE INTEGRAL</h4>
+            <p bold>
+                <integral></integral> x² dx = /frac x³&\3 + C\
+            </p>
+
+            <p>
+                The constant C is included because the derivative of any
+                constant is zero, so multiple functions can have the same
+                derivative.
+            </p>
             <h1>More coming soon!</h1>
             <div style="width: 100%; height: 200px; display: block;">
                 
             </div>
+            <script>
+                const piDigitCountInput = document.getElementById("pi-digit-count");
+                const piDigitsOutput = document.getElementById("pi-digits");
+                const piFractionalDigits = "1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679";
+
+                piDigitCountInput.addEventListener("input", () => {
+                    if (piDigitCountInput.value === "") {
+                        piDigitsOutput.textContent = "Enter a whole number from 1 to 100.";
+                        return;
+                    }
+
+                    const digitCount = Math.max(1, Math.min(100, Math.floor(Number(piDigitCountInput.value))));
+                    piDigitCountInput.value = String(digitCount);
+                    piDigitsOutput.textContent = `3.${piFractionalDigits.slice(0, digitCount)}`;
+                });
+            </script>
+            <script>
+                const integralExpressionInput = document.getElementById("integral-expression");
+                const integralLowerInput = document.getElementById("integral-lower");
+                const integralUpperInput = document.getElementById("integral-upper");
+                const integralResult = document.getElementById("integral-result");
+                const integralGraph = document.getElementById("integral-graph");
+                const superscriptDigits = { "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9" };
+                const displaySuperscripts = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"];
+
+                function parsePolynomial(expression) {
+                    const normalized = expression
+                        .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, digit => `^${superscriptDigits[digit]}`)
+                        .replace(/−/g, "-")
+                        .replace(/\s+/g, "");
+                    if (!normalized || normalized.length > 100) {
+                        throw new Error("Enter a polynomial with up to 100 characters.");
+                    }
+
+                    const terms = normalized.match(/[+-]?[^+-]+/g);
+                    if (!terms || terms.join("") !== normalized) {
+                        throw new Error("Use polynomial terms separated by + or − signs.");
+                    }
+
+                    const coefficients = new Map();
+                    for (const term of terms) {
+                        const match = /^([+-]?)(?:(\d+(?:\.\d*)?|\.\d+)?x(?:\^(\d+))?|(\d+(?:\.\d*)?|\.\d+))$/i.exec(term);
+                        if (!match) {
+                            throw new Error("Use terms like x^2, 3x, or 4; powers must be whole numbers.");
+                        }
+
+                        const sign = match[1] === "-" ? -1 : 1;
+                        const coefficient = match[2] === undefined
+                            ? (match[4] === undefined ? sign : sign * Number(match[4]))
+                            : sign * Number(match[2] || 1);
+                        const power = match[4] === undefined ? Number(match[3] || 1) : 0;
+                        if (power > 8 || Math.abs(coefficient) > 1000) {
+                            throw new Error("Keep powers at 8 or below and coefficients at 1,000 or less.");
+                        }
+
+                        coefficients.set(power, (coefficients.get(power) || 0) + coefficient);
+                    }
+
+                    return [...coefficients.entries()].sort((left, right) => right[0] - left[0]);
+                }
+
+                function evaluatePolynomial(terms, x) {
+                    return terms.reduce((total, [power, coefficient]) =>
+                        total + coefficient * x ** power, 0);
+                }
+
+                function formatNumber(value) {
+                    if (Math.abs(value) < 1e-10) return "0";
+                    return Number(value.toPrecision(8)).toString();
+                }
+
+                function formatPower(power) {
+                    if (power === 1) return "";
+                    return power < 10 ? displaySuperscripts[power] : `^${power}`;
+                }
+
+                function formatAntiderivative(terms) {
+                    const integratedTerms = terms
+                        .filter(([, coefficient]) => coefficient !== 0)
+                        .map(([power, coefficient]) => {
+                            const integratedPower = power + 1;
+                            const integratedCoefficient = coefficient / integratedPower;
+                            const simplified = integratedPower === 1
+                                || Number.isInteger(integratedCoefficient);
+                            const coefficientText = Math.abs(simplified
+                                ? integratedCoefficient
+                                : coefficient);
+                            const coefficientPrefix = coefficientText === 1
+                                ? ""
+                                : formatNumber(coefficientText);
+                            const numerator = `${coefficientPrefix}x${formatPower(integratedPower)}`;
+                            const fraction = simplified
+                                ? numerator
+                                : `${numerator} / ${integratedPower}`;
+                            return { sign: coefficient < 0 ? -1 : 1, fraction };
+                        });
+
+                    if (integratedTerms.length === 0) return "C";
+                    return integratedTerms.map((term, index) =>
+                        `${index === 0 ? (term.sign < 0 ? "−" : "") : (term.sign < 0 ? " − " : " + ")}${term.fraction}`
+                    ).join("") + " + C";
+                }
+
+                function renderIntegralGraph(terms, lower, upper) {
+                    const width = 480;
+                    const height = 280;
+                    const padding = { left: 42, right: 16, top: 18, bottom: 34 };
+                    const graphWidth = width - padding.left - padding.right;
+                    const graphHeight = height - padding.top - padding.bottom;
+                    const sampleCount = 100;
+                    const rectangleCount = 10;
+                    const samples = Array.from({ length: sampleCount + 1 }, (_, index) =>
+                        evaluatePolynomial(terms, lower + (upper - lower) * index / sampleCount));
+                    const minValue = Math.min(0, ...samples);
+                    const maxValue = Math.max(0, ...samples);
+                    const valueRange = maxValue - minValue || 1;
+                    const paddedMin = minValue - valueRange * 0.08;
+                    const paddedMax = maxValue + valueRange * 0.08;
+                    const xPosition = x => padding.left + (x - lower) / (upper - lower) * graphWidth;
+                    const yPosition = value => padding.top + (paddedMax - value) / (paddedMax - paddedMin) * graphHeight;
+                    const zeroY = yPosition(0);
+                    const step = (upper - lower) / rectangleCount;
+                    const rectangles = Array.from({ length: rectangleCount }, (_, index) => {
+                        const x = lower + index * step;
+                        const value = evaluatePolynomial(terms, x);
+                        const left = xPosition(x);
+                        const right = xPosition(x + step);
+                        const y = yPosition(value);
+                        return `<rect class="integral-rectangle" x="${left}" y="${Math.min(y, zeroY)}" width="${right - left}" height="${Math.abs(zeroY - y)}"/>`;
+                    }).join("");
+                    const yAxisX = lower <= 0 && upper >= 0 || upper <= 0 && lower >= 0
+                        ? xPosition(0)
+                        : null;
+                    const approximation = step * Array.from({ length: rectangleCount }, (_, index) =>
+                        evaluatePolynomial(terms, lower + index * step)
+                    ).reduce((total, value) => total + value, 0);
+                    const curve = samples.map((value, index) =>
+                        `${index === 0 ? "M" : "L"} ${xPosition(lower + (upper - lower) * index / sampleCount)} ${yPosition(value)}`
+                    ).join(" ");
+
+                    integralGraph.innerHTML = `
+                        <title>Graph of f(x) and ten left-endpoint rectangles from ${formatNumber(lower)} to ${formatNumber(upper)}</title>
+                        ${yAxisX === null ? "" : `<line class="integral-axis" x1="${yAxisX}" y1="${padding.top}" x2="${yAxisX}" y2="${height - padding.bottom}"/>`}
+                        ${rectangles}
+                        <line class="integral-axis" x1="${padding.left}" y1="${zeroY}" x2="${width - padding.right}" y2="${zeroY}"/>
+                        <path class="integral-curve" d="${curve}"/>
+                        <text x="${padding.left}" y="${height - 9}" text-anchor="middle">${formatNumber(lower)}</text>
+                        <text x="${width - padding.right}" y="${height - 9}" text-anchor="middle">${formatNumber(upper)}</text>
+                        <text x="${padding.left - 10}" y="${zeroY - 6}" text-anchor="end">0</text>`;
+                    return approximation;
+                }
+
+                function updateIntegral() {
+                    try {
+                        const terms = parsePolynomial(integralExpressionInput.value);
+                        const lower = Number(integralLowerInput.value);
+                        const upper = Number(integralUpperInput.value);
+                        if (!Number.isFinite(lower) || !Number.isFinite(upper)
+                            || Math.abs(lower) > 100 || Math.abs(upper) > 100) {
+                            throw new Error("Enter finite bounds between −100 and 100.");
+                        }
+                        if (lower === upper) {
+                            integralGraph.innerHTML = "<title>The bounds are equal, so the integral is zero.</title>";
+                            document.getElementById("integral-approximation").textContent =
+                                "Left Riemann sum (10 rectangles): 0";
+                            integralResult.textContent = "The bounds are equal, so the integral is 0.";
+                            return;
+                        }
+
+                        const exactValue = terms.reduce((total, [power, coefficient]) =>
+                            total + coefficient / (power + 1)
+                                * (upper ** (power + 1) - lower ** (power + 1)), 0);
+                        if (!Number.isFinite(exactValue)) {
+                            throw new Error("This integral is too large to calculate safely.");
+                        }
+
+                        const approximation = renderIntegralGraph(terms, lower, upper);
+                        document.getElementById("integral-approximation").textContent =
+                            `Left Riemann sum (10 rectangles): ${formatNumber(approximation)}`;
+                        integralResult.textContent =
+                            `∫ from ${formatNumber(lower)} to ${formatNumber(upper)} ${integralExpressionInput.value} dx = ${formatNumber(exactValue)}. Antiderivative: ${formatAntiderivative(terms)}`;
+                    } catch (error) {
+                        integralGraph.innerHTML = "<title>Enter a supported polynomial and valid bounds to see its graph.</title>";
+                        document.getElementById("integral-approximation").textContent = "";
+                        integralResult.textContent = error.message;
+                    }
+                }
+
+                [integralExpressionInput, integralLowerInput, integralUpperInput]
+                    .forEach(input => input.addEventListener("input", updateIntegral));
+                updateIntegral();
+            </script>
             <script>
                 document.querySelectorAll("[sectorid]").forEach(element => {
                     element.addEventListener("click", () => {
@@ -328,7 +776,7 @@
                 });
             </script>
             <script>
-                const fractionPattern = /^\/frac\s*([\d\s.+*\/()^-]+?)\s*&\s*(-?\d+(?:\.\d+)?)/;
+                const fractionPattern = /^\/frac\s*([^&]+?)\s*&\s*(?:\\([\s\S]*?)\\|(-?\d+(?:\.\d+)?))/;
                 const mathRoots = [document.getElementById("SVGSholder"), document.querySelector("main")]
                     .filter(Boolean);
 
@@ -529,7 +977,7 @@
 
                             const denominator = document.createElement("span");
                             denominator.className = "fraction__denominator";
-                            denominator.textContent = fractionMatch[2];
+                            denominator.append(renderMathText(fractionMatch[2] ?? fractionMatch[3]));
 
                             fraction.append(numerator, denominator);
                             fragment.append(fraction);
