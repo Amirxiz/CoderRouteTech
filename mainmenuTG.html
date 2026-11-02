@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Thanksgiving Arcade \ CODERROUTETECH</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#17120e">
+        <meta name="description" content="Celebrate Thanksgiving with games and projects from CoderRouteTech.">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="icon" type="image/png" href="mainlogo.png">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Source+Code+Pro:wght@400;600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+        <style>
+            :root {
+                color-scheme: dark;
+                --background: #17120e;
+                --surface: #241a13;
+                --surface-raised: #302116;
+                --border: #59402a;
+                --text: #fff4e5;
+                --muted: #c9b398;
+                --accent: #e8a34a;
+                --accent-blue: #bc6840;
+                --source-code: "Source Code Pro", monospace;
+                --roboto: "Roboto", sans-serif;
+                --source-sans: "Source Sans 3", sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html {
+                min-width: 320px;
+                min-height: 100%;
+                background: var(--background);
+            }
+
+            body {
+                min-height: 100vh;
+                margin: 0;
+                overflow-x: hidden;
+                color: var(--text);
+                background:
+                    radial-gradient(ellipse at 50% -20%, rgba(232, 163, 74, 0.16), transparent 48%),
+                    radial-gradient(ellipse at 100% 70%, rgba(188, 104, 64, 0.12), transparent 42%),
+                    var(--background);
+                font-family: var(--source-sans);
+            }
+
+            .falling-leaves {
+                position: fixed;
+                z-index: 0;
+                inset: 0;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            .falling-leaves span {
+                position: absolute;
+                top: -10%;
+                width: 22px;
+                height: 28px;
+                border-radius: 100% 0 100% 0;
+                background: linear-gradient(135deg, #edb751, #bd5938);
+                opacity: 0.32;
+                animation: leaf-fall 18s linear infinite;
+            }
+
+            .falling-leaves span:nth-child(1) {
+                left: 12%;
+                animation-delay: -12s;
+            }
+
+            .falling-leaves span:nth-child(2) {
+                left: 34%;
+                background: linear-gradient(135deg, #d98b38, #9d4933);
+                animation-delay: -4s;
+                animation-duration: 22s;
+            }
+
+            .falling-leaves span:nth-child(3) {
+                left: 59%;
+                animation-delay: -16s;
+                animation-duration: 20s;
+            }
+
+            .falling-leaves span:nth-child(4) {
+                left: 82%;
+                background: linear-gradient(135deg, #c87936, #984333);
+                animation-delay: -8s;
+                animation-duration: 24s;
+            }
+
+            .falling-leaves span:nth-child(5) {
+                left: 95%;
+                animation-delay: -2s;
+                animation-duration: 19s;
+            }
+
+            @keyframes leaf-fall {
+                to {
+                    transform: translate3d(8vw, 115vh, 0) rotate(540deg);
+                }
+            }
+
+            .page-shell {
+                position: relative;
+                z-index: 1;
+                width: min(100% - 48px, 1080px);
+                margin: 0 auto;
+                padding: 36px 0 64px;
+            }
+
+            .topbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+                padding-bottom: 22px;
+                border-bottom: 1px solid rgba(201, 179, 152, 0.2);
+            }
+
+            .brand {
+                display: inline-flex;
+                align-items: center;
+                gap: 11px;
+                color: var(--text);
+                font-family: var(--roboto);
+                font-size: 15px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-decoration: none;
+            }
+
+            .brand-mark {
+                display: grid;
+                width: 34px;
+                height: 34px;
+                place-items: center;
+                border-radius: 11px;
+                color: #28170c;
+                background: linear-gradient(145deg, #f1bd61, #bc6840);
+                font-size: 12px;
+                font-weight: 900;
+                box-shadow: 0 0 22px rgba(232, 163, 74, 0.2);
+            }
+
+            .top-label {
+                padding: 7px 11px;
+                border: 1px solid rgba(232, 163, 74, 0.32);
+                border-radius: 999px;
+                color: var(--muted);
+                background: rgba(232, 163, 74, 0.08);
+                font-family: var(--source-code);
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+
+            .intro {
+                max-width: 700px;
+                margin: 66px auto 42px;
+                text-align: center;
+            }
+
+            .eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin: 0 0 16px;
+                color: var(--accent);
+                font-family: var(--source-code);
+                font-size: 12px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+
+            .eyebrow::before {
+                color: var(--accent-blue);
+                content: "✦";
+                font-size: 17px;
+            }
+
+            h1 {
+                margin: 0;
+                font-family: var(--roboto);
+                font-size: clamp(36px, 6vw, 58px);
+                font-weight: 900;
+                letter-spacing: -0.045em;
+                line-height: 1.05;
+            }
+
+            h1 span {
+                color: var(--accent);
+            }
+
+            .intro-copy {
+                max-width: 510px;
+                margin: 18px auto 0;
+                color: var(--muted);
+                font-size: 17px;
+                line-height: 1.65;
+            }
+
+            .projects-heading {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                gap: 16px;
+                margin: 0 0 16px;
+            }
+
+            .projects-heading h2 {
+                margin: 0;
+                font-family: var(--roboto);
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .projects-heading span {
+                color: var(--muted);
+                font-family: var(--source-code);
+                font-size: 11px;
+            }
+
+            .view-switch {
+                display: flex;
+                gap: 8px;
+                margin: 0 0 20px;
+                padding-bottom: 14px;
+                border-bottom: 1px solid rgba(201, 179, 152, 0.2);
+            }
+
+            .view-switch button {
+                min-height: 38px;
+                padding: 8px 14px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                color: var(--muted);
+                background: var(--surface);
+                font: inherit;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .view-switch button:hover {
+                color: var(--text);
+                background: var(--surface-raised);
+            }
+
+            .view-switch button[aria-pressed="true"] {
+                border-color: rgba(232, 163, 74, 0.55);
+                color: var(--accent);
+                background: rgba(232, 163, 74, 0.08);
+            }
+
+            .view-switch button:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 3px;
+            }
+
+            [hidden] {
+                display: none !important;
+            }
+
+            .project-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+            }
+
+            .project-card {
+                display: flex;
+                min-width: 0;
+                min-height: 210px;
+                flex-direction: column;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                color: inherit;
+                background: linear-gradient(150deg, rgba(48, 33, 22, 0.96), rgba(36, 26, 19, 0.98));
+                text-decoration: none;
+                box-shadow: 0 14px 36px rgba(0, 0, 0, 0.16);
+                transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+            }
+
+            .project-card:hover {
+                transform: translateY(-4px);
+                border-color: rgba(232, 163, 74, 0.65);
+                box-shadow: 0 20px 44px rgba(0, 0, 0, 0.28);
+            }
+
+            .project-card:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 4px;
+            }
+
+            .project-art {
+                display: grid;
+                min-height: 150px;
+                flex: 1;
+                place-items: center;
+                overflow: hidden;
+                padding: 18px;
+                background:
+                    radial-gradient(ellipse at center, rgba(232, 163, 74, 0.13), transparent 68%),
+                    #1d1712;
+            }
+
+            .project-art img {
+                display: block;
+                width: 100%;
+                height: 150px;
+                border: 0;
+                border-radius: 9px;
+                object-fit: contain;
+                transition: transform 180ms ease;
+            }
+
+            .project-card:hover img {
+                transform: scale(1.035);
+            }
+
+            .project-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                padding: 14px 17px;
+                border-top: 1px solid rgba(201, 179, 152, 0.14);
+            }
+
+            .project-info h3 {
+                margin: 0;
+                font-family: var(--roboto);
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            .project-info .arrow {
+                color: var(--accent);
+                font-family: "Material Symbols Outlined";
+                font-size: 20px;
+                transition: transform 160ms ease;
+            }
+
+            .project-card:hover .arrow {
+                transform: translateX(3px);
+            }
+
+            @media (max-width: 600px) {
+                .page-shell {
+                    width: min(100% - 32px, 440px);
+                    padding-top: 22px;
+                }
+
+                .top-label {
+                    font-size: 9px;
+                }
+
+                .intro {
+                    margin: 48px auto 34px;
+                }
+
+                .intro-copy {
+                    font-size: 15px;
+                }
+
+                .project-grid {
+                    grid-template-columns: 1fr;
+                    gap: 14px;
+                }
+
+                .project-card {
+                    min-height: 195px;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .falling-leaves {
+                    display: none;
+                }
+
+                *,
+                *::before,
+                *::after {
+                    scroll-behavior: auto !important;
+                    transition-duration: 0.01ms !important;
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="falling-leaves" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="page-shell">
+            <header class="topbar">
+                <a class="brand" href="index.html">
+                    <span class="brand-mark" aria-hidden="true">CR</span>
+                    <span>CODERROUTETECH</span>
+                </a>
+                <span class="top-label">Thanksgiving collection</span>
+            </header>
+
+            <main>
+                <section class="intro" aria-labelledby="page-title">
+                    <p class="eyebrow">A season to be thankful</p>
+                    <h1 id="page-title">Gather 'round and <span>play.</span></h1>
+                    <p class="intro-copy">A little something to be thankful for: games and projects made by Amirxiz. Choose one and enjoy.</p>
+                </section>
+
+                <section aria-labelledby="projects-title">
+                    <div class="projects-heading">
+                        <h2 id="projects-title">Explore projects</h2>
+                        <span>CHOOSE A COLLECTION</span>
+                    </div>
+                    <div class="view-switch" role="group" aria-label="Project collection">
+                        <button type="button" id="newProjectsButton" aria-controls="newProjects" aria-pressed="true">New projects</button>
+                        <button type="button" id="legacyProjectsButton" aria-controls="legacyProjects" aria-pressed="false">Legacy projects</button>
+                    </div>
+                    <div id="newProjects">
+                        <div class="project-grid">
+                            <a class="project-card" href="index.html">
+                                <div class="project-art">
+                                    <img src="logo1.png" alt="CoderRoute Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>CoderRouteTech</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="stockmarketgame.html">
+                                <div class="project-art">
+                                    <img src="Screenshot 2026-10-18 083155.png" alt="stockgame Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Stock Market Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="blockzgame.html">
+                                <div class="project-art">
+                                    <img src="newblockgame.png" alt="Blockz Game Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Blockz Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="applegame.html">
+                                <div class="project-art">
+                                    <img src="applegame.png" alt="Apple Game Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Apple Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="codedocuments.html">
+                                <div class="project-art">
+                                    <img src="HTML-preview.png">
+                                </div>
+                                <div class="project-info">
+                                     <h3>Code Documents</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="mathcheatsheet.html">
+                                <div class="project-art">
+                                    <img src="HTML-preview.png">
+                                </div>
+                                <div class="project-info">
+                                     <h3>Math CheatSheet</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="legacyProjects" hidden>
+                        <div class="project-grid">
+                            <a class="project-card" href="legacycube.html">
+                                <div class="project-art">
+                                    <img src="logo2.png" alt="Legacy Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Legacy Blockz Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                            <a class="project-card" href="legacyapple.html">
+                                <div class="project-art">
+                                    <img src="logo3.png" alt="Legacy Apple Game Logo">
+                                </div>
+                                <div class="project-info">
+                                    <h3>Legacy Apple Game</h3>
+                                    <span class="arrow" aria-hidden="true">arrow_forward</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <p style="text-align: center;" id="message">I had recently decided MainMenu needed a little "freshup" earlier on. So here it is! Unfinished to Finished. <strong>Apple Game will SOON have more upgrades.</strong></p>
+            <details style="text-align: center; cursor: pointer; user-select: none;">
+                <summary>Soon To come</summary>
+                <p>
+                    1. More Apple Game Upgrades <br>
+                    2. More Games <br>
+                    3. Coderroutetech will get Saves
+                </p>
+            </details>
+        </div>
+        <script>
+            const newProjectsButton = document.getElementById("newProjectsButton");
+            const legacyProjectsButton = document.getElementById("legacyProjectsButton");
+            const newProjects = document.getElementById("newProjects");
+            const legacyProjects = document.getElementById("legacyProjects");
+
+            function showProjectCollection(showLegacy) {
+                newProjects.hidden = showLegacy;
+                legacyProjects.hidden = !showLegacy;
+                newProjectsButton.setAttribute("aria-pressed", String(!showLegacy));
+                legacyProjectsButton.setAttribute("aria-pressed", String(showLegacy));
+            }
+
+            newProjectsButton.addEventListener("click", () => showProjectCollection(false));
+            legacyProjectsButton.addEventListener("click", () => showProjectCollection(true));
+        </script>
+        <script>
+            const messages = document.getElementById("message");
+            const randomessages = {
+                "My vocabulary has been Enhanced.": 20,
+                'I had decided MainMenu needed a little "freshup" earlier on. So here it is! Unfinished to Finished. <strong>Apple Game will SOON have more upgrades.</strong>': 60,
+                'ZERO A.I by the way... Just a little more than 50 tutorials later.': 60,
+                "If you see this message, congrats.": 2,
+                "These were REALLY hard to make. Please, enjoy.": 50,
+                "What's 9 + 10? (reference)": 21,
+                'Insert("Cool Message")': 22,
+                'Thanksgivings is here!': 75,
+            };
+
+            const totalChance = Object.values(randomessages).reduce((total, chance) => total + chance, 0);
+            let chanceRoll = Math.random() * totalChance;
+
+            for (const [text, chance] of Object.entries(randomessages)) {
+                chanceRoll -= chance;
+                if (chanceRoll < 0) {
+                    messages.innerHTML = text;
+                    break;
+                }
+            }
+        </script>
+    </body>
+</html>
