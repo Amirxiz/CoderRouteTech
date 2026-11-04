@@ -4,20 +4,23 @@
         <title>Apple Collector | CoderRT</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="theme-color" content="#f5eee2">
+        <meta name="theme-color" content="#17120e">
         <link rel="stylesheet" href="othermain.css">
         <link rel="icon" type="image/png" href="mainlogo.png">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Source+Code+Pro:wght@400;600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
         <style>
             :root {
-                color-scheme: light;
-                --text: #382719;
-                --muted: #806b55;
-                --green: #8d4526;
-                --border: #dfc9aa;
-                --surface: rgba(255, 251, 243, 0.88);
+                color-scheme: dark;
+                --background: #17120e;
+                --surface: #241a13;
+                --surface-raised: #302116;
+                --text: #fff4e5;
+                --muted: #c9b398;
+                --accent: #e8a34a;
+                --accent-blue: #bc6840;
+                --border: #59402a;
                 font-family: "Source Sans 3", sans-serif;
             }
 
@@ -28,7 +31,7 @@
             html {
                 min-width: 320px;
                 min-height: 100%;
-                background: #f5eee2;
+                background: var(--background);
             }
 
             body {
@@ -40,63 +43,165 @@
                 overflow-x: hidden;
                 color: var(--text);
                 background:
-                    radial-gradient(ellipse at 12% 0%, rgba(218, 147, 63, 0.18), transparent 34%),
-                    radial-gradient(ellipse at 92% 18%, rgba(141, 69, 38, 0.1), transparent 32%),
-                    #f5eee2;
+                    radial-gradient(ellipse at 50% -20%, rgba(232, 163, 74, 0.16), transparent 48%),
+                    radial-gradient(ellipse at 100% 70%, rgba(188, 104, 64, 0.12), transparent 42%),
+                    var(--background);
                 font-family: "Source Sans 3", sans-serif;
             }
 
+            .falling-leaves {
+                position: fixed;
+                z-index: 0;
+                inset: 0;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            .falling-leaves span {
+                position: absolute;
+                top: -10%;
+                width: 22px;
+                height: 28px;
+                border-radius: 100% 0 100% 0;
+                background: linear-gradient(135deg, #edb751, #bd5938);
+                opacity: 0.32;
+                animation: leaf-fall 18s linear infinite;
+            }
+
+            .falling-leaves span:nth-child(1) {
+                left: 12%;
+                animation-delay: -12s;
+            }
+
+            .falling-leaves span:nth-child(2) {
+                left: 34%;
+                background: linear-gradient(135deg, #d98b38, #9d4933);
+                animation-delay: -4s;
+                animation-duration: 22s;
+            }
+
+            .falling-leaves span:nth-child(3) {
+                left: 59%;
+                animation-delay: -16s;
+                animation-duration: 20s;
+            }
+
+            .falling-leaves span:nth-child(4) {
+                left: 82%;
+                background: linear-gradient(135deg, #c87936, #984333);
+                animation-delay: -8s;
+                animation-duration: 24s;
+            }
+
+            .falling-leaves span:nth-child(5) {
+                left: 95%;
+                animation-delay: -2s;
+                animation-duration: 19s;
+            }
+
+            @keyframes leaf-fall {
+                to {
+                    transform: translate3d(8vw, 115vh, 0) rotate(540deg);
+                }
+            }
+
             .page {
+                position: relative;
+                z-index: 1;
                 width: min(100% - 40px, 1200px);
                 margin: 0 auto;
-                padding: 24px 0 40px;
+                padding: 36px 0 64px;
             }
 
             .topbar {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                gap: 16px;
-                padding-bottom: 16px;
-                border-bottom: 1px solid var(--border);
+                gap: 20px;
+                padding-bottom: 22px;
+                border-bottom: 1px solid rgba(201, 179, 152, 0.2);
             }
 
             .brand {
+                display: inline-flex;
+                align-items: center;
+                gap: 11px;
                 color: var(--text);
                 font-family: Roboto, sans-serif;
-                font-size: 14px;
+                font-size: 15px;
                 font-weight: 700;
+                letter-spacing: 0.04em;
                 text-decoration: none;
             }
 
-            .seasonal-label {
+            .brand-mark {
+                display: grid;
+                width: 34px;
+                height: 34px;
+                place-items: center;
+                border-radius: 11px;
+                color: #28170c;
+                background: linear-gradient(145deg, #f1bd61, #bc6840);
+                font-size: 12px;
+                font-weight: 900;
+                box-shadow: 0 0 22px rgba(232, 163, 74, 0.2);
+            }
+
+            .top-label {
                 padding: 7px 11px;
-                border: 1px solid #d5a25e;
+                border: 1px solid rgba(232, 163, 74, 0.32);
                 border-radius: 999px;
-                color: #85411f;
-                background: #f8e8cb;
-                font-family: Roboto, sans-serif;
-                font-size: 10px;
-                font-weight: 700;
-                letter-spacing: 0.08em;
-                white-space: nowrap;
+                color: var(--muted);
+                background: rgba(232, 163, 74, 0.08);
+                font-family: "Source Code Pro", monospace;
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
             }
 
             .page-heading {
-                margin: 28px 0 24px;
+                max-width: 700px;
+                margin: 66px auto 42px;
+                text-align: center;
+            }
+
+            .eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin: 0 0 16px;
+                color: var(--accent);
+                font-family: "Source Code Pro", monospace;
+                font-size: 12px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+
+            .eyebrow::before {
+                color: var(--accent-blue);
+                content: "✦";
+                font-size: 17px;
             }
 
             h1 {
                 margin: 0;
                 font-family: Roboto, sans-serif;
-                font-size: clamp(26px, 4vw, 34px);
-                font-weight: 700;
+                font-size: clamp(36px, 6vw, 58px);
+                font-weight: 900;
+                letter-spacing: -0.045em;
+                line-height: 1.05;
             }
 
-            .page-heading p {
-                margin: 5px 0 0;
+            h1 span {
+                color: var(--accent);
+            }
+
+            .page-heading > p:not(.eyebrow) {
+                max-width: 510px;
+                margin: 18px auto 0;
                 color: var(--muted);
-                font-size: 15px;
+                font-size: 17px;
+                line-height: 1.65;
             }
 
             .game-layout {
@@ -105,9 +210,9 @@
                 align-items: start;
                 overflow: hidden;
                 border: 1px solid var(--border);
-                border-radius: 12px;
-                background: var(--surface);
-                box-shadow: 0 12px 32px rgba(89, 55, 25, 0.08);
+                border-radius: 16px;
+                background: linear-gradient(150deg, rgba(48, 33, 22, 0.96), rgba(36, 26, 19, 0.98));
+                box-shadow: 0 14px 36px rgba(0, 0, 0, 0.16);
             }
 
             .section {
@@ -137,7 +242,7 @@
                 justify-content: space-between;
                 gap: 12px;
                 padding: 9px 0;
-                border-bottom: 1px solid #eee2d1;
+                border-bottom: 1px solid rgba(201, 179, 152, 0.14);
                 font-size: 14px;
             }
 
@@ -171,9 +276,9 @@
                 min-height: 42px;
                 padding: 9px 11px;
                 border: 1px solid var(--border);
-                border-radius: 7px;
+                border-radius: 8px;
                 color: var(--text);
-                background: #fffaf1;
+                background: var(--surface);
                 font: inherit;
                 font-size: 14px;
                 text-align: left;
@@ -182,26 +287,26 @@
 
             .action-button:hover,
             .shop-button:hover {
-                border-color: #d5a25e;
-                background: #fbf0dc;
+                border-color: rgba(232, 163, 74, 0.55);
+                background: var(--surface-raised);
             }
 
             .action-button:focus-visible,
             .shop-button:focus-visible {
-                outline: 2px solid #bc7138;
+                outline: 2px solid var(--accent);
                 outline-offset: 2px;
             }
 
             .action-button.primary {
                 justify-content: center;
-                border-color: var(--green);
+                border-color: var(--accent-blue);
                 color: #fff;
-                background: linear-gradient(135deg, #9b4c29, #78381f);
+                background: linear-gradient(145deg, #e8a34a, #bc6840);
                 font-weight: 700;
             }
 
             .action-button.primary:hover {
-                background: #71341e;
+                background: linear-gradient(145deg, #f1bd61, #c8794c);
             }
 
             .button-hint,
@@ -213,9 +318,10 @@
 
             .shop-section-label {
                 margin: 12px 0 0;
-                color: var(--muted);
+                color: var(--accent);
                 font-size: 12px;
                 font-weight: 700;
+                letter-spacing: 0.04em;
             }
 
             .shop-section-label:first-child {
@@ -245,11 +351,19 @@
             @media (max-width: 620px) {
                 .page {
                     width: min(100% - 28px, 480px);
-                    padding-top: 18px;
+                    padding-top: 22px;
+                }
+
+                .top-label {
+                    font-size: 9px;
                 }
 
                 .page-heading {
-                    margin: 22px 0 18px;
+                    margin: 48px auto 34px;
+                }
+
+                .page-heading p {
+                    font-size: 15px;
                 }
 
                 .game-layout {
@@ -281,17 +395,43 @@
                     grid-column: auto;
                 }
             }
+
+            @media (prefers-reduced-motion: reduce) {
+                .falling-leaves {
+                    display: none;
+                }
+
+                *,
+                *::before,
+                *::after {
+                    scroll-behavior: auto !important;
+                    transition-duration: 0.01ms !important;
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                }
+            }
         </style>
     </head>
     <body>
+        <div class="falling-leaves" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         <main class="page">
             <header class="topbar">
-                <a class="brand" href="index.html">CODERROUTETECH</a>
-                <span class="seasonal-label">THANKSGIVING EDITION</span>
+                <a class="brand" href="index.html">
+                    <span class="brand-mark" aria-hidden="true">CR</span>
+                    <span>CODERROUTETECH</span>
+                </a>
+                <span class="top-label">Thanksgiving collection</span>
             </header>
 
             <section class="page-heading" aria-labelledby="page-title">
-                <h1 id="page-title">Apple Collector</h1>
+                <p class="eyebrow">A season to be thankful</p>
+                <h1 id="page-title">Apple <span>Collector</span></h1>
                 <p>Collect apples, sell your harvest, and upgrade your orchard.</p>
             </section>
 
@@ -349,6 +489,6 @@
                 </section>
             </div>
         </main>
-        <script src="gamelol.js"></script>
+        <script src="gamelol.js?v=2"></script>
     </body>
 </html>
