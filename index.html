@@ -456,7 +456,7 @@
                     </footer>
                 </div>
                 <!-- MAINS -->
-                <textarea id="codepage" class="codetext" aria-label="HTML code editor" placeholder="Start writing HTML here…" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+                <textarea id="codepage" class="codetext" aria-label="HTML code editor" placeholder="Write HTML, or type html:xml / html:document and press Tab or Enter…" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
                 <div style="display: flex; flex-direction: column; width: 100%; height: 100%; overflow: visible; border-left: 2px solid #524F4F;">
                     <nav id="minitopbar">
                         <div class="mso" id="mainmenubtn" onclick="window.location.href='mainmenuTG.html'">apps</div>
@@ -479,6 +479,25 @@
         </script>
         <script data-type="text/javascript">
             const codeEditor = document.getElementById("codepage");
+            const closingBodyTag = "<" + "/body>";
+            const htmlAbbreviations = {
+                "html:xml": '<html xmlns="http://www.w3.org/1999/xhtml"></html>',
+                "html:document": [
+                    "<html>",
+                    "    <head>",
+                    "        <title>Document</title>",
+                    "        <style>",
+                    "            body {",
+                    "                font-family: Verdana;",
+                    "            }",
+                    "        </style>",
+                    "    </head>",
+                    "    <body>",
+                    "        <h1>Hello, World!</h1>",
+                    "    " + closingBodyTag,
+                    "</html>"
+                ].join("\n")
+            };
             const voidElements = new Set([
                 "area", "base", "br", "col", "embed", "hr", "img", "input",
                 "link", "meta", "param", "source", "track", "wbr"
@@ -520,9 +539,36 @@
                 codeEditor.setSelectionRange(caret, caret);
             }
 
+            function expandHtmlAbbreviation() {
+                if (codeEditor.selectionStart !== codeEditor.selectionEnd) {
+                    return false;
+                }
+
+                const textBeforeCaret = codeEditor.value.slice(0, codeEditor.selectionStart);
+                const abbreviation = textBeforeCaret.match(/(^|[\s>])(html:(?:xml|document))$/i);
+                if (!abbreviation) {
+                    return false;
+                }
+
+                const abbreviationStart = codeEditor.selectionStart - abbreviation[2].length;
+                const expansion = htmlAbbreviations[abbreviation[2].toLowerCase()];
+                codeEditor.setRangeText(expansion, abbreviationStart, codeEditor.selectionEnd, "end");
+                codeEditor.dispatchEvent(new Event("input", { bubbles: true }));
+                return true;
+            }
+
             codeEditor.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" && expandHtmlAbbreviation()) {
+                    event.preventDefault();
+                    return;
+                }
+
                 if (event.key === "Tab" && !event.shiftKey) {
                     event.preventDefault();
+                    if (expandHtmlAbbreviation()) {
+                        return;
+                    }
+
                     codeEditor.setRangeText(
                         "    ",
                         codeEditor.selectionStart,
@@ -564,7 +610,7 @@
                     );
                 }
 
-                return `<!DOCTYPE html><html><head><title>New Webpage</title></head><body>${code}</body></html>`;
+                return `<!DOCTYPE html><html><head><title>New Webpage</title></head><body>${code}${closingBodyTag}</html>`;
             }
 
             function saveCode() {
