@@ -1078,10 +1078,50 @@
                 return true;
             }
 
+            function insertIndentedTagBreak() {
+                if (codeEditor.selectionStart !== codeEditor.selectionEnd) {
+                    return false;
+                }
+
+                const caret = codeEditor.selectionStart;
+                const textBeforeCaret = codeEditor.value.slice(0, caret);
+                const textAfterCaret = codeEditor.value.slice(caret);
+                const openingTag = textBeforeCaret.match(/<([a-z][a-z0-9:-]*)(?:\s[^<>]*)?>[ \t]*$/i);
+                if (!openingTag || voidElements.has(openingTag[1].toLowerCase())) {
+                    return false;
+                }
+
+                const closingTag = textAfterCaret.match(/^[ \t]*<\/([a-z][a-z0-9:-]*)\s*>/i);
+                if (!closingTag || openingTag[1].toLowerCase() !== closingTag[1].toLowerCase()) {
+                    return false;
+                }
+
+                const openingWhitespaceLength = openingTag[0].match(/[ \t]*$/)[0].length;
+                const closingWhitespaceLength = closingTag[0].match(/^[ \t]*/)[0].length;
+                const openingStart = caret - openingTag[0].length;
+                const lineStart = textBeforeCaret.lastIndexOf("\n", openingStart - 1) + 1;
+                const outerIndent = textBeforeCaret.slice(lineStart, openingStart);
+                if (!/^[ \t]*$/.test(outerIndent)) {
+                    return false;
+                }
+
+                const replacementStart = caret - openingWhitespaceLength;
+                const replacementEnd = caret + closingWhitespaceLength;
+                const innerIndent = `${outerIndent}    `;
+                const insertion = `\n${innerIndent}\n${outerIndent}`;
+                codeEditor.setRangeText(insertion, replacementStart, replacementEnd, "preserve");
+                const nextCaret = replacementStart + 1 + innerIndent.length;
+                codeEditor.setSelectionRange(nextCaret, nextCaret);
+                codeEditor.dispatchEvent(new Event("input", { bubbles: true }));
+                return true;
+            }
+
             codeEditor.addEventListener("keydown", (event) => {
-                if (event.key === "Enter" && expandHtmlAbbreviation()) {
-                    event.preventDefault();
-                    return;
+                if (event.key === "Enter") {
+                    if (expandHtmlAbbreviation() || insertIndentedTagBreak()) {
+                        event.preventDefault();
+                        return;
+                    }
                 }
 
                 if (event.key === "Tab" && !event.shiftKey) {
