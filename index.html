@@ -296,6 +296,7 @@
 
             .saves-actions {
                 display: flex;
+                flex-wrap: wrap;
                 gap: 6px;
                 margin: 12px 0 8px;
             }
@@ -369,6 +370,19 @@
             .saves-file .mso {
                 flex: 0 0 auto;
                 font-size: 17px;
+            }
+
+            .saves-file .file-html {
+                color: #e88b55;
+            }
+
+            .saves-file .file-css {
+                color: #8ab4f8;
+            }
+
+            .saves-file .file-js,
+            .saves-file .file-ts {
+                color: #fdd663;
             }
 
             .saves-label {
@@ -866,6 +880,8 @@
                 font-size: 24px;
                 padding: 7px;
                 border-radius: 8px;
+                border: 0;
+                background: transparent;
             }
 
             #create {
@@ -874,6 +890,8 @@
                 font-size: 24px;
                 padding: 7px;
                 border-radius: 8px;
+                border: 0;
+                background: transparent;
             }
 
             #mainmenubtn {
@@ -940,6 +958,7 @@
                             <span class="mso" aria-hidden="true">folder_open</span>
                         </div>
                         <div class="saves-actions">
+                            <button id="chooseSiteFolder" class="saves-action" type="button">Choose website folder</button>
                             <button id="newSaveFolder" class="saves-action" type="button">NEW</button>
                             <button id="newSaveFile" class="saves-action" type="button" disabled>New file</button>
                         </div>
@@ -952,12 +971,12 @@
                 <div style="display: flex; flex-direction: column; width: 100%; height: 100%; overflow: visible; border-left: 2px solid #524F4F;">
                     <nav id="minitopbar" aria-label="Preview controls">
                         <div class="mso" id="mainmenubtn" onclick="window.location.href='mainmenuTG.html'">apps</div>
-                        <div class="mso" id="refresh" onclick="refresh()">
+                        <button class="mso" id="refresh" type="button" aria-label="Refresh preview" title="Refresh preview">
                             refresh
-                        </div>
-                        <div class="mso" id="create" onclick="create()">
+                        </button>
+                        <button class="mso" id="create" type="button" aria-label="Create page" title="Create page">
                             fullscreen
-                        </div>
+                        </button>
                         <div class="preview-tabs" role="tablist" aria-label="Preview panels">
                             <button class="preview-tab active" id="previewTab" type="button" role="tab" aria-selected="true" aria-controls="previewView">
                                 <span class="mso" aria-hidden="true">visibility</span><span>Preview</span>
@@ -1117,7 +1136,7 @@
             }
 
             codeEditor.addEventListener("keydown", (event) => {
-                if (event.key === "Enter") {
+                if (event.key === "Enter" && (!codeEditor.dataset.fileType || codeEditor.dataset.fileType === "html")) {
                     if (expandHtmlAbbreviation() || insertIndentedTagBreak()) {
                         event.preventDefault();
                         return;
@@ -1181,7 +1200,11 @@
 
             function refresh() {
                 const code = editor.value;
-                document.getElementById("outputted").srcdoc = getPageSource(code);
+                if (editor.dataset.saveFileId && typeof window.refreshSavedPreview === "function") {
+                    window.refreshSavedPreview();
+                } else {
+                    document.getElementById("outputted").srcdoc = getPageSource(code);
+                }
                 saveCode();
             }
 
@@ -1197,23 +1220,79 @@
             });
 
             editor.addEventListener("input", (event) => {
-                closeTagAfterInsertion(event.data);
+                if (!editor.dataset.fileType || editor.dataset.fileType === "html") {
+                    closeTagAfterInsertion(event.data);
+                }
                 saveCode();
-                document.getElementById("outputted").srcdoc = getPageSource(editor.value);
+                if (!editor.dataset.saveFileId) {
+                    document.getElementById("outputted").srcdoc = getPageSource(editor.value);
+                }
             });
 
-            function create() {
+            function createSavedPage() {
+                const folder = findSaveFolder(selectedSaveFolderId);
+                const pageFile = findSaveFile(folder, folder && folder.previewFileId)
+                    || folder?.files.find((file) => file.name.toLowerCase() === "index.html")
+                    || folder?.files.find((file) => getSaveFileType(file.name)?.kind === "html");
+                const projectUrl = folder && pageFile ? getWebsiteProjectUrl(folder, pageFile) : null;
+                if (projectUrl) {
+                    const win = window.open("about:blank", "_blank");
+                    if (!win) {
+                        window.alert("The new tab was blocked. Allow pop-ups for this page, then try again.");
+                        return;
+                    }
+                    flushSiteProjectWrites(folder)
+                        .then(() => win.location.replace(projectUrl))
+                        .catch((error) => {
+                            win.close();
+                            window.alert(`Could not save the project files: ${error.message}`);
+                        });
+                    return;
+                }
+                const savedPage = editor.dataset.saveFileId
+                    && typeof window.getSavedPreviewSource === "function"
+                    ? window.getSavedPreviewSource()
+                    : null;
+                const previewFrame = document.getElementById("outputted");
+                const source = previewFrame.getAttribute("srcdoc")
+                    || savedPage?.source
+                    || getPageSource(editor.value);
+                if (typeof window.openCreatedSavedPage === "function") {
+                    if (!window.openCreatedSavedPage({ ...savedPage, source })) {
+                        window.alert("The new tab was blocked. Allow pop-ups for this page, then try again.");
+                    }
+                    return;
+                }
+
                 const win = window.open("about:blank", "_blank");
                 if (!win) {
                     window.alert("The new tab was blocked. Allow pop-ups for this page, then try again.");
                     return;
                 }
 
-                const code = getPageSource(editor.value);
                 win.document.open();
-                win.document.write(code);
+                win.document.write(source);
                 win.document.close();
             }
+
+            function runPreviewControl(control) {
+                if (control === "create") {
+                    createSavedPage();
+                    return;
+                }
+                refresh();
+            }
+
+            ["refresh", "create"].forEach((control) => {
+                const button = document.getElementById(control);
+                button.addEventListener("click", () => runPreviewControl(control));
+                button.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        runPreviewControl(control);
+                    }
+                });
+            });
 
             editor.addEventListener("paste", (event) => {
                 const items = event.clipboardData?.items ?? [];
@@ -1239,6 +1318,7 @@
             const aboutPanel = document.getElementById("aboutPanel");
             const savesList = document.getElementById("savesList");
             const savesStatus = document.getElementById("savesStatus");
+            const chooseSiteFolderButton = document.getElementById("chooseSiteFolder");
             const newSaveFolderButton = document.getElementById("newSaveFolder");
             const newSaveFileButton = document.getElementById("newSaveFile");
             const savesEditor = document.getElementById("codepage");
@@ -1248,6 +1328,13 @@
             let selectedSaveFileId = null;
             let expandedSaveFolders = new Set();
             let savesStorageReady = true;
+            let siteDirectoryHandle = null;
+            const siteProjectDirectories = new Map();
+            const siteFileWriteTimers = new Map();
+            const siteFileWriteQueues = new Map();
+            const previewAssetUrls = new Map();
+            const siteFolderHandleDatabase = "coderoute-site-folder-handles";
+            const siteFolderHandleKey = "website-directory";
 
             function setSavesStatus(message) {
                 savesStatus.textContent = message;
@@ -1299,25 +1386,330 @@
                 return folder && folder.files.find((file) => file.id === fileId);
             }
 
+            function openSiteFolderHandleDatabase() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(siteFolderHandleDatabase, 1);
+                    request.onupgradeneeded = () => {
+                        request.result.createObjectStore("handles");
+                    };
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error || new Error("Could not open browser folder storage."));
+                });
+            }
+
+            async function storeSiteFolderHandle(handle) {
+                const database = await openSiteFolderHandleDatabase();
+                await new Promise((resolve, reject) => {
+                    const transaction = database.transaction("handles", "readwrite");
+                    transaction.objectStore("handles").put(handle, siteFolderHandleKey);
+                    transaction.oncomplete = resolve;
+                    transaction.onerror = () => reject(transaction.error || new Error("Could not save website folder permission."));
+                    transaction.onabort = () => reject(transaction.error || new Error("Saving website folder permission was cancelled."));
+                });
+                database.close();
+            }
+
+            async function loadSiteFolderHandle() {
+                const database = await openSiteFolderHandleDatabase();
+                const handle = await new Promise((resolve, reject) => {
+                    const transaction = database.transaction("handles", "readonly");
+                    const request = transaction.objectStore("handles").get(siteFolderHandleKey);
+                    request.onsuccess = () => resolve(request.result || null);
+                    request.onerror = () => reject(request.error || new Error("Could not restore website folder permission."));
+                });
+                database.close();
+                return handle;
+            }
+
+            function validateWebsiteFolderName(name) {
+                return Boolean(
+                    name
+                    && name !== "."
+                    && name !== ".."
+                    && !/[<>:"/\\|?*\u0000-\u001f]/.test(name)
+                    && !/[. ]$/.test(name)
+                    && !/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i.test(name)
+                );
+            }
+
+            function getWebsiteProjectUrl(folder, file) {
+                if (!siteProjectDirectories.has(folder.id)) {
+                    return null;
+                }
+                return new URL(
+                    `${encodeURIComponent(folder.name)}/${encodeURIComponent(file.name)}`,
+                    window.location.href
+                ).href;
+            }
+
+            async function getWritableSiteDirectory(rootHandle) {
+                const pathParts = window.location.pathname
+                    .split("/")
+                    .filter(Boolean)
+                    .map((part) => decodeURIComponent(part));
+                pathParts.pop();
+                let directoryHandle = rootHandle;
+                for (const part of pathParts) {
+                    directoryHandle = await directoryHandle.getDirectoryHandle(part);
+                }
+                const currentPageName = decodeURIComponent(window.location.pathname.split("/").pop());
+                await directoryHandle.getFileHandle(currentPageName);
+                const permission = await directoryHandle.queryPermission({ mode: "readwrite" });
+                if (permission !== "granted") {
+                    const requestedPermission = await directoryHandle.requestPermission({ mode: "readwrite" });
+                    if (requestedPermission !== "granted") {
+                        throw new Error("Write access was not granted for the website folder.");
+                    }
+                }
+                return directoryHandle;
+            }
+
+            async function readSiteProjectFiles(directoryHandle) {
+                const files = [];
+                for await (const entry of directoryHandle.values()) {
+                    if (entry.kind !== "file" || !getSaveFileType(entry.name)) {
+                        continue;
+                    }
+                    const file = await entry.getFile();
+                    files.push({ name: entry.name, code: await file.text() });
+                }
+                return files;
+            }
+
+            async function connectExistingSiteProjects(directoryHandle) {
+                siteProjectDirectories.clear();
+                for (const folder of saveData.folders) {
+                    if (!validateWebsiteFolderName(folder.name)) {
+                        continue;
+                    }
+                    let projectDirectory;
+                    try {
+                        projectDirectory = await directoryHandle.getDirectoryHandle(folder.name);
+                    } catch (error) {
+                        if (error.name === "NotFoundError") {
+                            projectDirectory = await directoryHandle.getDirectoryHandle(folder.name, { create: true });
+                            siteProjectDirectories.set(folder.id, projectDirectory);
+                            for (const file of folder.files) {
+                                await writeSiteProjectFile(folder, file);
+                            }
+                        } else {
+                            throw error;
+                        }
+                    }
+                    folder.siteBacked = true;
+                    siteProjectDirectories.set(folder.id, projectDirectory);
+                    const diskFiles = await readSiteProjectFiles(projectDirectory);
+                    diskFiles.forEach((diskFile) => {
+                        const existingFile = folder.files.find(
+                            (file) => file.name.toLowerCase() === diskFile.name.toLowerCase()
+                        );
+                        if (existingFile) {
+                            existingFile.name = diskFile.name;
+                            existingFile.code = diskFile.code;
+                        } else {
+                            folder.files.push({
+                                id: createSaveId(),
+                                name: diskFile.name,
+                                code: diskFile.code
+                            });
+                        }
+                    });
+                    for (const file of folder.files) {
+                        if (!diskFiles.some((diskFile) => diskFile.name.toLowerCase() === file.name.toLowerCase())) {
+                            await writeSiteProjectFile(folder, file);
+                        }
+                    }
+                }
+                persistSaveData();
+                renderSaveFolders();
+                const activeFolder = findSaveFolder(selectedSaveFolderId);
+                const activeFile = findSaveFile(activeFolder, selectedSaveFileId);
+                if (activeFolder && activeFile) {
+                    renderSavedPreview(activeFolder);
+                }
+            }
+
+            async function restoreWebsiteFolder() {
+                if (!window.isSecureContext || !["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+                    return;
+                }
+                try {
+                    const handle = await loadSiteFolderHandle();
+                    if (!handle || typeof handle.queryPermission !== "function") {
+                        return;
+                    }
+                    const permission = await handle.queryPermission({ mode: "readwrite" });
+                    if (permission !== "granted") {
+                        setSavesStatus("Your website folder is remembered. Choose it again to reconnect and resume normal relative file URLs.");
+                        return;
+                    }
+                    siteDirectoryHandle = handle;
+                    await connectExistingSiteProjects(handle);
+                    newSaveFolderButton.disabled = !savesStorageReady;
+                    renderSaveFolders();
+                    setSavesStatus("Website folder reconnected. Project pages now load their real relative files.");
+                } catch (error) {
+                    setSavesStatus(`Could not restore website folder access: ${error.message}. Choose the website folder again to reconnect.`);
+                }
+            }
+
+            async function chooseWebsiteFolder() {
+                if (typeof window.showDirectoryPicker !== "function") {
+                    setSavesStatus("This browser cannot grant website-folder access. Use a recent Chromium browser on localhost.");
+                    return;
+                }
+                if (!window.isSecureContext || !["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+                    setSavesStatus("Real website folders work only when this editor is served from localhost (for example, Live Server). A hosted GitHub Pages site cannot write files into its published folder.");
+                    return;
+                }
+
+                try {
+                    const rootHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+                    siteDirectoryHandle = await getWritableSiteDirectory(rootHandle);
+                    await storeSiteFolderHandle(siteDirectoryHandle);
+                    await connectExistingSiteProjects(siteDirectoryHandle);
+                    newSaveFolderButton.disabled = !savesStorageReady;
+                    renderSaveFolders();
+                    setSavesStatus("Website folder connected. NEW creates a real folder beside this editor; relative CSS, JavaScript, and HTML links can load normally.");
+                } catch (error) {
+                    if (error.name === "AbortError") {
+                        return;
+                    }
+                    siteDirectoryHandle = null;
+                    siteProjectDirectories.clear();
+                    newSaveFolderButton.disabled = !savesStorageReady;
+                    renderSaveFolders();
+                    setSavesStatus(`Could not connect the website folder: ${error.message}`);
+                }
+            }
+
+            async function writeSiteProjectFile(folder, file) {
+                const directoryHandle = siteProjectDirectories.get(folder.id);
+                if (!directoryHandle) {
+                    return;
+                }
+                const fileHandle = await directoryHandle.getFileHandle(file.name, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(file.code);
+                await writable.close();
+            }
+
+            function queueSiteProjectFileWrite(folder, file) {
+                const key = `${folder.id}/${file.id}`;
+                const previousWrite = siteFileWriteQueues.get(key) || Promise.resolve();
+                const nextWrite = previousWrite
+                    .catch(() => {})
+                    .then(() => writeSiteProjectFile(folder, file));
+                siteFileWriteQueues.set(key, nextWrite);
+                nextWrite.then(() => {
+                    if (siteFileWriteQueues.get(key) === nextWrite) {
+                        siteFileWriteQueues.delete(key);
+                    }
+                }).catch((error) => {
+                    setSavesStatus(`Could not write ${folder.name}/${file.name} into the website folder: ${error.message}`);
+                    if (siteFileWriteQueues.get(key) === nextWrite) {
+                        siteFileWriteQueues.delete(key);
+                    }
+                });
+                return nextWrite;
+            }
+
+            function scheduleSiteProjectFileWrite(folder, file) {
+                if (!siteProjectDirectories.has(folder.id)) {
+                    return;
+                }
+                const key = `${folder.id}/${file.id}`;
+                window.clearTimeout(siteFileWriteTimers.get(key));
+                siteFileWriteTimers.set(key, window.setTimeout(() => {
+                    siteFileWriteTimers.delete(key);
+                    queueSiteProjectFileWrite(folder, file).then(() => {
+                        if (findSaveFolder(selectedSaveFolderId) === folder) {
+                            renderSavedPreview(folder);
+                        }
+                    }).catch(() => {});
+                }, 300));
+            }
+
+            async function flushSiteProjectWrites(folder) {
+                const writes = [];
+                folder.files.forEach((file) => {
+                    const key = `${folder.id}/${file.id}`;
+                    const timer = siteFileWriteTimers.get(key);
+                    if (timer) {
+                        window.clearTimeout(timer);
+                        siteFileWriteTimers.delete(key);
+                        writes.push(queueSiteProjectFileWrite(folder, file));
+                    } else if (siteFileWriteQueues.has(key)) {
+                        writes.push(siteFileWriteQueues.get(key));
+                    }
+                });
+                await Promise.all(writes);
+            }
+
+            function getSaveFileType(fileName) {
+                const extension = fileName.slice(fileName.lastIndexOf(".") + 1).toLowerCase();
+                const types = {
+                    html: { extension, icon: "html", kind: "html" },
+                    css: { extension, icon: "css", kind: "css" },
+                    js: { extension, icon: "javascript", kind: "javascript" },
+                    ts: { extension, icon: "data_object", kind: "typescript" }
+                };
+                return Object.prototype.hasOwnProperty.call(types, extension) ? types[extension] : null;
+            }
+
+            function getPreviewAssetUrl(folder, file, mimeType) {
+                const assetKey = `${folder.id}/${file.id}`;
+                const cachedAsset = previewAssetUrls.get(assetKey);
+                if (cachedAsset?.code === file.code) {
+                    return cachedAsset.url;
+                }
+                if (cachedAsset) {
+                    URL.revokeObjectURL(cachedAsset.url);
+                }
+                const url = URL.createObjectURL(new Blob([file.code], { type: mimeType }));
+                previewAssetUrls.set(assetKey, { code: file.code, url });
+                return url;
+            }
+
             function selectSaveFile(folder, file) {
                 selectedSaveFolderId = folder.id;
                 selectedSaveFileId = file.id;
                 folder.activeFileId = file.id;
+                if (getSaveFileType(file.name)?.kind === "html") {
+                    folder.previewFileId = file.id;
+                }
                 saveData.activeFolderId = folder.id;
                 saveData.activeFileId = file.id;
                 expandedSaveFolders.add(folder.id);
                 savesEditor.value = file.code;
+                savesEditor.setAttribute("aria-label", `Code editor for ${file.name}`);
+                savesEditor.placeholder = `Write ${file.name}…`;
+                savesEditor.dataset.saveFileId = file.id;
+                savesEditor.dataset.fileType = getSaveFileType(file.name)?.kind || "";
                 savesEditor.dispatchEvent(new Event("input", { bubbles: true }));
                 renderSaveFolders();
-                if (persistSaveData()) {
+                persistSaveData();
+                const type = getSaveFileType(file.name);
+                if (type?.kind === "typescript") {
+                    setSavesStatus(`Editing ${folder.name} / ${file.name}. TypeScript is not run in Preview; compile it to JavaScript first.`);
+                } else {
                     setSavesStatus(`Editing ${folder.name} / ${file.name}. Changes are saved automatically.`);
                 }
             }
 
-            function addSaveFile(folder, fileName, initialCode = "") {
+            async function addSaveFile(folder, fileName, initialCode = "") {
                 const normalizedName = fileName.trim();
                 if (!normalizedName) {
                     setSavesStatus("Enter a name for the new file.");
+                    return;
+                }
+                if (
+                    /[\\/]/.test(normalizedName)
+                    || normalizedName.lastIndexOf(".") < 1
+                    || !getSaveFileType(normalizedName)
+                    || !validateWebsiteFolderName(normalizedName)
+                ) {
+                    setSavesStatus("Use a file name ending in .html, .css, .js, or .ts.");
                     return;
                 }
                 if (folder.files.some((file) => file.name.toLowerCase() === normalizedName.toLowerCase())) {
@@ -1330,19 +1722,41 @@
                     name: normalizedName,
                     code: initialCode
                 };
+                const directoryHandle = siteProjectDirectories.get(folder.id);
+                if (directoryHandle) {
+                    try {
+                        await directoryHandle.getFileHandle(normalizedName);
+                        setSavesStatus(`A file named "${normalizedName}" already exists in the website folder.`);
+                        return;
+                    } catch (error) {
+                        if (error.name !== "NotFoundError") {
+                            setSavesStatus(`Could not check the website folder: ${error.message}`);
+                            return;
+                        }
+                    }
+                    try {
+                        const fileHandle = await directoryHandle.getFileHandle(normalizedName, { create: true });
+                        const writable = await fileHandle.createWritable();
+                        await writable.write(initialCode);
+                        await writable.close();
+                    } catch (error) {
+                        setSavesStatus(`Could not create ${normalizedName} in the website folder: ${error.message}`);
+                        return;
+                    }
+                }
                 folder.files.push(file);
                 selectSaveFile(folder, file);
             }
 
-            function addSaveFolder() {
+            async function addSaveFolder() {
                 const initialCode = savesEditor.value;
                 const enteredName = window.prompt("Choose a name for this save folder:");
                 if (enteredName === null) {
                     return;
                 }
                 const folderName = enteredName.trim();
-                if (!folderName) {
-                    setSavesStatus("Folder names cannot be empty.");
+                if (!validateWebsiteFolderName(folderName)) {
+                    setSavesStatus("Choose a folder name without path separators, reserved characters, or a trailing dot.");
                     return;
                 }
                 if (saveData.folders.some((folder) => folder.name.toLowerCase() === folderName.toLowerCase())) {
@@ -1350,16 +1764,53 @@
                     return;
                 }
 
+                let projectDirectory = null;
+                if (siteDirectoryHandle) {
+                    try {
+                        await siteDirectoryHandle.getDirectoryHandle(folderName);
+                        setSavesStatus(`A real website folder named "${folderName}" already exists. Choose another name to avoid overwriting it.`);
+                        return;
+                    } catch (error) {
+                        if (error.name !== "NotFoundError") {
+                            setSavesStatus(`Could not check the website folder: ${error.message}`);
+                            return;
+                        }
+                    }
+
+                    try {
+                        projectDirectory = await siteDirectoryHandle.getDirectoryHandle(folderName, { create: true });
+                        const indexHandle = await projectDirectory.getFileHandle("index.html", { create: true });
+                        const writable = await indexHandle.createWritable();
+                        await writable.write(initialCode);
+                        await writable.close();
+                    } catch (error) {
+                        setSavesStatus(`Could not create the real project folder: ${error.message}`);
+                        return;
+                    }
+                }
+
+                const indexFile = {
+                    id: createSaveId(),
+                    name: "index.html",
+                    code: initialCode
+                };
                 const folder = {
                     id: createSaveId(),
                     name: folderName,
                     activeFileId: null,
-                    files: []
+                    files: [indexFile],
+                    siteBacked: Boolean(projectDirectory)
                 };
+                if (projectDirectory) {
+                    siteProjectDirectories.set(folder.id, projectDirectory);
+                }
                 saveData.folders.push(folder);
                 expandedSaveFolders.add(folder.id);
                 selectedSaveFolderId = folder.id;
-                addSaveFile(folder, "index.html", initialCode);
+                selectSaveFile(folder, indexFile);
+                setSavesStatus(projectDirectory
+                    ? `Created ${folderName} beside kindexdmien.html. Its index.html is a real file on disk.`
+                    : `Created ${folderName} in this browser. Choose the website folder first to create real disk files.`);
             }
 
             function addSaveFileToSelectedFolder() {
@@ -1369,21 +1820,175 @@
                     return;
                 }
                 const suggestedName = `file-${folder.files.length + 1}.html`;
-                const enteredName = window.prompt("Name the new save file:", suggestedName);
+                const enteredName = window.prompt("Name the new file (.html, .css, .js, or .ts):", suggestedName);
                 if (enteredName === null) {
                     return;
                 }
                 addSaveFile(folder, enteredName, "");
             }
 
+            function findRelativeSaveFile(folder, currentPage, href) {
+                if (!href || href.startsWith("#")) {
+                    return null;
+                }
+
+                let resolvedUrl;
+                try {
+                    resolvedUrl = new URL(href, `https://saved.invalid/${encodeURIComponent(currentPage.name)}`);
+                } catch (error) {
+                    if (error instanceof TypeError) {
+                        return null;
+                    }
+                    throw error;
+                }
+                if (resolvedUrl.origin !== "https://saved.invalid") {
+                    return null;
+                }
+
+                let fileName;
+                try {
+                    fileName = decodeURIComponent(resolvedUrl.pathname.slice(resolvedUrl.pathname.lastIndexOf("/") + 1));
+                } catch (error) {
+                    if (error instanceof URIError) {
+                        return null;
+                    }
+                    throw error;
+                }
+                return folder.files.find((file) => file.name.toLowerCase() === fileName.toLowerCase()) || null;
+            }
+
+            function buildSavedPreviewSource(folder, requestedPageFile = null) {
+                const pageFile = requestedPageFile
+                    || findSaveFile(folder, folder.previewFileId)
+                    || folder.files.find((file) => file.name.toLowerCase() === "index.html")
+                    || folder.files.find((file) => getSaveFileType(file.name)?.kind === "html");
+                if (!pageFile) {
+                    return null;
+                }
+
+                const parsedPage = new DOMParser().parseFromString(getPageSource(pageFile.code), "text/html");
+                let hasLinkedTypeScript = false;
+
+                parsedPage.querySelectorAll('link[rel~="stylesheet" i][href]').forEach((link) => {
+                    const linkedFile = findRelativeSaveFile(folder, pageFile, link.getAttribute("href"));
+                    if (linkedFile && getSaveFileType(linkedFile.name)?.kind === "css") {
+                        link.setAttribute("href", getPreviewAssetUrl(folder, linkedFile, "text/css"));
+                        link.removeAttribute("integrity");
+                        link.removeAttribute("crossorigin");
+                    }
+                });
+
+                parsedPage.querySelectorAll("script[src]").forEach((script) => {
+                    const linkedFile = findRelativeSaveFile(folder, pageFile, script.getAttribute("src"));
+                    const type = linkedFile && getSaveFileType(linkedFile.name);
+                    if (type?.kind === "javascript") {
+                        script.setAttribute(
+                            "src",
+                            getPreviewAssetUrl(folder, linkedFile, "text/javascript")
+                        );
+                        script.removeAttribute("integrity");
+                        script.removeAttribute("crossorigin");
+                    } else if (type?.kind === "typescript") {
+                        script.remove();
+                        hasLinkedTypeScript = true;
+                    }
+                });
+
+                parsedPage.querySelectorAll("a[href]").forEach((link) => {
+                    const linkedFile = findRelativeSaveFile(folder, pageFile, link.getAttribute("href"));
+                    if (linkedFile && getSaveFileType(linkedFile.name)?.kind === "html") {
+                        link.setAttribute("href", `#_saved_file=${encodeURIComponent(linkedFile.id)}`);
+                    }
+                });
+
+                const doctype = parsedPage.doctype ? "<!DOCTYPE html>" : "";
+                return {
+                    source: `${doctype}${parsedPage.documentElement.outerHTML}`,
+                    hasLinkedTypeScript,
+                    folderId: folder.id,
+                    pageFileId: pageFile.id
+                };
+            }
+
+            function renderSavedPreview(folder) {
+                const previewFrame = document.getElementById("outputted");
+                const pageFile = findSaveFile(folder, folder.previewFileId)
+                    || folder.files.find((file) => file.name.toLowerCase() === "index.html")
+                    || folder.files.find((file) => getSaveFileType(file.name)?.kind === "html");
+                if (folder.siteBacked && !siteProjectDirectories.has(folder.id)) {
+                    previewFrame.removeAttribute("src");
+                    previewFrame.removeAttribute("srcdoc");
+                    setSavesStatus("Reconnect the website folder to preview this project with real relative files.");
+                    return;
+                }
+                const projectUrl = pageFile && getWebsiteProjectUrl(folder, pageFile);
+                if (projectUrl) {
+                    previewFrame.removeAttribute("srcdoc");
+                    if (previewFrame.src !== projectUrl) {
+                        previewFrame.src = projectUrl;
+                    } else {
+                        previewFrame.contentWindow.location.reload();
+                    }
+                    return;
+                }
+
+                const preview = buildSavedPreviewSource(folder);
+                if (!preview) {
+                    return;
+                }
+
+                previewFrame.removeAttribute("src");
+                previewFrame.srcdoc = preview.source;
+                if (preview.hasLinkedTypeScript) {
+                    setSavesStatus(`${folder.name} previewed. Linked TypeScript is skipped; compile it to JavaScript first.`);
+                }
+            }
+
+            window.getSavedPreviewSource = () => {
+                const folder = findSaveFolder(selectedSaveFolderId);
+                return folder ? buildSavedPreviewSource(folder) : null;
+            };
+
+            window.refreshSavedPreview = () => {
+                const folder = findSaveFolder(selectedSaveFolderId);
+                if (folder) {
+                    renderSavedPreview(folder);
+                }
+            };
+
+            window.getSavedDevToolsFiles = () => {
+                const folder = findSaveFolder(selectedSaveFolderId);
+                if (!folder) {
+                    return null;
+                }
+
+                return {
+                    folderName: folder.name,
+                    activePath: `saved/${selectedSaveFileId}`,
+                    files: folder.files.map((file) => {
+                        const type = getSaveFileType(file.name);
+                        return {
+                            name: file.name,
+                            path: `saved/${file.id}`,
+                            kind: type?.kind || "text",
+                            icon: type?.icon || "draft",
+                            content: file.code
+                        };
+                    })
+                };
+            };
+
             function renderSaveFolders() {
                 savesList.replaceChildren();
-                newSaveFileButton.disabled = !savesStorageReady || !findSaveFolder(selectedSaveFolderId);
+                const selectedFolder = findSaveFolder(selectedSaveFolderId);
+                newSaveFileButton.disabled = !savesStorageReady || !selectedFolder;
 
                 if (!saveData.folders.length) {
                     const empty = document.createElement("div");
                     empty.className = "saves-empty";
-                    empty.textContent = "No saved folders yet. Choose NEW to create one.";
+                    empty.textContent = siteDirectoryHandle
+                        ? "No project folders yet. Choose NEW to create a real folder."
+                        : "Choose NEW to save a browser project, or choose the website folder first to create real disk files.";
                     savesList.append(empty);
                     return;
                 }
@@ -1411,7 +2016,6 @@
                             expandedSaveFolders.add(folder.id);
                         }
                         renderSaveFolders();
-                        newSaveFileButton.disabled = !savesStorageReady;
                         setSavesStatus(`Double-click "${folder.name}" to reopen its last active file.`);
                     });
                     folderButton.addEventListener("dblclick", () => {
@@ -1431,8 +2035,9 @@
                             const fileLabel = document.createElement("span");
                             fileButton.type = "button";
                             fileButton.className = `saves-file${file.id === selectedSaveFileId ? " selected" : ""}`;
-                            fileIcon.className = "mso";
-                            fileIcon.textContent = "code";
+                            const type = getSaveFileType(file.name);
+                            fileIcon.className = `mso file-${type ? type.extension : "unknown"}`;
+                            fileIcon.textContent = type ? type.icon : "draft";
                             fileLabel.className = "saves-label";
                             fileLabel.textContent = file.name;
                             fileButton.append(fileIcon, fileLabel);
@@ -1446,6 +2051,9 @@
             loadSaveData();
             renderSaveFolders();
             newSaveFolderButton.disabled = !savesStorageReady;
+            newSaveFileButton.disabled = !savesStorageReady || !findSaveFolder(selectedSaveFolderId);
+            setSavesStatus("Saves are stored in this browser. Choose the website folder to create real project folders for normal relative links.");
+            chooseSiteFolderButton.addEventListener("click", chooseWebsiteFolder);
             newSaveFolderButton.addEventListener("click", addSaveFolder);
             newSaveFileButton.addEventListener("click", addSaveFileToSelectedFolder);
             savesEditor.addEventListener("input", () => {
@@ -1455,10 +2063,108 @@
                     return;
                 }
                 file.code = savesEditor.value;
+                const type = getSaveFileType(file.name);
                 if (persistSaveData()) {
-                    setSavesStatus(`Saved ${folder.name} / ${file.name}.`);
+                    setSavesStatus(type?.kind === "typescript"
+                        ? `Saved ${folder.name} / ${file.name}. TypeScript is not run in Preview; compile it to JavaScript first.`
+                        : `Saved ${folder.name} / ${file.name}.`);
+                }
+                if (siteProjectDirectories.has(folder.id)) {
+                    scheduleSiteProjectFileWrite(folder, file);
+                } else {
+                    renderSavedPreview(folder);
                 }
             });
+
+            function handleSavedPageNavigation(request, savedWindow = null) {
+                const folder = findSaveFolder(request.folderId);
+                const file = findSaveFile(folder, request.fileId);
+                if (!folder || !file || getSaveFileType(file.name)?.kind !== "html") {
+                    return;
+                }
+                folder.previewFileId = file.id;
+                if (savedWindow) {
+                    const preview = buildSavedPreviewSource(folder, file);
+                    if (preview) {
+                        savedWindow.document.open();
+                        savedWindow.document.write(preview.source);
+                        savedWindow.document.close();
+                    }
+                }
+                selectSaveFile(folder, file);
+            }
+
+            function handleSavedPreviewLinkClick(event) {
+                const target = event.target;
+                const link = target && typeof target.closest === "function"
+                    ? target.closest('a[href^="#_saved_file="]')
+                    : null;
+                if (!link) {
+                    return;
+                }
+                const folder = findSaveFolder(selectedSaveFolderId);
+                if (!folder) {
+                    return;
+                }
+                const fileId = decodeURIComponent(link.getAttribute("href").slice("#_saved_file=".length));
+                const file = findSaveFile(folder, fileId);
+                if (!file || getSaveFileType(file.name)?.kind !== "html") {
+                    return;
+                }
+                event.preventDefault();
+                handleSavedPageNavigation({ folderId: folder.id, fileId });
+            }
+
+            document.getElementById("outputted").addEventListener("load", () => {
+                const previewFrame = document.getElementById("outputted");
+                const previewDocument = previewFrame.contentDocument;
+                previewDocument?.addEventListener("click", handleSavedPreviewLinkClick);
+                const folder = findSaveFolder(selectedSaveFolderId);
+                if (folder && siteProjectDirectories.has(folder.id)) {
+                    const projectDirectoryUrl = new URL(`${encodeURIComponent(folder.name)}/`, window.location.href);
+                    try {
+                        const frameUrl = new URL(previewFrame.contentWindow.location.href);
+                        if (frameUrl.origin === projectDirectoryUrl.origin
+                            && frameUrl.pathname.startsWith(projectDirectoryUrl.pathname)) {
+                            const pageName = decodeURIComponent(frameUrl.pathname.slice(projectDirectoryUrl.pathname.length));
+                            const file = folder.files.find((candidate) => candidate.name === pageName);
+                            if (file && getSaveFileType(file.name)?.kind === "html" && file.id !== selectedSaveFileId) {
+                                folder.previewFileId = file.id;
+                                selectSaveFile(folder, file);
+                            }
+                        }
+                    } catch (error) {
+                        if (!(error instanceof TypeError)) {
+                            setSavesStatus(`Could not read the preview page location: ${error.message}`);
+                        }
+                    }
+                }
+            });
+
+            window.openCreatedSavedPage = (savedPage) => {
+                const win = window.open("about:blank", "_blank");
+                if (!win) {
+                    return null;
+                }
+                win.document.open();
+                win.document.write(savedPage.source);
+                win.document.close();
+                if (savedPage.folderId) {
+                    win.document.addEventListener("click", (event) => {
+                        const target = event.target;
+                        const link = target && typeof target.closest === "function"
+                            ? target.closest('a[href^="#_saved_file="]')
+                            : null;
+                        if (!link) {
+                            return;
+                        }
+                        const fileId = decodeURIComponent(link.getAttribute("href").slice("#_saved_file=".length));
+                        event.preventDefault();
+                        handleSavedPageNavigation({ folderId: savedPage.folderId, fileId }, win);
+                    });
+                }
+                return win;
+            };
 
             const lastFolder = findSaveFolder(saveData.activeFolderId)
                 || [...saveData.folders].reverse().find((folder) => findSaveFile(folder, folder.activeFileId));
@@ -1467,6 +2173,7 @@
             if (lastFolder && lastFile) {
                 selectSaveFile(lastFolder, lastFile);
             }
+            restoreWebsiteFolder();
 
             savesButton.addEventListener("click", () => {
                 const showSaves = !savesPanel.hidden;
@@ -1522,6 +2229,8 @@
                 const expandedFolders = new Set(["iframe"]);
                 let sourceFiles = [];
                 let selectedPath = "";
+                let sourceRootName = "iframe";
+                let sourceContext = "iframe";
 
                 const escapeHtml = (text) => text.replace(/[&<>"']/g, (character) => ({
                     "&": "&amp;",
@@ -1616,7 +2325,10 @@
                         "finally", "for", "from", "function", "if", "import", "in", "instanceof",
                         "let", "new", "null", "of", "return", "static", "super", "switch", "this",
                         "throw", "true", "try", "typeof", "undefined", "var", "void", "while", "with",
-                        "yield"
+                        "yield", "abstract", "any", "as", "asserts", "bigint", "boolean", "declare",
+                        "enum", "implements", "infer", "interface", "is", "keyof", "never", "number",
+                        "object", "private", "protected", "public", "readonly", "satisfies", "string",
+                        "type", "unique", "unknown"
                     ]);
                     let result = "";
                     let lastIndex = 0;
@@ -1745,13 +2457,16 @@
 
                 function renderTree() {
                     fileTree.replaceChildren();
-                    const htmlFile = sourceFiles.find((file) => file.kind === "html");
+                    const htmlFiles = sourceFiles.filter((file) => file.kind === "html");
                     const styles = sourceFiles.filter((file) => file.kind === "css");
                     const scripts = sourceFiles.filter((file) => file.kind === "javascript");
+                    const typescript = sourceFiles.filter((file) => file.kind === "typescript");
                     const rootChildren = document.createDocumentFragment();
 
-                    if (htmlFile) {
-                        addFile(rootChildren, htmlFile, 1);
+                    htmlFiles.forEach((file) => addFile(rootChildren, file, 1));
+                    if (sourceFiles.some((file) => file.kind === "text")) {
+                        sourceFiles.filter((file) => file.kind === "text")
+                            .forEach((file) => addFile(rootChildren, file, 1));
                     }
                     if (styles.length) {
                         addFolder(rootChildren, "styles", "styles", styles, 1);
@@ -1759,7 +2474,10 @@
                     if (scripts.length) {
                         addFolder(rootChildren, "scripts", "scripts", scripts, 1);
                     }
-                    addFolder(fileTree, "iframe", "iframe", [], 0);
+                    if (typescript.length) {
+                        addFolder(rootChildren, "typescript", "typescript", typescript, 1);
+                    }
+                    addFolder(fileTree, sourceRootName, "iframe", [], 0);
                     const rootFolder = fileTree.querySelector('[data-folder="iframe"]');
                     const rootChildrenContainer = rootFolder.nextElementSibling;
                     rootChildrenContainer.replaceChildren(rootChildren);
@@ -1810,6 +2528,13 @@
                     return files;
                 }
 
+                function getSavedFiles() {
+                    if (typeof window.getSavedDevToolsFiles !== "function") {
+                        return null;
+                    }
+                    return window.getSavedDevToolsFiles();
+                }
+
                 function getFrameSource() {
                     if (iframe.hasAttribute("srcdoc")) {
                         return iframe.srcdoc;
@@ -1822,6 +2547,33 @@
                 }
 
                 function updateDevTools() {
+                    const savedSource = getSavedFiles();
+                    if (savedSource) {
+                        sourceRootName = savedSource.folderName;
+                        sourceFiles = savedSource.files;
+                        const nextContext = `${savedSource.folderName}:${savedSource.activePath}`;
+                        if (nextContext !== sourceContext) {
+                            selectedPath = savedSource.activePath;
+                        }
+                        sourceContext = nextContext;
+                        if (!sourceFiles.length) {
+                            selectedPath = "";
+                            renderTree();
+                            renderSource(null);
+                            status.textContent = `${savedSource.folderName} has no saved files.`;
+                            return;
+                        }
+                        selectedPath = sourceFiles.some((file) => file.path === selectedPath)
+                            ? selectedPath
+                            : sourceFiles[0].path;
+                        renderTree();
+                        renderSource(sourceFiles.find((file) => file.path === selectedPath));
+                        status.textContent = `${sourceFiles.length} saved source file${sourceFiles.length === 1 ? "" : "s"} · ${sourceFiles[0].name}`;
+                        return;
+                    }
+
+                    sourceRootName = "iframe";
+                    sourceContext = "iframe";
                     let source;
                     try {
                         source = getFrameSource();
